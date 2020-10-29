@@ -1,4 +1,3 @@
 # EthicalEating
 
-thomas-cs test commit
-tom test commit
+CS 361 Ethical Eating web app by Zero Rows Returned
