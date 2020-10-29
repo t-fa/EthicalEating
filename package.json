@@ -1,0 +1,24 @@
+{
+  "name": "ethicaleating",
+  "version": "1.0.0",
+  "description": "Web app to help users make more ethical choices in terms of meals and ingredients",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/t-fa/EthicalEating.git"
+  },
+  "author": "Zero Rows Returned",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/t-fa/EthicalEating/issues"
+  },
+  "homepage": "https://github.com/t-fa/EthicalEating#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "handlebars": "^4.7.6"
+  }
+}
