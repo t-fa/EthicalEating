@@ -20,6 +20,13 @@ app.set('view engine', 'handlebars');
 
 // routes TBD
 
+// Little database demo: visit http://localhost:6377/database-test and check logs.
+const { describeTables } = require("./database/client");
+app.get("/database-test", (_, res) => {
+  describeTables();
+  res.status(200).send("OK");
+})
+
 app.use((req,res) => {
     res.status(404);
     res.render('404');
