@@ -1,0 +1,13 @@
+# FROM node:6.10.2-alpine
+# The above line is what's running on flip. It doesn't work with
+# express-handlebars due to use of async.
+
+# Temporarily using a later version of Node so we can use async and such here.
+# But this must be resolved soon.
+
+FROM node:12.19.0-alpine
+WORKDIR /app
+COPY package.json /app
+RUN npm install
+COPY . /app
+EXPOSE 6377
