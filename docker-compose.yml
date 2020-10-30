@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    # https://stackoverflow.com/a/43331395 init database by running database-definitions.sql file
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./database/database-definitions.sql:/data/application/init.sql
+    ports:
+      - "3306"
+  webapp:
+    build:
+      context: .
+      dockerfile: webapp_dockerfile
+    command: "npm start"
+    depends_on:
+      - "db"
+    ports:
+      - "6377:6377"
