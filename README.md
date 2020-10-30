@@ -11,14 +11,18 @@ Then from the root folder in this repo, run:
 
 ```
 docker-compose build
-docker-compose up
+docker-compose up -d
 ```
+
+To stream logs:
+`docker-compose logs -f`
+
+To stop streaming logs: `Control+C`
 
 To stop:
-
-```
+`
 docker-compose down
-```
+`
 
 To re-build, like when you change source code or similar, run `docker-compose build` again, and then
 `docker-compose up`.
