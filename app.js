@@ -18,6 +18,18 @@ app.engine(
 
 app.set('view engine', 'handlebars');
 
+// Demo of how to create and log in a user...
+const { Users } = require("./database");
+app.get("/demo", (_, res) => {
+  Users.createUserWithUsernameAndPassword({"username": "foo", "password": "bar"}, (error, user) => {
+    console.log("user creation error:", error, "newly created user:", user);
+      Users.logInWithUsernameAndPassword({"username": "foo", "password": "bar"}, (error, user) => {
+        console.log("login error:", error, "logged in user:", user);
+      });
+  });
+  res.status(200).send("demo ok");
+})
+
 // routes TBD
 app.get("/login", (req, res) => {
   res.render('login');
@@ -25,13 +37,6 @@ app.get("/login", (req, res) => {
 
 app.get("/", (req, res) => {
   res.render('index');
-})
-
-// Little database demo: visit http://localhost:6377/database-test and check logs.
-const { describeTables } = require("./database/client");
-app.get("/database-test", (_, res) => {
-  describeTables();
-  res.status(200).send("OK");
 })
 
 app.use((req,res) => {

@@ -9,13 +9,29 @@ services:
     volumes:
       - ./database/database-definitions.sql:/data/application/init.sql
     ports:
+      # If you uncomment the "127.0.0.1:3306:3306", you expose the database to port 3306 locally,
+      # and you can connect to your database using MySQL Workbench tool
+      # https://www.mysql.com/products/workbench/ -- create a connection to 127.0.0.1
+      # port 3306, user "root" password "secret". If it is just "3306" then it is
+      # only available from another Docker container running in this compose file.
+      # See: https://stackoverflow.com/a/46220742
       - "3306"
+      # - "127.0.0.1:3306:3306"
   webapp:
     build:
       context: .
       dockerfile: webapp_dockerfile
-    command: "npm start"
+    command: "npm run dev"
     depends_on:
       - "db"
     ports:
       - "6377:6377"
+    volumes:
+      # Map your local working directory to the app folder so nodemon
+      # will notice when it changes to enable hot reload.
+      - .:/app
+      - node_modules:/app/node_modules
+volumes:
+  # Create an empty volume so that local node_modules folder does not get
+  # mounted into app container and override it.
+  node_modules:

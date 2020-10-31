@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "npx nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,8 @@
     "express-handlebars": "^5.2.0",
     "handlebars": "^4.7.6",
     "mysql2": "^2.2.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
   }
 }
