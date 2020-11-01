@@ -19,6 +19,13 @@ app.engine(
 app.set('view engine', 'handlebars');
 
 // routes TBD
+app.get("/login", (req, res) => {
+  res.render('login');
+})
+
+app.get("/", (req, res) => {
+  res.render('index');
+})
 
 // Little database demo: visit http://localhost:6377/database-test and check logs.
 const { describeTables } = require("./database/client");
