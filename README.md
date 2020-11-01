@@ -14,6 +14,10 @@ docker-compose build
 docker-compose up -d
 ```
 
+The app has been configured with [nodemon](https://www.npmjs.com/package/nodemon) to hot-reload the app container whenever the source code changes. This way, you don't have to bring the container down and back up again when you make a change in the source code in order to see the behavior reflected. This makes development faster.
+
+If you don't want this behavior, simply change the `command: "npm run dev"` line in docker-compose.yml to `command: "npm start"` and hot-reloading will no longer occur.
+
 To stream logs:
 `docker-compose logs -f`
 
@@ -32,3 +36,7 @@ You can use the --force-recreate flag if changes don't seem to be sticking.
 `docker-compose up --force-recreate`
 
 You will be able to view the app locally at http://localhost:6377.
+
+## viewing the mysql database with mysql workbench
+
+It can be useful for debugging to see what is in the database using [mysql workbench](https://www.mysql.com/products/workbench/), a free tool. If you would like to use the app with mysql workbench, first download the software. Then, make one small change to the docker-compose file to the db: ports: section, changing `"3306"` to `"127.0.0.1:3306:3306"` to expose the database on port 3306 on your localhost.
