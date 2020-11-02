@@ -39,6 +39,10 @@ app.get("/", (req, res) => {
   res.render('index');
 })
 
+app.get("/build", (req, res) => {
+  res.render('buildRecipe');
+})
+
 app.use((req,res) => {
     res.status(404);
     res.render('404');
