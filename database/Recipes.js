@@ -188,6 +188,42 @@ const Recipes = (database) => {
     });
   };
 
+  /**
+    searchByName searches for Recipe objects by name. Performs a fuzzy, case-insensitive search
+    where name only has to contain @query somewhere. This returns more potential results at the
+    cost of some accuracy.
+    => Receives:
+      + query: what to search for in the name. Query can appear anywhere in the name.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, []Recipe) the list of Recipes in the system with names like the provided @query.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Search for Cupcakes.
+      Recipes.searchByName({"query": "Cupcakes"}, (err, listOfAllCupcakeRecipes) => {
+        if (err) {
+          console.log("Failed to fetch Recipes:", err);
+          return;  // bail out of the handler here, listOfAllCupcakeRecipes undefined
+        }
+        // Got the listOfAllCupcakeRecipes.
+        console.log("listOfAllCupcakeRecipes:", listOfAllCupcakeRecipes);
+        console.log("listOfAllCupcakeRecipes as json", listOfAllCupcakeRecipes.map(recipe => recipe.toJSON()));
+      });
+  */
+  recipes.searchByName = ({ query }, callback) => {
+    database.execute(
+      "SELECT * FROM Recipes WHERE UPPER(name) LIKE ?",
+      ["%" + query.toUpperCase() + "%"],
+      (err, rows) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        buildResponseList(err, rows, Recipe, callback);
+      }
+    );
+  };
+
   return { ...recipes, Errors, Validators };
 };
 

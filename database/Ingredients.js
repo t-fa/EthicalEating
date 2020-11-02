@@ -1,4 +1,9 @@
-const { buildCreateResponse, buildResponse, toJSON } = require("./utils");
+const {
+  buildCreateResponse,
+  buildResponse,
+  buildResponseList,
+  toJSON,
+} = require("./utils");
 
 /**
 Ingredient is an Ingredient in the system. A Recipe consists of zero or more Ingredients.
@@ -128,6 +133,42 @@ const Ingredients = (database) => {
           callback(Errors.notFound, null);
         }
         buildResponse(err, rows, Ingredient, callback);
+      }
+    );
+  };
+
+  /**
+    searchByName searches for Ingredient objects by name. Performs a fuzzy, case-insensitive search
+    where name only has to contain @query somewhere. This returns more potential results at the
+    cost of some accuracy.
+    => Receives:
+      + query: what to search for in the name. Query can appear anywhere in the name.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, []Ingredient) the list of Ingredients in the system with names like the provided @query.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Search for flour.
+      Ingredients.searchByName({"query": "flour"}, (err, listOfFlourIngredients) => {
+        if (err) {
+          console.log("Failed to fetch Ingredients:", err);
+          return;  // bail out of the handler here, listOfFlourIngredients undefined
+        }
+        // Got the listOfFlourIngredients.
+        console.log("listOfFlourIngredients:", listOfFlourIngredients);
+        console.log("listOfFlourIngredients as json", listOfFlourIngredients.map(ingredient => ingredient.toJSON()));
+      });
+  */
+  ingredients.searchByName = ({ query }, callback) => {
+    database.execute(
+      "SELECT * FROM Ingredients WHERE UPPER(name) LIKE ?",
+      ["%" + query.toUpperCase() + "%"],
+      (err, rows) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        buildResponseList(err, rows, Ingredient, callback);
       }
     );
   };
