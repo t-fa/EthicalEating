@@ -1,10 +1,25 @@
-<link rel='stylesheet' href='css/tooltip.css'>
 <script src='js/buildRecipe.js'></script>
 
 <h1>Build A Recipe
     {{!-- question mark in box, can be changed to image later if desired --}}
-    <span class='tooltip'>&#9072;
-        <span class='tooltiptext'>Create your own recipe using ingredients from our database. This is a good way to figure out if your home cooking is ethical or not.</span>
-    </span>
+    <div class='tooltip'>&#9072;
+        <div class='tooltiptext'>Create your own recipe using ingredients from 
+            our database. This is a good way to figure out if your home cooking 
+            is ethical or not.</div>
+    </div>
 </h1>
+<p>
+    <div id="ingredient">
+        {{!-- Enter ingredient prompt gets added here via buildRecipe.js --}}
 
+    <button id="addIngredient">Add another ingredient</button>
+</p>
+
+<p>
+    <div>Name your recipe
+        <div class='tooltip'>&#9072;
+            <div class='tooltiptext'>The name your recipe will be saved as in 
+                your recipe book.</div>
+        </div>
+    </div>
+</p>
