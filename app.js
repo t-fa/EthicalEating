@@ -3,7 +3,12 @@ const app = express();
 const handlebars = require('express-handlebars');
 const path = require('path');
 
-const port = 6377
+// When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
+// that we can request. Heroku sets an environmental variable to tell our app which port
+// it's allowed to listen on in process.env.PORT.
+//
+// If this variable is set, use the port in the variable. Otherwise, use the default (6377).
+const port = process.env.PORT || 6377;
 
 app.use(express.static(path.join(__dirname, 'public')));
 
