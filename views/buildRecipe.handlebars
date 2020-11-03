@@ -8,10 +8,26 @@
             is ethical or not.</div>
     </div>
 </h1>
-<p>
-    <div id="ingredient">
-        {{!-- Enter ingredient prompt gets added here via buildRecipe.js --}}
 
+<p>
+    <div id="ingredientFields">
+        {{!-- this is where I'm having problems --}}
+        {{#each iterator}}
+            <div>
+                <label>Enter Ingredient</label><br>
+                <select name="ingredients" id="ingredients">
+                    {{!-- TODO: Get data from DB --}}
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                    <option value="4">Option 4</option>
+                </select>
+                <button>Remove Ingredient</button>
+            </div>
+        {{/each}}
+    </div>
+</p>
+<p>
     <button id="addIngredient">Add another ingredient</button>
 </p>
 
@@ -22,4 +38,10 @@
                 your recipe book.</div>
         </div>
     </div>
+    <input type="text" id="recipeName">
+</p>
+
+<p>
+    <input type="submit" value="Submit">
+    <button>Start over</button>
 </p>
