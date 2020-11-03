@@ -12,8 +12,8 @@
 <p>
     <div id="ingredientFields">
         {{!-- this is where I'm having problems --}}
-        {{#each iterator}}
-            <div>
+
+            <div id="ingredientSelect">
                 <label>Enter Ingredient</label><br>
                 <select name="ingredients" id="ingredients">
                     {{!-- TODO: Get data from DB --}}
@@ -24,11 +24,12 @@
                 </select>
                 <button>Remove Ingredient</button>
             </div>
-        {{/each}}
+ 
+    {{!-- add other ingredients here --}}
     </div>
 </p>
 <p>
-    <button id="addIngredient">Add another ingredient</button>
+    <input type="button" id="addIngredient" value="Add Another Ingredient">
 </p>
 
 <p>
