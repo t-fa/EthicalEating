@@ -5,14 +5,18 @@ function buttonFunctions() {
 let ingredientCount = 1;
 function addIngredients() {
     ingredientCount++;
-    var objTo = document.getElementById('ingredientFields')
-    var divtest = document.createElement('div');
+    let ingredientFields = document.getElementById('ingredientFields')
+    let ingredientSelect = document.createElement('div');
+    let className = 'ingredient' + ingredientCount
+    ingredientSelect.className = className
+    let htmlContent = document.getElementById('ingredientSelect').innerHTML
+    htmlContent += '<button onclick="removeIngredient(\'' + className + '\');">Remove Ingredient</button>'
+    ingredientSelect.innerHTML = htmlContent
+    ingredientFields.appendChild(ingredientSelect)
+}
 
-    var ingredientSelect = document.getElementById('ingredientSelect').innerHTML
-
-
-    divtest.innerHTML = ingredientSelect
-    objTo.appendChild(divtest)
+function removeIngredient(ingredient) {
+    document.getElementsByClassName(ingredient)[0].remove()
 }
 
 document.addEventListener("DOMContentLoaded", buttonFunctions)
