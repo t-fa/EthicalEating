@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const buildRecipeRouter = require('./routes/buildRecipeRouter');
 const handlebars = require('express-handlebars');
 const path = require('path');
 
@@ -36,16 +37,14 @@ app.get("/demo", (_, res) => {
 })
 
 // routes TBD
+app.use('/build', buildRecipeRouter);
+
 app.get("/login", (req, res) => {
   res.render('login');
 })
 
 app.get("/", (req, res) => {
   res.render('index');
-})
-
-app.get("/build", (req, res) => {
-  res.render('buildRecipe');
 })
 
 app.use((req,res) => {

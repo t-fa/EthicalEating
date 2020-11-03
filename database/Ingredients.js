@@ -95,6 +95,35 @@ const Ingredients = (database) => {
   };
 
   /**
+    getAllIngredients fetches a list of all the Ingredient objects in the system.
+    => Receives:
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, []Ingredients) the list of Ingredients in the system.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Get all the Ingredients.
+      Ingredients.getAllIngredients((err, listOfAllIngredients) => {
+        if (err) {
+          console.log("Failed to fetch Ingredients:", err);
+          return;  // bail out of the handler here, listOfAllIngredients undefined
+        }
+        // Got the list of Ingredients.
+        console.log("listOfAllIngredients:", listOfAllIngredients);
+        console.log("listOfAllIngredients as json", listOfAllIngredients.map(ingredient => ingredient.toJSON()));
+      });
+  */
+ ingredients.getAllIngredients = (callback) => {
+  database.execute("SELECT * FROM Ingredients", (err, rows) => {
+    if (err) {
+      callback(err, null);
+      return;
+    }
+    buildResponseList(err, rows, Ingredient, callback);
+  });
+};
+
+  /**
     getIngredient fetches the Ingredient with ID @ingredientID if it exists.
     => Receives:
       + ingredientID: ID of the Ingredient to fetch.
