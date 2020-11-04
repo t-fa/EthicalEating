@@ -9,8 +9,9 @@ const path = require('path');
 // it's allowed to listen on in process.env.PORT.
 //
 // If this variable is set, use the port in the variable. Otherwise, use the default (6377).
-const port = process.env.PORT || 6377;
+//const port = process.env.PORT || 6377;
 
+const port = 3000;
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.engine(
@@ -41,6 +42,10 @@ app.use('/build', buildRecipeRouter);
 
 app.get("/login", (req, res) => {
   res.render('login');
+})
+
+app.get("/search", (req, res) => {
+  res.render('search');
 })
 
 app.get("/", (req, res) => {
