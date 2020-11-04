@@ -25,6 +25,16 @@
       </div>
       <br>
       
+      <ul class="Recipe_List">
+      {{#if recipes}}
+  {{#each recipes}}
+    <li>{{name}}</li>
+  {{/each}}
+  
+  {{else}}
+  No matching recipes were found. Please search for a different Recipe.
+  {{/if}}
+</ul>
       
 
 
