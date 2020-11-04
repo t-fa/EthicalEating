@@ -11,7 +11,12 @@ search_recipe_router.use(bodyParser.json());
 search_recipe_router.route('/')
 .get((req, res) => {
     context = {}
-    Models.Recipes.getAllRecipes((err, Recipe_List) => {
+    // Search term that is passed to the database query
+    var search_term = req.query.recipe_search;
+    console.log("Search Term Is", req.query)
+    
+    
+    Models.Recipes.searchByName({"query":search_term},(err, Recipe_List) => {
         if (err) {
             console.log("Failed to fetch Ingredients:", err);
             return next(err); 
