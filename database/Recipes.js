@@ -284,6 +284,7 @@ const Recipes = (database) => {
       INNER JOIN Ingredients i ON ri.ingredient_id = i.id
       WHERE r.id = ?
     ) data
+    GROUP BY data.id
     `,
       [recipeID],
       (err, rows) => {
