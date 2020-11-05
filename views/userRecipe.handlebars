@@ -6,7 +6,7 @@
 
     <p>
         <span>
-            <button onclick="window.location.href='book'" style="height:4em;width:16em;font-size:medium" " >
+            <button onclick="window.location.href='book'" style="height:4em;width:16em;font-size:medium">
                 My Recipes Home
             </button>
         </span>
@@ -26,7 +26,13 @@
             <td>Details go here</td>
             <td>2.0</td>
             <td>
-                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+                <span>Info</span>
+                <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
+                    &#9432
+                    <span class="tooltiptext">
+                        How can I ethically improve this ingredient?
+                    </span>
+                </span>
             </td>
         </tr>
         <tr>
@@ -34,7 +40,13 @@
             <td>Details go here</td>
             <td>3.0</td>
             <td>
-                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+                <span>Info</span>
+                <span class="tooltipleft" style="float:right">
+                    &#9432
+                    <span class="tooltiptext">
+                        How can I ethically improve this ingredient?
+                    </span>
+                </span>
             </td>
         </tr>
         <tr>
@@ -42,7 +54,13 @@
             <td>Details go here</td>
             <td>5.0</td>
             <td>
-                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+                <span>Info</span>
+                <span class="tooltipleft" style="float:right">
+                    &#9432
+                    <span class="tooltiptext">
+                        How can I ethically improve this ingredient?
+                    </span>
+                </span>
             </td>
         </tr>
         <tr>
@@ -50,7 +68,13 @@
             <td>Details go here</td>
             <td>5.0</td>
             <td>
-                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+                <span>Info</span>
+                <span class="tooltipleft" style="float:right">
+                    &#9432
+                    <span class="tooltiptext">
+                        How can I ethically improve this ingredient? 
+                    </span>
+                </span>
             </td>
         </tr>
     </table> <br />
@@ -58,6 +82,7 @@
 </div>
 
 <div style="margin-left: 10%; margin-right: 10%;">
+    <!-- will link to previous and next recipes in user's book-->
     <p>
         <button onclick="window.location.href='userRecipe'" class="prevRecipe">
             Prev Recipe
@@ -66,6 +91,8 @@
             Next Recipe
         </button>
     </p>
+
+    <!-- Buttons for Create, Edit, and Delete recipe -->
     <p>
         <button onclick="window.location.href='build'" class="createNewRecipe">
             Create New Recipe
@@ -73,10 +100,11 @@
         <button class="editRecipe" style="margin-left:40%">
             Edit Recipe
         </button>
-        <button class="deleteRecipe" style="float:right">
-            Delete Recipe
+        <button class="removeRecipe" style="float:right">
+            Remove Recipe
         </button>
     </p>
+
 </div>
 
-<script src="js/recipeBook.js"></script>
+<script src="js/book.js"></script>

@@ -66,6 +66,10 @@ app.get("/userRecipe", (req, res) => {
     res.render('userRecipe');
 })
 
+app.get("/ingredientEthics", (req, res) => {
+    res.render('ingredientEthics');
+})
+
 app.use((req,res) => {
     res.status(404);
     res.render('404');
