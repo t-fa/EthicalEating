@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
-
+const ethicalRouter = require('./routes/ethicalRouter');
 const handlebars = require('express-handlebars');
 const path = require('path');
 const searchRouter = require('./routes/searchRouter');
@@ -43,6 +43,7 @@ app.get("/demo", (_, res) => {
 // routes TBD
 app.use('/build', buildRecipeRouter);
 app.use('/search', searchRouter);
+app.use('/ethicality', ethicalRouter);
 
 app.get("/login", (req, res) => {
   res.render('login');
