@@ -14,11 +14,13 @@ class IngredientReplacement {
     replacementReason,
     ingredientIDReplaces,
     ingredientIDReplacement,
+    replacementReasonSource,
   } = {}) {
     this.id = id;
     this.replacementReason = replacementReason;
     this.ingredientIDReplaces = ingredientIDReplaces;
     this.ingredientIDReplacement = ingredientIDReplacement;
+    this.replacementReasonSource = replacementReasonSource;
   }
 
   // fromDatabaseRow returns an instance of the class, populating data from database row @dbRow.
@@ -28,6 +30,7 @@ class IngredientReplacement {
       replacementReason: dbRow.replacement_reason,
       ingredientIDReplaces: dbRow.ingredient_id_replaces,
       ingredientIDReplacement: dbRow.ingredient_id_replacement,
+      replacementReasonSource: dbRow.replacement_reason_source,
     });
   }
 
