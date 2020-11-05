@@ -39,7 +39,7 @@ app.get("/demo", (_, res) => {
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
-app.use('/searc', searchRouter);
+app.use('/search', searchRouter);
 
 app.get("/login", (req, res) => {
   res.render('login');
