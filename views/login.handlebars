@@ -1,6 +1,11 @@
+<script src='js/loginErrors.js'></script>
+
 <form action="/login" method="POST">
     <fieldset>
         <legend>Log in:</legend>
+        <p>
+            <span style="color:red" id="loginError"></span>
+        </p>
         <p>
             <label>Username:<br>
                 <input type="text" name="username" id="username" placeholder="Username">
@@ -22,6 +27,9 @@
 <form action="/register" method="POST"">
     <fieldset>
         <legend>Create account:</legend>
+        <p>
+            <span style="color:red" id="registerError"></span>
+        </p>
         <p>
             <label>Username:<br>
                 <span>Username must have at least 3 characters 

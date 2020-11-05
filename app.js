@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
+const loginFunctions = require('./public/js/loginFunctions');
 
 const handlebars = require('express-handlebars');
 const path = require('path');
@@ -44,24 +45,39 @@ app.use('/build', buildRecipeRouter);
 
 app.post('/register', async (req, res) => {
 	const { password, confirmPassword, username } = req.body;
-	const hash = await bcrypt.hash(password, 12);
 
-	if (password == confirmPassword) {
-		// create new user
-		Users.createUserWithUsernameAndPassword(
-			{
-				username: username,
-				password: hash
-			},
-			(error, user) => {
-				console.log('user creation error:', error, 'newly created user:', user);
-			}
-		);
-	} else {
-		// error message
-		res.send('fail');
+	// check username content
+	if (!(loginFunctions.onlyAlphanumerical(username) && username.length > 2)) {
+		res.send('Invalid username');
 	}
-	res.redirect('/');
+
+	// check password content
+	if (!loginFunctions.validatePassword(password)) {
+		res.send('Invalid password');
+	}
+
+	// check passwords match
+	if (!(password == confirmPassword)) {
+		res.send("Passwords do not match");
+	}
+
+	// check if username is in use
+	if (!loginFunctions.usernameAvailability(username)) {
+		res.send("Username already taken");
+	}
+
+	// if validation passes, create new user
+	Users.createUserWithUsernameAndPassword(
+		{
+			username: username,
+			password: hash
+		},
+		(error, user) => {
+			console.log('user creation error:', error, 'newly created user:', user);
+		}
+	);
+	res.send('check log to make sure user creation worked');
+	//res.redirect('/');
 });
 
 app.get('/login', (req, res) => {
