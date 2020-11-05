@@ -25,20 +25,28 @@
       </div>
       <br>
       
-      <ul class="Recipe_List">
-      {{#if recipes}}
-  {{#each recipes}}
-    <li>{{name}}</li>
-  {{/each}}
-  
-  {{else}}
-  No matching recipes were found. Please search for a different Recipe.
-  {{/if}}
-</ul>
       
+     <div class = "card" style="width: 18rem;">
+      <ul class="list-group list-group-flush">
+
+      {{#if recipes}}
+      	{{#each recipes}}
+  	<div class = "card-header">
+  		{{name}}
+  	</div>
+    	<li class = "list-group-item">{{name}}</li>
+
+  	{{/each}}
+  	</ul>
+ 	 </div>
+  	{{else}}
+  	No matching recipes were found. Please search for a different Recipe.
+  	{{/if}}
 
 
-    </div>
+
+
+
   </div>
   <!-- Required code for bootstrap to work, obtained from Bootstrap website -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
