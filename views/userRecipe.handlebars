@@ -1,0 +1,82 @@
+﻿<head>
+    <link rel="stylesheet" href="css/book.css" />
+</head>
+<div style="margin-left: 10%; margin-right: 10%;">
+    <h1 id="recipeBookHomeTitle">[Recipe Name]</h1><br />
+
+    <p>
+        <span>
+            <button onclick="window.location.href='book'" style="height:4em;width:16em;font-size:medium" " >
+                My Recipes Home
+            </button>
+        </span>
+        
+    </p>
+
+    <table id="userRecipeTable">
+
+        <tr>
+            <th style="width:10%">Ingredient</th>
+            <th style="width:40%">Details</th>
+            <th style="width:5%">Ethical Score</th>
+            <th style="width:40%">Info</th>
+        </tr>
+        <tr>
+            <td class="ingredient">Ingredient 1</td>
+            <td>Details go here</td>
+            <td>2.0</td>
+            <td>
+                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="ingredient">Ingredient 2</td>
+            <td>Details go here</td>
+            <td>3.0</td>
+            <td>
+                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="ingredient">Ingredient 3</td>
+            <td>Details go here</td>
+            <td>5.0</td>
+            <td>
+                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="ingredient">Ingredient 4</td>
+            <td>Details go here</td>
+            <td>5.0</td>
+            <td>
+                <span>Info</span><span class="ethicalInfoTip" style="float:right">&#9432</span>
+            </td>
+        </tr>
+    </table> <br />
+
+</div>
+
+<div style="margin-left: 10%; margin-right: 10%;">
+    <p>
+        <button onclick="window.location.href='userRecipe'" class="prevRecipe">
+            Prev Recipe
+        </button>
+        <button onclick="window.location.href='userRecipe'" class="nextRecipe" style="float:right">
+            Next Recipe
+        </button>
+    </p>
+    <p>
+        <button onclick="window.location.href='build'" class="createNewRecipe">
+            Create New Recipe
+        </button>
+        <button class="editRecipe" style="margin-left:40%">
+            Edit Recipe
+        </button>
+        <button class="deleteRecipe" style="float:right">
+            Delete Recipe
+        </button>
+    </p>
+</div>
+
+<script src="js/recipeBook.js"></script>

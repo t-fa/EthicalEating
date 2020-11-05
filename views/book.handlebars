@@ -1,0 +1,68 @@
+﻿<head>
+    <link rel="stylesheet" href="css/book.css" />
+</head>
+<div style="margin-left: 10%; margin-right: 10%;">
+    <h1 id="recipeBookHomeTitle">My Recipes Home</h1><br />
+
+    <p>
+        click on a recipe to view it!
+        <button class="filter">Filter</button>
+    </p>
+
+    <table id="recipeBookTable">
+
+        <tr>
+            <th style="width:60%" onclick="sortTable(0)">Recipe</th>
+            <th style="width:15%" onclick="sortTable(1)">Source</th>
+            <th style="width:25%" onclick="sortTable(2)">Ethical Rating</th>
+            <th onclick="sortTable(3)">Public</th>
+        </tr>
+        <tr>
+            <td class="first" id="recipeClick">
+                <span onclick="window.location.href='userRecipe'">Pumpkin Pie</span>
+            </td>
+            <td>Public</td>
+            <td>4.0</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td class="first" id="recipeClick">
+                <span onclick="window.location.href='userRecipe'">Caesar Salad</span>
+            </td>
+            <td>User</td>
+            <td>2.5</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td class="first" id="recipeClick"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="first" id="recipeClick"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="first" id="recipeClick"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="first" id="recipeClick"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table> <br />
+
+    <!-- will link to page where user can create new recipe -->
+    <button onclick="window.location.href='build'" class="createNewRecipe">
+        Create New Recipe
+    </button>
+</div>
+
+<script src="js/recipeBook.js"></script>

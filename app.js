@@ -58,6 +58,14 @@ app.get("/", (req, res) => {
   res.render('index');
 })
 
+app.get("/book", (req, res) => {
+    res.render('book');
+})
+
+app.get("/userRecipe", (req, res) => {
+    res.render('userRecipe');
+})
+
 app.use((req,res) => {
     res.status(404);
     res.render('404');
