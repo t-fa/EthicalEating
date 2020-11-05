@@ -1,9 +1,11 @@
 const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
+
 const handlebars = require('express-handlebars');
 const path = require('path');
 const searchRouter = require('./routes/searchRouter');
+
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
 // that we can request. Heroku sets an environmental variable to tell our app which port
@@ -11,6 +13,7 @@ const searchRouter = require('./routes/searchRouter');
 //
 // If this variable is set, use the port in the variable. Otherwise, use the default (6377).
 const port = process.env.PORT || 6377;
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -43,6 +46,14 @@ app.use('/search', searchRouter);
 
 app.get("/login", (req, res) => {
   res.render('login');
+})
+
+
+app.use('/search', require('./routes/search_router.js'));
+
+
+app.get("/ingredient_search", (req, res) => {
+  res.render('ingredient_search');
 })
 
 app.get("/", (req, res) => {

@@ -224,6 +224,91 @@ const Recipes = (database) => {
     );
   };
 
+  /**
+    getRecipeWithIngredientsByRecipeID fetches the Recipe with ID @recipeID and all its Ingredients. It returns
+    the Recipe object and a list of each of the Recipe's Ingredient objects.
+    => Receives:
+      + recipeID: ID of Recipe to fetch along with its Ingredients.
+      + callback function(error, data)
+    => Returns: by calling @callback with:
+      + (null, {recipe:Recipe, ingredients: []Ingredient})
+        => Returns an Object with the Recipe at the @recipe key and a (possibly empty) list of Ingredients
+        at the @ingredients key.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Get an object with @recipe and @ingredients keys containing Recipe and list of Ingredients for Recipe with ID @recipeID = 1.
+      Recipes.getRecipeWithIngredientsByRecipeID({recipeID: 1}, (err, recipeWithIngredients) => {
+        if (err) {
+          // Couldn't fetch the Recipe and Ingredients.
+          console.log(err);
+          return; // bail out of the handler here, recipeWithIngredients undefined
+        }
+        // Fetched Recipe with list of Ingredients
+        console.log(recipeWithIngredients.recipe, recipeWithIngredients.ingredients);
+      });
+    => Sample Returned Data:
+        {
+          "recipe": {
+            "id": 1,
+            "name": "Recipe 1",
+            "isPublic": 1
+          },
+          "ingredients": [
+            {
+              "id": 1,
+              "name": "ingredient 1",
+              "description": "description 1"
+            },
+            {
+              "id": 2,
+              "name": "ingredient 2",
+              "description": "description 2"
+            }
+          ]
+        }
+  */
+  recipes.getRecipeWithIngredientsByRecipeID = ({ recipeID }, callback) => {
+    database.execute(
+      `
+    SELECT *, JSON_ARRAYAGG(data.ingredients) as ingredients FROM
+    (
+      SELECT r.id, r.name, r.is_public,
+        (
+          SELECT
+          JSON_OBJECT("id", i.id, "name", i.name, "description", i.description)
+          FROM Ingredients
+          WHERE id = i.id
+        ) as "ingredients"
+      FROM Recipes r
+      INNER JOIN RecipeIngredients ri ON ri.recipe_id = r.id
+      INNER JOIN Ingredients i ON ri.ingredient_id = i.id
+      WHERE r.id = ?
+    ) data
+    GROUP BY data.id
+    `,
+      [recipeID],
+      (err, rows) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        callback(
+          err,
+          rows.map((recipeWithIngredients) => {
+            const parsedIngredients = JSON.parse(
+              recipeWithIngredients.ingredients
+            ).map((element) => JSON.parse(element));
+            const recipe = Recipe.fromDatabaseRow(recipeWithIngredients);
+            const ingredients = parsedIngredients.map((ingredient) =>
+              Ingredient.fromDatabaseRow(ingredient).toJSON()
+            );
+            return { recipe, ingredients };
+          })[0]
+        );
+      }
+    );
+  };
+
   return { ...recipes, Errors, Validators };
 };
 

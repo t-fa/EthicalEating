@@ -9,8 +9,8 @@
 </head>
 <body>
 <nav class="nav nav-pills nav-justified">
-  <a class="nav-item nav-link active" href="/search">Recipe</a>
-  <a class="nav-item nav-link" href="/ingredient_search">Ingredient</a>
+  <a class="nav-item nav-link" href="/search">Recipe</a>
+  <a class="nav-item nav-link active" href="/ingredient_search">Ingredient</a>
 </nav>
 <br>
 <br>
@@ -23,18 +23,6 @@
         </form>
       </div>
       <br>
-      
-      <ul class="Recipe_List">
-      {{#if recipes}}
-  {{#each recipes}}
-    <li>{{name}}</li>
-  {{/each}}
-  
-  {{else}}
-  No matching recipes were found. Please search for a different Recipe.
-  {{/if}}
-</ul>
-      
 
 
     </div>
