@@ -65,6 +65,7 @@ const IngredientReplacements = (database) => {
       + ingredientIDReplaces: ID of the Ingredient A to replace.
       + ingredientIDReplacement: ID of the Ingredient to replace Ingredient A with.
       + replacementReason: Description of the reason why we are making the replacement.
+      + replacementReasonSource: Source for the rationale we're using to suggest the replacement.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Instance of created IngredientReplacement object) on creation success.
@@ -99,15 +100,25 @@ const IngredientReplacements = (database) => {
     }
     database.execute(
       `
-      INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replacement, replacement_reason)
-      VALUES (?, ?, ?)
+      INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replacement, replacement_reason, replacement_reason_source)
+      VALUES (?, ?, ?, ?)
       `,
-      [ingredientIDReplaces, ingredientIDReplacement, replacementReason],
+      [
+        ingredientIDReplaces,
+        ingredientIDReplacement,
+        replacementReason,
+        replacementReasonSource,
+      ],
       (err, rows) =>
         buildCreateResponse(
           err,
           rows,
-          { ingredientIDReplaces, ingredientIDReplacement, replacementReason },
+          {
+            ingredientIDReplaces,
+            ingredientIDReplacement,
+            replacementReason,
+            replacementReasonSource,
+          },
           IngredientReplacement,
           callback
         )
