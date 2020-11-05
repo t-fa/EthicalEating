@@ -4,6 +4,7 @@ const buildRecipeRouter = require('./routes/buildRecipeRouter');
 
 const handlebars = require('express-handlebars');
 const path = require('path');
+const searchRouter = require('./routes/searchRouter');
 
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
@@ -41,6 +42,7 @@ app.get("/demo", (_, res) => {
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
+app.use('/search', searchRouter);
 
 app.get("/login", (req, res) => {
   res.render('login');
