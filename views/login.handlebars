@@ -1,45 +1,49 @@
-<fieldset>
-    <legend>Log in:</legend>
-    <p>
-        <label>Username:<br>
-            <input type="text" name="username">
-        </label>
-    </p>
-    <p>
-        <label>Password:<br>
-            <input type="password" name="password">
-        </label>
-    </p>
-    <p>
-        <input type="submit" value="Log in">
-    </p>
-</fieldset>
+<form action="/login" method="POST">
+    <fieldset>
+        <legend>Log in:</legend>
+        <p>
+            <label>Username:<br>
+                <input type="text" name="username" id="username" placeholder="Username">
+            </label>
+        </p>
+        <p>
+            <label>Password:<br>
+                <input type="password" name="password" id="password" placeholder="Password">
+            </label>
+        </p>
+        <p>
+            <input type="submit" value="Log in">
+        </p>
+    </fieldset>
+</form>
 
 <p>or</p>
 
-<fieldset>
-    <legend>Create account:</legend>
-    <p>
-        <label>Username:<br>
-            <span>Username must have at least 3 characters 
-                consisting of letters and numbers only.</span><br>
-            <input type="text" name="username">
-        </label>
-    </p>
-    <p>
-        <label>Password:<br>
-            <span>Password must be at least 8 characters long, 
-                with at least one letter and one number.</span><br>
-            <input type="password" name="password">
-        </label>
-    </p>
-    <p>
-        <label>Confirm password:<br>
-            <span>Passwords must match.</span><br>
-            <input type="password" name="confirmPassword">
-        </label>
-    </p>
-    <p>
-        <input type="submit" value="Create account">
-    </p>
-</fieldset>
+<form action="/register" method="POST"">
+    <fieldset>
+        <legend>Create account:</legend>
+        <p>
+            <label>Username:<br>
+                <span>Username must have at least 3 characters 
+                    consisting of letters and numbers only.</span><br>
+                <input type="text" name="username">
+            </label>
+        </p>
+        <p>
+            <label>Password:<br>
+                <span>Password must be at least 8 characters long, 
+                    with at least one letter and one number.</span><br>
+                <input type="password" name="password">
+            </label>
+        </p>
+        <p>
+            <label>Confirm password:<br>
+                <span>Passwords must match.</span><br>
+                <input type="password" name="confirmPassword">
+            </label>
+        </p>
+        <p>
+            <input type="submit" value="Create account">
+        </p>
+    </fieldset>
+</form>
