@@ -78,13 +78,21 @@ INSERT INTO Ingredients (name, description, ethical_reason) VALUES
 ('Olive Oil', 'Olive based cooking Oil' , 'null'),
 ('White Flour', 'Wheat based baking flour', 'null' ),
 ('Butter', 'Semi-solid dairy product', 'null' ),
-('Chicken', 'Meat,Poultry, Animal product', 'null' ),
+('Chicken', 'Meat, Poultry, Animal product', 'null' ),
+('Salmon', 'Fish, Animal product', 'null' ),
 ('Sugar', 'Sweetening agent', 'null'),
+('Coconut Sugar', 'Sweetening agent', 'null'),
 ('Salt', 'Spice','null'),
 ('Egg', 'Chicken Egg, Animal product', 'null' ),
+('Flaxseed', 'Egg replacement', 'null' ),
 ('Rice', 'Cereal grain', 'null' ),
+('Pasta', 'Cereal grain', 'null' ),
+('Potatoes', 'A classic tuber', 'null'),
 ('Vegetable Oil', 'Corn based cooking oil', 'null' ),
+('Sunflower Oil (cold-pressed)', 'Seed based cooking oil', 'null' ),
 ('Pork', 'Pork, Bacon, Ham, Animal Product', 'null' ),
+('Tempeh', 'Fermented soybean meat substitute', 'null' ),
+('Beyond Meat Meat Substitute', 'Meat substitute', 'null' ),
 ('Beef', 'Cow, Beef, Hamburger','null' ),
 ('Cheese', 'Fermented Dairy Product, Animal product', 'null' ),
 ('Garlic', 'Garnish, Spice', 'null'),
@@ -99,6 +107,7 @@ INSERT INTO Ingredients (name, description, ethical_reason) VALUES
 ('Bacon', 'Bacon, Pork, Animal product', 'null' ),
 ('Mushrooms', 'Plant based product, Garnish', 'null'),
 ('Coconut', 'Fruit', 'null' ),
+('Coconut Milk', 'A plant-based milk', 'null' ),
 ('Beets', 'Root Vegetable','null' ),
 ('Strawberries', 'Fruit', 'null' ),
 ('Fennel', 'Vegetable, Herb, Spice', 'null' ),
@@ -108,7 +117,11 @@ INSERT INTO Ingredients (name, description, ethical_reason) VALUES
 ('Green Onions', 'Vegetable, Garnish, ', 'null'),
 ('Pepper', 'Spice', 'null'),
 ('Water', 'Water', 'null' ),
-('Cashew', 'Legume', 'null' );
+('Cashew', 'Legume', 'null' ),
+('Lentils', 'Legume', 'null' ),
+('Hazlenuts', 'Legume', 'null' ),
+('Sunflower Seeds', 'A small seed', 'null' ),
+('Tofu', 'A soy-based meat substitute', 'null' );
 
 -- Seed Data for the recipes table
 INSERT INTO Recipes (name, is_public, date_created) VALUES
