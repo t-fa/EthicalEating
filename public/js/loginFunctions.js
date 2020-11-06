@@ -20,19 +20,4 @@ function validatePassword(password) {
 	}
 }
 
-function usernameAvailability(username) {
-	let checkUser = Users.getUserByUsername({ username: username }, (err, userObject) => {
-		if (err) {
-			return false;
-		}
-		return true;
-	});
-	if (checkUser) {
-		// username is not available
-		return false;
-	}
-	// else, username is available
-	return true;
-}
-
-module.exports = { onlyAlphanumerical, validatePassword, usernameAvailability };
+module.exports = { onlyAlphanumerical, validatePassword };

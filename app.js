@@ -5,7 +5,7 @@ const loginFunctions = require('./public/js/loginFunctions');
 
 const handlebars = require('express-handlebars');
 const path = require('path');
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
 // that we can request. Heroku sets an environmental variable to tell our app which port
@@ -30,6 +30,7 @@ app.set('view engine', 'handlebars');
 
 // Demo of how to create and log in a user...
 const { Users } = require('./database');
+const { check } = require('express-validator');
 app.get('/demo', (_, res) => {
 	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
 		console.log('user creation error:', error, 'newly created user:', user);
@@ -43,49 +44,92 @@ app.get('/demo', (_, res) => {
 // routes TBD
 app.use('/build', buildRecipeRouter);
 
-app.post('/register', async (req, res) => {
+app.post('/register', (req, res) => {
+	var context = {
+		loginError: '',
+		registerError: ''
+	};
 	const { password, confirmPassword, username } = req.body;
-	const hash = bcrypt.hash(password, 12);
+	// const hash = await bcrypt.hash(password, 12);
+
+	function usernameAvailability(username) {
+		let checkUser = Users.getUserByUsername({ username: username }, (err, userObject) => {
+			if (err) {
+				// console.log('user creation error:', err, 'newly created user:', userObject);
+				// username not found
+				return true;
+			}
+			// username found
+			return false;
+		});
+		if (checkUser) {
+			return true;
+		}
+		return false;
+	}
 
 	// check username content
 	if (!(loginFunctions.onlyAlphanumerical(username) && username.length > 2)) {
-		res.send('Invalid username');
+		context.registerError = 'Invalid username or password';
+		console.log(context);
+		res.render('login', context);
 	}
 
 	// check password content
 	if (!loginFunctions.validatePassword(password)) {
-		res.send('Invalid password');
+		context.registerError = 'Invalid username or password';
+		res.render('login', context);
 	}
 
 	// check passwords match
 	if (!(password == confirmPassword)) {
-		res.send('Passwords do not match');
-	}
-
-	// check if username is in use
-	if (!loginFunctions.usernameAvailability(username)) {
-		res.send('Username already taken');
+		context.registerError = 'Passwords do not match';
+		res.render('login', context);
 	}
 
 	// if validation passes, create new user
-	Users.createUserWithUsernameAndPassword(
-		{
-			username: username,
-			password: hash
-		},
-		(error, user) => {
-			console.log('user creation error:', error, 'newly created user:', user);
+	if (loginFunctions.onlyAlphanumerical(username) && username.length > 2) {
+		if (loginFunctions.validatePassword(password)) {
+			if (password == confirmPassword) {
+				Users.createUserWithUsernameAndPassword(
+					{
+						username: username,
+						password: password
+					},
+					(error, user) => {
+						console.log('user creation error:', error, 'newly created user:', user);
+					}
+				);
+				context.registerError = 'Account successfully created!';
+				res.render('login', context);
+			}
 		}
-	);
-	res.send('check log to make sure user creation worked');
-	//res.redirect('/');
+	}
+
+	// console.log('creating user...')
+	// Users.createUserWithUsernameAndPassword(
+	// 	{
+	// 		username: username,
+	// 		password: password
+	// 	},
+	// 	(error, user) => {
+	// 		console.log('user creation error:', error, 'newly created user:', user);
+	// 	}
+	// );
+	// res.redirect('/');
 });
 
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
+	var context = {
+		loginError: '',
+		registerError: ''
+	};
 	const { username, password } = req.body;
 	Users.logInWithUsernameAndPassword({ username: username, password: password }, (error, user) => {
 		console.log('login error:', error, 'logged in user:', user);
 	});
+	context.loginError = 'Logged in successfully!';
+	res.render('login', context);
 });
 
 app.get('/login', (req, res) => {
