@@ -1,5 +1,5 @@
 const { toJSON, buildResponseList, buildCreateResponse } = require("./utils");
-
+const { Ingredient } = require("./Ingredients");
 /**
 IngredientReplacement is a recommended replacement of one Ingredient for another Ingredient
 in the system. We suggest an IngredientReplacement when a more ethical Ingredients exists
@@ -14,11 +14,13 @@ class IngredientReplacement {
     replacementReason,
     ingredientIDReplaces,
     ingredientIDReplacement,
+    replacementReasonSource,
   } = {}) {
     this.id = id;
     this.replacementReason = replacementReason;
     this.ingredientIDReplaces = ingredientIDReplaces;
     this.ingredientIDReplacement = ingredientIDReplacement;
+    this.replacementReasonSource = replacementReasonSource;
   }
 
   // fromDatabaseRow returns an instance of the class, populating data from database row @dbRow.
@@ -28,6 +30,7 @@ class IngredientReplacement {
       replacementReason: dbRow.replacement_reason,
       ingredientIDReplaces: dbRow.ingredient_id_replaces,
       ingredientIDReplacement: dbRow.ingredient_id_replacement,
+      replacementReasonSource: dbRow.replacement_reason_source,
     });
   }
 
@@ -135,9 +138,6 @@ const IngredientReplacements = (database) => {
     => Returns: by calling @callback with:
       + (null, []IngredientReplacement objects) on query success. List may be empty.
       + (Error, null) if an error occurs.
-    => Notes:
-      + TODO: make a query that returns the IngredientReplacements as Ingredient objects directly
-      by joining to Ingredients.
     => Code Example:
       // Find IngredientReplacements for Ingredient with @ingredientID = 1.
       IngredientReplacements.getReplacementsForIngredient(
@@ -172,7 +172,7 @@ const IngredientReplacements = (database) => {
     );
   };
 
-/**
+  /**
     getReplacementsForIngredientAsIngredientObjects returns a list of Ingredients for each
     IngredientReplacement that we suggest for the Ingredient with the ID @ingredientIDToReplace.
     The list may be empty if no replacements exist or if the Ingredient with @ingredientIDToReplace
@@ -201,6 +201,7 @@ const IngredientReplacements = (database) => {
         }
       );
   */
+
  ingredientReplacement.getReplacementsForIngredientAsIngredientObjects = (
   { ingredientIDToReplace },
   callback
@@ -221,6 +222,7 @@ const IngredientReplacements = (database) => {
     }
   );
 };
+
 
   return { ...ingredientReplacement, Errors, Validators };
 };
