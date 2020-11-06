@@ -201,26 +201,28 @@ const IngredientReplacements = (database) => {
         }
       );
   */
-  ingredientReplacement.getReplacementsForIngredientAsIngredientObjects = (
-    { ingredientIDToReplace },
-    callback
-  ) => {
-    database.execute(
-      `
-      SELECT * FROM IngredientReplacements ir
-      INNER JOIN Ingredients i
-      ON ir.ingredient_id_replacement = i.id
-      WHERE ingredient_id_replaces = ?
-      `,
-      [ingredientIDToReplace],
-      (err, rows) => {
-        if (err) {
-          callback(err, null);
-        }
-        buildResponseList(err, rows, Ingredient, callback);
+
+ ingredientReplacement.getReplacementsForIngredientAsIngredientObjects = (
+  { ingredientIDToReplace },
+  callback
+) => {
+  database.execute(
+    `
+    SELECT * FROM IngredientReplacements ir
+    INNER JOIN Ingredients i
+    ON ir.ingredient_id_replacement = i.id
+    WHERE ingredient_id_replaces = ?
+    `,
+    [ingredientIDToReplace],
+    (err, rows) => {
+      if (err) {
+        callback(err, null);
       }
-    );
-  };
+      buildResponseList(err, rows, IngredientReplacement, callback);
+    }
+  );
+};
+
 
   return { ...ingredientReplacement, Errors, Validators };
 };

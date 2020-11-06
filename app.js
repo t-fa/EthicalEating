@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
+const ethicalRouter = require('./routes/ethicalRouter');
 const loginFunctions = require('./public/js/loginFunctions');
 const handlebars = require('express-handlebars');
 const path = require('path');
@@ -56,6 +57,7 @@ const requireLogin = (req, res, next) => {
 // routes TBD
 app.use('/build', buildRecipeRouter);
 app.use('/search', searchRouter);
+app.use('/ethicality', ethicalRouter);
 
 app.post('/register', async (req, res) => {
 	var context = {
