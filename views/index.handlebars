@@ -10,67 +10,53 @@
 
 <body>
 
+<div class="card " class="border border-primary" style="width: 50rem;margin:0 auto;">
+  <div class="card-body">
 
-  <div class="card" style="width: 50rem;margin:0 auto;">
-    <div class="card-body">
-
-      <nav class="nav nav-pills nav-justified">
-        <a class="nav-item nav-link active" href="/">Recipe</a>
-        <a class="nav-item nav-link " href="/search/ingredient_search">Ingredient</a>
-      </nav>
-      <br>
+    <nav class="nav nav-pills nav-justified">
+  <a class="nav-item nav-link active" href="/">Recipe</a>
+  <a class="nav-item nav-link " href="/ingredient_search">Ingredient</a>
+</nav>
+<br>
+<br>
+  
+  <div class="container horizontal-center">
+      <div>
+        <form action="/" method="get">
+          <input type="text" name="recipe_search">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </div>
       <br>
       
-      
-    <div class = "card" style="width: 18rem;">
+        {{#if recipes}}
+      	{{#each recipes}}
+     <div class = "card " style="width: 18rem;">
       <ul class="list-group list-group-flush">
 
-      {{#if recipes}}
-      {{#each recipes}}
-  <div class = "card-header">
-  	{{name}}
-  </div>
-    	{{#each ingredients}}
-    	<li class = "list-group-item">{{name}}</li>
-	{{/each}}
-  	
-  	{{/each}}
+  	<div class = "card-header">{{name}}</div>
+  	{{#each ingredients}}
+    	<li class = "list-group-item">{name}}</li>
+    	{{/each}}
   	</ul>
  	 </div>
+ 	 <br>
+ 	 {{/each}}
   	{{else}}
-  	No matching recipes were found. Please search for a different Recipe.
+  	No matching Ingredients were found. Please search for a different Ingredient.
   	{{/if}}
 
-      <div class="container">
-        <div>
-          <form action="/" method="get">
-            <input type="text" name="recipe_search">
-            <button type="submit" class="btn btn-primary">Search</button>
-          </form>
-        </div>
-        <br>
-
-        <div class="card" style="width: 18rem;">
-          <ul class="list-group list-group-flush">
-
-            {{#if recipes}}
-            {{#each recipes}}
-            <div class="card-header">
-              {{name}}
-            </div>
-            <li class="list-group-item">{{name}}</li>
-
-            {{/each}}
-          </ul>
-        </div>
-        {{else}}
-        No matching recipes were found. Please search for a different Recipe.
-        {{/if}}
-
-      </div>
-
-    </div>
   </div>
+
+  </div>
+</div>
+
+
+{{#each ingredients}}
+{{name}}
+{{/each}}
+
+
 
   <!-- Required code for bootstrap to work, obtained from Bootstrap website -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
