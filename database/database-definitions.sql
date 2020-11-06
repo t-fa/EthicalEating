@@ -135,44 +135,142 @@ INSERT INTO Recipes (name, is_public, date_created) VALUES
 -- Required data for the ethical score, will create after team meeting
 INSERT INTO RecipeIngredients(recipe_id, ingredient_id) VALUES
 -- Almond Cake
-(1,2), 
-(1,5),
-(1,3),
-(1,7),
-(1,21),
-(1,6),
--- Hamurber Gravy
-(2,11),
-(2,6),
-(2,13),
-(2,16),
-(2,3),
-(2,2),
-(2,18),
+(
+  (SELECT id FROM Recipes WHERE name = 'Almond Cake'),
+  (SELECT id FROM Ingredients WHERE name = 'White Flour')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Almond Cake'),
+  (SELECT id FROM Ingredients WHERE name = 'Butter')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Almond Cake'),
+  (SELECT id FROM Ingredients WHERE name = 'Sugar')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Almond Cake'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Almond Cake'),
+  (SELECT id FROM Ingredients WHERE name = 'Egg')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Almond Cake'),
+  (SELECT id FROM Ingredients WHERE name = 'Almonds')
+),
+-- Hamurbger Gravy
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'White Flour')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'Butter')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'Beef')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'Garlic')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'Onion')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Hamburger Gravy'),
+  (SELECT id FROM Ingredients WHERE name = 'Whole Milk')
+),
 -- Shrimp Scampi
-(3,16),
-(3,20),
-(3,13),
-(3,29),
-(3,31),
-(3,8),
-(3,24),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Rice')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Garlic')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Onion')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Chiles')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Coconut')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Apple')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Shrimp Scampi'),
+  (SELECT id FROM Ingredients WHERE name = 'Green Onions')
+),
 -- Chicken and Mushroom
-(4,4),
-(4,6),
-(4,1),
-(4,33),
-(4,3),
-(4,23),
+(
+  (SELECT id FROM Recipes WHERE name = 'Chicken and Mushroom'),
+  (SELECT id FROM Ingredients WHERE name = 'Olive Oil')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Chicken and Mushroom'),
+  (SELECT id FROM Ingredients WHERE name = 'Butter')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Chicken and Mushroom'),
+  (SELECT id FROM Ingredients WHERE name = 'Chicken')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Chicken and Mushroom'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Chicken and Mushroom'),
+  (SELECT id FROM Ingredients WHERE name = 'Mushrooms')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Chicken and Mushroom'),
+  (SELECT id FROM Ingredients WHERE name = 'Water')
+),
 -- Herb Roasted Chicken
-(5,15),
-(5,6),
-(5,3),
-(5,16),
-(5,1),
-(5,25),
-(5,13);
-
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Olive Oil')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Butter')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Garlic')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Turkey')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Onion')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
+  (SELECT id FROM Ingredients WHERE name = 'Beets')
+);
 
 -- Add Ingredient Replacements
 INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replacement, replacement_reason, replacement_reason_source) VALUES
