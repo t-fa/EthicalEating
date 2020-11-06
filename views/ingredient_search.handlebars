@@ -7,25 +7,26 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <title>Search</title>
 </head>
+
 <body>
-<nav class="nav nav-pills nav-justified">
-  <a class="nav-item nav-link" href="/search">Recipe</a>
-  <a class="nav-item nav-link active" href="/ingredient_search">Ingredient</a>
-</nav>
-<br>
-<br>
-  
+  <nav class="nav nav-pills nav-justified">
+    <a class="nav-item nav-link" href="/search">Recipe</a>
+    <a class="nav-item nav-link active" href="/ingredient_search">Ingredient</a>
+  </nav>
+  <br>
+  <br>
+
   <div class="container">
-      <div>
-        <form action="/search" method="get">
-          <input type="text" name="recipe_search">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-      </div>
-      <br>
-
-
+    <div>
+      <form action="/search" method="get">
+        <input type="text" name="ingredient_search">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
     </div>
+    <br>
+
+
+  </div>
   </div>
   <!-- Required code for bootstrap to work, obtained from Bootstrap website -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>

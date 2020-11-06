@@ -2,10 +2,10 @@ const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
 const loginFunctions = require('./public/js/loginFunctions');
-
 const handlebars = require('express-handlebars');
 const path = require('path');
 const session = require('express-session');
+const searchRouter = require('./routes/searchRouter');
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
 // that we can request. Heroku sets an environmental variable to tell our app which port
@@ -54,6 +54,7 @@ const requireLogin = (req, res, next) => {
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
+app.use('/search', searchRouter);
 
 app.post('/register', (req, res) => {
 	var context = {
