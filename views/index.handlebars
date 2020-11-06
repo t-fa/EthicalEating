@@ -30,16 +30,18 @@
       <br>
       
       
-     <div class = "card" style="width: 18rem;">
+    <div class = "card" style="width: 18rem;">
       <ul class="list-group list-group-flush">
 
       {{#if recipes}}
-      	{{#each recipes}}
-  	<div class = "card-header">
-  		{{name}}
-  	</div>
+      {{#each recipes}}
+  <div class = "card-header">
+  	{{name}}
+  </div>
+    	{{#each ingredients}}
     	<li class = "list-group-item">{{name}}</li>
-
+	{{/each}}
+  	
   	{{/each}}
   	</ul>
  	 </div>
@@ -51,7 +53,9 @@
 
   </div>
 </div>
-
+{{#each ingredients}}
+{{this.name}}
+{{/each}}
   
   <!-- Required code for bootstrap to work, obtained from Bootstrap website -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
