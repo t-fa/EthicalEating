@@ -5,29 +5,54 @@
   <!--Required for Bootstrap -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <title>Search</title>
+  <title>Index</title>
 </head>
-
 <body>
-  <nav class="nav nav-pills nav-justified">
-    <a class="nav-item nav-link" href="/search">Recipe</a>
-    <a class="nav-item nav-link active" href="/ingredient_search">Ingredient</a>
-  </nav>
-  <br>
-  <br>
 
+
+<div class="card" style="width: 50rem;margin:0 auto;">
+  <div class="card-body">
+
+    <nav class="nav nav-pills nav-justified">
+  <a class="nav-item nav-link " href="/">Recipe</a>
+  <a class="nav-item nav-link active" href="/ingredient_search">Ingredient</a>
+</nav>
+<br>
+<br>
+  
   <div class="container">
-    <div>
-      <form action="/search" method="get">
-        <input type="text" name="ingredient_search">
-        <button type="submit" class="btn btn-primary">Search</button>
-      </form>
-    </div>
-    <br>
+      <div>
+        <form action="/ingredient_search" method="get">
+          <input type="text" name="ingredient_search">
+          <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+      </div>
+      <br>
+      
+      
+     <div class = "card" style="width: 18rem;">
+      <ul class="list-group list-group-flush">
 
+      {{#if recipes}}
+      	{{#each ingredients}}
+  	<div class = "card-header">
+  		{{name}}
+  	</div>
+    	<li class = "list-group-item">{{name}}</li>
+
+  	{{/each}}
+  	</ul>
+ 	 </div>
+  	{{else}}
+  	No matching Ingredients were found. Please search for a different Ingredient.
+  	{{/if}}
 
   </div>
+
   </div>
+</div>
+
+  
   <!-- Required code for bootstrap to work, obtained from Bootstrap website -->
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
