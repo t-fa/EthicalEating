@@ -5,6 +5,7 @@ const loginFunctions = require('./public/js/loginFunctions');
 
 const handlebars = require('express-handlebars');
 const path = require('path');
+const session = require('express-session');
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
 // that we can request. Heroku sets an environmental variable to tell our app which port
@@ -15,6 +16,7 @@ const port = process.env.PORT || 6377;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
+app.use(session({ secret: 'XTCkQE&t%yRV$2dyn8ZUkt3EKP98gpHB34HX8d&&yJVuPmjMe' }));
 
 app.engine(
 	'handlebars',
@@ -30,6 +32,7 @@ app.set('view engine', 'handlebars');
 // Demo of how to create and log in a user...
 const { Users } = require('./database');
 const { check } = require('express-validator');
+const { read } = require('fs');
 app.get('/demo', (_, res) => {
 	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
 		console.log('user creation error:', error, 'newly created user:', user);
@@ -39,6 +42,15 @@ app.get('/demo', (_, res) => {
 	});
 	res.status(200).send('demo ok');
 });
+
+// Run this program as a parameter on any page that requires login
+// See '/secret' page for example
+const requireLogin = (req, res, next) => {
+	if (!req.session.user_id) {
+		return res.redirect('/login')
+	}
+	next();
+}
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
@@ -80,10 +92,14 @@ app.post('/register', (req, res) => {
 					},
 					(error, user) => {
 						console.log('user creation error:', error, 'newly created user:', user);
+						if (!error) {
+							req.session.user_id = username;
+						} else {
+							context.registerError = 'Username taken';
+							res.render('login', context);
+						}
 					}
 				);
-				context.registerError = 'Account successfully created!';
-				res.render('login', context);
 			}
 		}
 	}
@@ -96,10 +112,22 @@ app.post('/login', (req, res) => {
 	};
 	const { username, password } = req.body;
 	Users.logInWithUsernameAndPassword({ username: username, password: password }, (error, user) => {
-		console.log('login error:', error, 'logged in user:', user);
+		if (!error) {
+			req.session.user_id = username;
+			context.loginError = 'Logged in successfully!';
+			res.render('login', context);
+		} else {
+			context.loginError = 'Invalid username or password';
+			res.render('login', context);
+		}
 	});
-	context.loginError = 'Logged in successfully!';
-	res.render('login', context);
+});
+
+app.post('/logout', (req, res) => {
+	if (req.session.user_id) {
+		req.session.user_id = null;
+		res.redirect('/');
+	}
 });
 
 app.get('/login', (req, res) => {
@@ -116,8 +144,8 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-// TODO: Delete after testing
-app.get('/secret', (req, res) => {
+// Example page to show authentication. User must be logged in to visit this page
+app.get('/secret', requireLogin, (req, res) => {
 	res.send('This page is secret!');
 });
 
