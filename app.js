@@ -173,6 +173,10 @@ app.get("/ingredientEthics", (req, res) => {
     res.render('ingredientEthics');
 })
 
+app.get("/publicRecipe", (req, res) => {
+	res.render('publicRecipe');
+})
+
 app.use((req,res) => {
     res.status(404);
     res.render('404');

@@ -12,10 +12,22 @@
     <table id="recipeBookTable">
 
         <tr>
-            <th style="width:50%" onclick="sortTable(0)">Recipe</th>
-            <th style="width:25%" onclick="sortTable(1)">Source</th>
-            <th style="width:25%" onclick="sortTable(2)">Ethical Rating</th>
-            <th onclick="sortTable(3)">Public</th>
+            <th style="width:50%">
+                Recipe
+                <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(0)">&#9660</span>
+            </th>
+            <th style="width:25%">
+                Source
+                <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(1)">&#9660</span>
+            </th>
+            <th style="width:25%">
+                Ethical Rating
+                <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(2)">&#9660</span>
+            </th>
+            <th>
+                Public
+                <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(3)">&#9660</span>
+            </th>
         </tr>
         <tr>
             <td class="first" id="recipeClick">
