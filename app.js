@@ -5,7 +5,6 @@ const loginFunctions = require('./public/js/loginFunctions');
 
 const handlebars = require('express-handlebars');
 const path = require('path');
-// const bcrypt = require('bcrypt');
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
 // that we can request. Heroku sets an environmental variable to tell our app which port
@@ -50,23 +49,6 @@ app.post('/register', (req, res) => {
 		registerError: ''
 	};
 	const { password, confirmPassword, username } = req.body;
-	// const hash = await bcrypt.hash(password, 12);
-
-	function usernameAvailability(username) {
-		let checkUser = Users.getUserByUsername({ username: username }, (err, userObject) => {
-			if (err) {
-				// console.log('user creation error:', err, 'newly created user:', userObject);
-				// username not found
-				return true;
-			}
-			// username found
-			return false;
-		});
-		if (checkUser) {
-			return true;
-		}
-		return false;
-	}
 
 	// check username content
 	if (!(loginFunctions.onlyAlphanumerical(username) && username.length > 2)) {
@@ -105,18 +87,6 @@ app.post('/register', (req, res) => {
 			}
 		}
 	}
-
-	// console.log('creating user...')
-	// Users.createUserWithUsernameAndPassword(
-	// 	{
-	// 		username: username,
-	// 		password: password
-	// 	},
-	// 	(error, user) => {
-	// 		console.log('user creation error:', error, 'newly created user:', user);
-	// 	}
-	// );
-	// res.redirect('/');
 });
 
 app.post('/login', (req, res) => {
