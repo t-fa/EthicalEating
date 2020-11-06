@@ -67,6 +67,8 @@ ethicalRouter.route('/:ingredientId')
             ingredient.toJSON()
           )
         );
+        context.ingredientReplacements = listOfIngredientObjects;
+        res.render('ingredientEthics', context);
       }
     );
   });

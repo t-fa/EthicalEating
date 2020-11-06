@@ -217,7 +217,7 @@ const IngredientReplacements = (database) => {
       if (err) {
         callback(err, null);
       }
-      buildResponseList(err, rows, Ingredient, callback);
+      buildResponseList(err, rows, IngredientReplacement, callback);
     }
   );
 };
