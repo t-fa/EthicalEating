@@ -45,6 +45,7 @@ app.use('/build', buildRecipeRouter);
 
 app.post('/register', async (req, res) => {
 	const { password, confirmPassword, username } = req.body;
+	const hash = bcrypt.hash(password, 12);
 
 	// check username content
 	if (!(loginFunctions.onlyAlphanumerical(username) && username.length > 2)) {
@@ -58,12 +59,12 @@ app.post('/register', async (req, res) => {
 
 	// check passwords match
 	if (!(password == confirmPassword)) {
-		res.send("Passwords do not match");
+		res.send('Passwords do not match');
 	}
 
 	// check if username is in use
 	if (!loginFunctions.usernameAvailability(username)) {
-		res.send("Username already taken");
+		res.send('Username already taken');
 	}
 
 	// if validation passes, create new user
@@ -78,6 +79,13 @@ app.post('/register', async (req, res) => {
 	);
 	res.send('check log to make sure user creation worked');
 	//res.redirect('/');
+});
+
+app.post('/login', async (req, res) => {
+	const { username, password } = req.body;
+	Users.logInWithUsernameAndPassword({ username: username, password: password }, (error, user) => {
+		console.log('login error:', error, 'logged in user:', user);
+	});
 });
 
 app.get('/login', (req, res) => {
