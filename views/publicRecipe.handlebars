@@ -5,14 +5,11 @@
     <h1 id="recipeBookHomeTitle">[Recipe Name]</h1><br />
 
     <p>
-        <span>
-            <button onclick="window.location.href='book'" style="height:4em;width:16em;font-size:medium">
-                My Recipes Home
-            </button>
-        </span>
-        <span style="float:right">This recipe is currently in your Recipe Book!</span>
-        
-    </p>
+        <span style="right:40%;">This is a public recipe</span>
+
+        <!-- This should add (copy) a public recipe to a user's recipe book -->
+        <button id="addToBookButton" style="float:right" onclick="window.location.href='book'">Add to My Recipe Book</button>
+    </p><br />
 
     <table id="userRecipeTable">
 
@@ -68,7 +65,7 @@
                 <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
                     &#9432
                     <span class="tooltiptext">
-                        How can I ethically improve this ingredient? 
+                        How can I ethically improve this ingredient?
                     </span>
                 </span>
             </td>
@@ -77,30 +74,6 @@
 
 </div>
 
-<div style="margin-left: 10%; margin-right: 10%;">
-    <!-- will link to previous and next recipes in user's book-->
-    <p>
-        <button onclick="window.location.href='userRecipe'" class="prevRecipe">
-            Prev Recipe
-        </button>
-        <button onclick="window.location.href='userRecipe'" class="nextRecipe" style="float:right">
-            Next Recipe
-        </button>
-    </p>
 
-    <!-- Buttons for Create, Edit, and Delete recipe -->
-    <p>
-        <button onclick="window.location.href='build'" class="createNewRecipe">
-            Create New Recipe
-        </button>
-        <button class="editRecipe" style="margin-left:40%">
-            Edit Recipe
-        </button>
-        <button class="removeRecipe" style="float:right">
-            Remove Recipe
-        </button>
-    </p>
-
-</div>
 
 <script src="js/book.js"></script>

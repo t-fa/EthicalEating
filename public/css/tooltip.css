@@ -43,7 +43,7 @@
 }
 
 
-  /* Show the tooltip text when user mouses over the tooltip container */
+/* Show the tooltip text when user mouses over the tooltip container */
 .tooltip:hover .tooltiptext {
     visibility: visible;
   }
