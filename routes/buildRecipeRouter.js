@@ -1,12 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Models = require('../database/index');
-const { Ingredient } = require('../database/Ingredients');
 
 const buildRecipeRouter = express.Router();
 buildRecipeRouter.use(bodyParser.urlencoded({ extended: false }));
 buildRecipeRouter.use(bodyParser.json());
-
 
 buildRecipeRouter.route('/')
 .get((req, res, next) => {

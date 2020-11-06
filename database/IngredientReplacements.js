@@ -1,5 +1,5 @@
 const { toJSON, buildResponseList, buildCreateResponse } = require("./utils");
-
+const { Ingredient } = require("./Ingredients");
 /**
 IngredientReplacement is a recommended replacement of one Ingredient for another Ingredient
 in the system. We suggest an IngredientReplacement when a more ethical Ingredients exists
@@ -14,11 +14,13 @@ class IngredientReplacement {
     replacementReason,
     ingredientIDReplaces,
     ingredientIDReplacement,
+    replacementReasonSource,
   } = {}) {
     this.id = id;
     this.replacementReason = replacementReason;
     this.ingredientIDReplaces = ingredientIDReplaces;
     this.ingredientIDReplacement = ingredientIDReplacement;
+    this.replacementReasonSource = replacementReasonSource;
   }
 
   // fromDatabaseRow returns an instance of the class, populating data from database row @dbRow.
@@ -28,6 +30,7 @@ class IngredientReplacement {
       replacementReason: dbRow.replacement_reason,
       ingredientIDReplaces: dbRow.ingredient_id_replaces,
       ingredientIDReplacement: dbRow.ingredient_id_replacement,
+      replacementReasonSource: dbRow.replacement_reason_source,
     });
   }
 
@@ -65,6 +68,7 @@ const IngredientReplacements = (database) => {
       + ingredientIDReplaces: ID of the Ingredient A to replace.
       + ingredientIDReplacement: ID of the Ingredient to replace Ingredient A with.
       + replacementReason: Description of the reason why we are making the replacement.
+      + replacementReasonSource: Source for the rationale we're using to suggest the replacement.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Instance of created IngredientReplacement object) on creation success.
@@ -99,15 +103,25 @@ const IngredientReplacements = (database) => {
     }
     database.execute(
       `
-      INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replacement, replacement_reason)
-      VALUES (?, ?, ?)
+      INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replacement, replacement_reason, replacement_reason_source)
+      VALUES (?, ?, ?, ?)
       `,
-      [ingredientIDReplaces, ingredientIDReplacement, replacementReason],
+      [
+        ingredientIDReplaces,
+        ingredientIDReplacement,
+        replacementReason,
+        replacementReasonSource,
+      ],
       (err, rows) =>
         buildCreateResponse(
           err,
           rows,
-          { ingredientIDReplaces, ingredientIDReplacement, replacementReason },
+          {
+            ingredientIDReplaces,
+            ingredientIDReplacement,
+            replacementReason,
+            replacementReasonSource,
+          },
           IngredientReplacement,
           callback
         )
@@ -124,9 +138,6 @@ const IngredientReplacements = (database) => {
     => Returns: by calling @callback with:
       + (null, []IngredientReplacement objects) on query success. List may be empty.
       + (Error, null) if an error occurs.
-    => Notes:
-      + TODO: make a query that returns the IngredientReplacements as Ingredient objects directly
-      by joining to Ingredients.
     => Code Example:
       // Find IngredientReplacements for Ingredient with @ingredientID = 1.
       IngredientReplacements.getReplacementsForIngredient(
@@ -157,6 +168,56 @@ const IngredientReplacements = (database) => {
           callback(err, null);
         }
         buildResponseList(err, rows, IngredientReplacement, callback);
+      }
+    );
+  };
+
+  /**
+    getReplacementsForIngredientAsIngredientObjects returns a list of Ingredients for each
+    IngredientReplacement that we suggest for the Ingredient with the ID @ingredientIDToReplace.
+    The list may be empty if no replacements exist or if the Ingredient with @ingredientIDToReplace
+    does not exist.
+    => Receives:
+      + ingredientIDToReplace: ID of the Ingredient to find IngredientReplacements for.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, []Ingredient objects) on query success. List may be empty.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Find IngredientReplacements for Ingredient with @ingredientIDToReplace = 19.
+      IngredientReplacements.getReplacementsForIngredientAsIngredientObjects(
+        { ingredientIDToReplace: 19 },
+        (err, listOfIngredientObjects) => {
+          if (err) {
+            console.log("Failed to get IngredientReplacements:", err);
+            return; // bail out of the handler here, listOfIngredientObjects undefined
+          }
+          console.log("Fetched listOfIngredientReplacements:", listOfIngredientObjects);
+          console.log("List as JSON objects",
+            listOfIngredientObjects.map((ingredient) =>
+              ingredient.toJSON()
+            )
+          );
+        }
+      );
+  */
+  ingredientReplacement.getReplacementsForIngredientAsIngredientObjects = (
+    { ingredientIDToReplace },
+    callback
+  ) => {
+    database.execute(
+      `
+      SELECT * FROM IngredientReplacements ir
+      INNER JOIN Ingredients i
+      ON ir.ingredient_id_replacement = i.id
+      WHERE ingredient_id_replaces = ?
+      `,
+      [ingredientIDToReplace],
+      (err, rows) => {
+        if (err) {
+          callback(err, null);
+        }
+        buildResponseList(err, rows, Ingredient, callback);
       }
     );
   };
