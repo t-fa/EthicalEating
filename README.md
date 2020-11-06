@@ -40,3 +40,5 @@ You will be able to view the app locally at http://localhost:6377.
 ## viewing the mysql database with mysql workbench
 
 It can be useful for debugging to see what is in the database using [mysql workbench](https://www.mysql.com/products/workbench/), a free tool. If you would like to use the app with mysql workbench, first download the software. Then, make one small change to the docker-compose file to the db: ports: section, changing `"3306"` to `"127.0.0.1:3306:3306"` to expose the database on port 3306 on your localhost.
+
+## test edit to trigger action
