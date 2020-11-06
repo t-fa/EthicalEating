@@ -172,6 +172,56 @@ const IngredientReplacements = (database) => {
     );
   };
 
+/**
+    getReplacementsForIngredientAsIngredientObjects returns a list of Ingredients for each
+    IngredientReplacement that we suggest for the Ingredient with the ID @ingredientIDToReplace.
+    The list may be empty if no replacements exist or if the Ingredient with @ingredientIDToReplace
+    does not exist.
+    => Receives:
+      + ingredientIDToReplace: ID of the Ingredient to find IngredientReplacements for.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, []Ingredient objects) on query success. List may be empty.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Find IngredientReplacements for Ingredient with @ingredientIDToReplace = 19.
+      IngredientReplacements.getReplacementsForIngredientAsIngredientObjects(
+        { ingredientIDToReplace: 19 },
+        (err, listOfIngredientObjects) => {
+          if (err) {
+            console.log("Failed to get IngredientReplacements:", err);
+            return; // bail out of the handler here, listOfIngredientObjects undefined
+          }
+          console.log("Fetched listOfIngredientReplacements:", listOfIngredientObjects);
+          console.log("List as JSON objects",
+            listOfIngredientObjects.map((ingredient) =>
+              ingredient.toJSON()
+            )
+          );
+        }
+      );
+  */
+ ingredientReplacement.getReplacementsForIngredientAsIngredientObjects = (
+  { ingredientIDToReplace },
+  callback
+) => {
+  database.execute(
+    `
+    SELECT * FROM IngredientReplacements ir
+    INNER JOIN Ingredients i
+    ON ir.ingredient_id_replacement = i.id
+    WHERE ingredient_id_replaces = ?
+    `,
+    [ingredientIDToReplace],
+    (err, rows) => {
+      if (err) {
+        callback(err, null);
+      }
+      buildResponseList(err, rows, Ingredient, callback);
+    }
+  );
+};
+
   return { ...ingredientReplacement, Errors, Validators };
 };
 
