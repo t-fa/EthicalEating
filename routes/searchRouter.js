@@ -23,9 +23,7 @@ searchRouter.route('/')
             context.ingredients = listOfIngredients;
             res.render('search', context);
         });
-    }
-
-    if(req.query.recipe_search){
+    } else if(req.query.recipe_search) {
         context = {};
         const search = req.query.recipe_search;
 
@@ -38,10 +36,24 @@ searchRouter.route('/')
             console.log("listOfAllRecipes:", listOfAllRecipes);
             console.log("listOfAllRecipes as json", listOfAllRecipes.map(recipe => recipe.toJSON()));
             context.recipes = listOfAllRecipes;
+            
+            listOfAllRecipes.forEach(recipe => {
+                Models.Recipes.getIngredients({ recipeID: recipe.id }, (err, listOfIngredients) => {
+                    if (err) {
+                        console.log("Failed to fetch recipe ingredients:", err);
+                        return; // bail out of the handler here, listOfIngredients undefined
+                    }
+                    // Got the Ingredients list.
+                    console.log("listOfIngredients:", listOfIngredients);
+                    console.log("listOfIngredients as json", listOfIngredients.map(ingredient => ingredient.toJSON()));
+                  });
+                  context.ingredients = listOfIngredients
+            })
             res.render('search', context);
           });
+    } else {
+        res.render('search')
     }
-    res.render('search')
 });
 
 
