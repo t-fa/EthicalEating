@@ -161,9 +161,21 @@ app.get('/secret', requireLogin, (req, res) => {
 	res.send('This page is secret!');
 });
 
-app.use((req, res) => {
-	res.status(404);
-	res.render('404');
+app.get("/book", (req, res) => {
+    res.render('book');
+})
+
+app.get("/userRecipe", (req, res) => {
+    res.render('userRecipe');
+})
+
+app.get("/ingredientEthics", (req, res) => {
+    res.render('ingredientEthics');
+})
+
+app.use((req,res) => {
+    res.status(404);
+    res.render('404');
 });
 
 app.use((req, res) => {
