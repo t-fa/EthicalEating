@@ -418,3 +418,121 @@ INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replace
   "Tofu requires less than half the water to produce than lentils.",
   "https://www.huffpost.com/entry/food-water-footprint_n_5952862"
 );
+
+
+-- Views that help compute intermediate results and can be used to form more complex queries.
+
+-- The IngredientAndItsReplacements view consists of 1 row for every Ingredient
+-- with the Ingredient's ID, name, and description, and a "replacements" column
+-- that contains every IngredientReplacement for that Ingredient as a JSON object.
+CREATE SQL SECURITY INVOKER VIEW IngredientAndItsReplacements as
+SELECT
+    i.id,
+    i.name,
+    i.description,
+    json_arrayagg(
+        json_object(
+            "id",
+            i2.id,
+            "name",
+            i2.name,
+            "description",
+            i2.description,
+            "replacement_reason",
+            ir.replacement_reason,
+            "replacement_reason_source",
+            ir.replacement_reason_source
+        )
+    ) as replacements
+FROM
+    Ingredients i
+    INNER JOIN IngredientReplacements ir ON ir.ingredient_id_replaces = i.id
+    INNER JOIN Ingredients i2 ON ir.ingredient_id_replacement = i2.id
+GROUP BY
+    i.id;
+
+-- The RecipeAndItsIngredients view consists of 1 row for every Recipe with the
+-- Recipe's ID, name, is_public status and date_created and an Ingredients column
+-- that contains every Ingredient in that Recipe as a JSON object.
+CREATE
+SQL SECURITY INVOKER
+VIEW RecipeAndItsIngredients as
+SELECT
+    r.id,
+    r.name,
+    r.is_public,
+    r.date_created,
+    JSON_ARRAYAGG(
+        json_object(
+            "id",
+            i.id,
+            "name",
+            i.name,
+            "description",
+            i.description
+        )
+    ) as ingredients
+FROM
+    Recipes r
+    INNER JOIN RecipeIngredients ri ON r.id = ri.recipe_id
+    INNER JOIN Ingredients i ON ri.ingredient_id = i.id
+GROUP BY
+    r.id;
+
+-- The RecipeItsIngredientsAndTheirReplacements view consists of 1 row for every
+-- Recipe with the Recipe's ID, name, is_public status and date_created and an
+-- Ingredients column that contains every Ingredient in that Recipe as a JSON object
+-- along with every available IngredientReplacement for each of these Ingredients.
+CREATE
+SQL SECURITY INVOKER
+VIEW RecipeItsIngredientsAndTheirReplacements as
+SELECT
+    r.id,
+    r.name,
+    r.is_public,
+    r.date_created,
+    JSON_ARRAYAGG(
+        json_object(
+            "ingredient",
+            json_object(
+                "id",
+                i.id,
+                "name",
+                i.name,
+                "description",
+                i.description
+            ),
+            "replacements",
+            (
+                SELECT
+                    json_arrayagg(
+                        json_object(
+                            "id",
+                            i2.id,
+                            "name",
+                            i2.name,
+                            "description",
+                            i2.description,
+                            "replacement_reason",
+                            ir.replacement_reason,
+                            "replacement_reason_source",
+                            ir.replacement_reason_source
+                        )
+                    )
+                FROM
+                    Ingredients ii
+                    INNER JOIN IngredientReplacements ir ON ir.ingredient_id_replaces = ii.id
+                    INNER JOIN Ingredients i2 ON ir.ingredient_id_replacement = i2.id
+                GROUP BY
+                    ii.id
+                HAVING
+                    ii.id = i.id
+            )
+        )
+    ) as ingredients_and_replacements
+FROM
+    Recipes r
+    INNER JOIN RecipeIngredients ri ON r.id = ri.recipe_id
+    INNER JOIN Ingredients i ON ri.ingredient_id = i.id
+GROUP BY
+    r.id;
