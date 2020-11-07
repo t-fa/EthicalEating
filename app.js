@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
+const ethicalRouter = require('./routes/ethicalRouter');
 const loginFunctions = require('./public/js/loginFunctions');
 const handlebars = require('express-handlebars');
 const path = require('path');
 const session = require('express-session');
 const searchRouter = require('./routes/searchRouter');
+const bcrypt = require('bcrypt');
 
 // When deploying on a service like Heroku, the port is "ephemeral". It's not a fixed one
 // that we can request. Heroku sets an environmental variable to tell our app which port
@@ -47,21 +49,23 @@ app.get('/demo', (_, res) => {
 // See '/secret' page for example
 const requireLogin = (req, res, next) => {
 	if (!req.session.user_id) {
-		return res.redirect('/login')
+		return res.redirect('/login');
 	}
 	next();
-}
+};
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
 app.use('/search', searchRouter);
+app.use('/ethicality', ethicalRouter);
 
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
 	var context = {
 		loginError: '',
 		registerError: ''
 	};
 	const { password, confirmPassword, username } = req.body;
+	const hash = await bcrypt.hash(password, 12);
 
 	// check username content
 	if (!(loginFunctions.onlyAlphanumerical(username) && username.length > 2)) {
@@ -89,7 +93,7 @@ app.post('/register', (req, res) => {
 				Users.createUserWithUsernameAndPassword(
 					{
 						username: username,
-						password: password
+						password: hash
 					},
 					(error, user) => {
 						console.log('user creation error:', error, 'newly created user:', user);
@@ -106,20 +110,33 @@ app.post('/register', (req, res) => {
 	}
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
 	var context = {
 		loginError: '',
 		registerError: ''
 	};
 	const { username, password } = req.body;
-	Users.logInWithUsernameAndPassword({ username: username, password: password }, (error, user) => {
-		if (!error) {
-			req.session.user_id = username;
-			context.loginError = 'Logged in successfully!';
-			res.render('login', context);
-		} else {
+
+	Users.getUserByUsername({ username: username }, async (err, userObject) => {
+		if (err) {
 			context.loginError = 'Invalid username or password';
-			res.render('login', context);
+			return res.render('login', context);
+		} else {
+			// Do something with the User object.
+			user = userObject;
+			const validPassword = await bcrypt.compare(password, user._password);
+			if (validPassword) {
+				Users.logInWithUsernameAndPassword({ username: username, password: user._password }, (error, user) => {
+					if (!error) {
+						req.session.user_id = username;
+						context.loginError = 'Logged in successfully!';
+						res.render('login', context);
+					} else {
+						context.loginError = 'Invalid username or password';
+						res.render('login', context);
+					}
+				});
+			}
 		}
 	});
 });
@@ -133,12 +150,6 @@ app.post('/logout', (req, res) => {
 
 app.get('/login', (req, res) => {
 	res.render('login');
-});
-
-app.use('/search', require('./routes/search_router.js'));
-
-app.get('/ingredient_search', (req, res) => {
-	res.render('ingredient_search');
 });
 
 app.get('/', (req, res) => {
