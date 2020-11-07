@@ -1,6 +1,6 @@
 const { IngredientReplacement } = require("./IngredientReplacements");
 const { Ingredient } = require("./Ingredients");
-const { buildCreateResponse, toJSON, buildResponseList } = require("./utils");
+const { buildCreateResponse, toJSON, buildResponseList, nullOrUndefined } = require("./utils");
 
 /*
 Recipe represents a Recipe in the system. A Recipe has zero or more Ingredients.
@@ -229,6 +229,7 @@ const Recipes = (database) => {
       "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ?",
       ["%" + query.toUpperCase() + "%"],
       (err, rows) => {
+        console.log(err, rows);
         if (err) {
           callback(err, null);
           return;
@@ -239,8 +240,11 @@ const Recipes = (database) => {
           recipeIDToData[row.id]["recipe"] = Recipe.fromDatabaseRow(row).toJSON();
           recipeIDToData[row.id]["ingredients"] = {};
           const thisIngredient = recipeIDToData[row.id]["ingredients"];
-          if (row.ingredients_and_replacements !== null) {
-            JSON.parse(row.ingredients_and_replacements).forEach((iar) => {
+          if (!nullOrUndefined(row.ingredients_and_replacements)) {
+            console.log("Row", row.ingredients_and_replacements);
+            const parsed = JSON.parse(row.ingredients_and_replacements);
+            console.log("Parsed", parsed);
+            parsed.forEach((iar) => {
               const ID = iar.ingredient.id;
               thisIngredient[ID] = {};
               thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(iar.ingredient).toJSON();
