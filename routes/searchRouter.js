@@ -9,7 +9,7 @@ searchRouter.use(bodyParser.json());
 /* Endpoint for searching for recipes. Returns a list of recipes matching a search term
 and associated ingredients accesible in context.recipes and context.ingredients, respectively.s
 */
-searchRouter.route('/')
+searchRouter.route('/search')
 .get((req, res) => {
     if(req.query.recipe_search) {
         context = {};
