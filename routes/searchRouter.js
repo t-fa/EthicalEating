@@ -9,7 +9,7 @@ searchRouter.use(bodyParser.json());
 /* Endpoint for searching for recipes. Returns a list of recipes matching a search term
 and associated ingredients accesible in context.recipes and context.ingredients, respectively.s
 */
-searchRouter.route('/')
+searchRouter.route('/search')
 .get((req, res) => {
     if(req.query.recipe_search) {
         context = {};
@@ -20,29 +20,7 @@ searchRouter.route('/')
               console.log("Failed to fetch Recipes:", err);
               return next(err);  // bail out of the handler here, listOfAllRecipes undefined
             }
-            // Got the listOfAllRecipes.
-            console.log("listOfAllRecipes:", listOfAllRecipes);
-            console.log("listOfAllRecipes as json", listOfAllRecipes.map(recipe => recipe.toJSON()));
-            context.recipes = listOfAllRecipes;
-
-            console.log('RECIPES:', Object.entries(listOfAllRecipes))
-            console.log('RECIPES:', listOfAllRecipes[0].id)
-
-            for(let i=0; i < listOfAllRecipes.length; i++){
-                Models.Recipes.getIngredients({ recipeID: listOfAllRecipes[i].id }, (err, listOfIngredients) => {
-                    if (err) {
-                        console.log("Failed to fetch recipe ingredients:", err);
-                        return next(err); // bail out of the handler here, listOfIngredients undefined
-                    }
-                    // Got the Ingredients list.
-                    console.log("listOfIngredients:", listOfIngredients);
-                    console.log("listOfIngredients as json", listOfIngredients.map(ingredient => ingredient.toJSON()));
-                    context.ingredients = listOfIngredients;
-                    if(i === listOfAllRecipes.length - 1){
-                        res.render('index', context);
-                    }
-                  });
-            }
+            res.render('index', {"recipes": listOfAllRecipes});
           });
     } else {
         res.render('index')

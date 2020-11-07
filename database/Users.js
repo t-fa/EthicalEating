@@ -66,7 +66,8 @@ const Users = (database) => {
   const user = {};
 
   /**
-    createUserWithUsernameAndPassword creates a new User with @username and @password.
+    createUserWithUsernameAndPassword creates a new User with @username and @password and adds
+    a RecipeBook for the User.
     => Receives:
       + username (string)
       + password (string)
@@ -101,7 +102,7 @@ const Users = (database) => {
     database.execute(
       "INSERT INTO Users(username, password)  VALUES(?, ?)",
       [username, password],
-      (err, rows) => {
+      (err, userRows) => {
         if (err) {
           if (err.code === "ER_DUP_ENTRY") {
             // mysql returns this code if a CONSTRAINT UNIQUE(username) is violated.
@@ -113,7 +114,33 @@ const Users = (database) => {
           callback(err, null);
           return;
         }
-        buildCreateResponse(err, rows, { username, password }, User, callback);
+        database.execute(
+          "INSERT INTO RecipeBooks(owner_id) VALUES (?)",
+          [userRows.insertId],
+          (err, recipeBook) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            database.execute(
+              "UPDATE Users SET recipebook_id = ? WHERE id = ?",
+              [recipeBook.insertId, userRows.insertId],
+              (err, userUpdate) => {
+                if (err) {
+                  callback(err, null);
+                  return;
+                }
+                buildCreateResponse(
+                  err,
+                  userRows,
+                  { username, password, recipeBookID: recipeBook.insertId },
+                  User,
+                  callback
+                );
+              }
+            );
+          }
+        );
       }
     );
   };

@@ -58,7 +58,10 @@ const requireLogin = (req, res, next) => {
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
-app.use('/search', searchRouter);
+app.use('/', searchRouter);
+
+
+
 app.use('/ethicality', ethicalRouter);
 app.use('/book', bookRouter);
 
