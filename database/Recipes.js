@@ -1,3 +1,4 @@
+const { IngredientReplacement } = require("./IngredientReplacements");
 const { Ingredient } = require("./Ingredients");
 const { buildCreateResponse, toJSON, buildResponseList } = require("./utils");
 
@@ -191,12 +192,26 @@ const Recipes = (database) => {
   /**
     searchByName searches for Recipe objects by name. Performs a fuzzy, case-insensitive search
     where name only has to contain @query somewhere. This returns more potential results at the
-    cost of some accuracy.
+    cost of some accuracy. The search returns a highly nested object, but it's very information
+    rich! It contains all Recipe objects matching the result, with the Ingredient objects for
+    every Ingredient in that Recipe, and also the IngredientReplacements (as Ingredients) for
+    all the Ingredients in each of the Recipes returned by the search.
     => Receives:
       + query: what to search for in the name. Query can appear anywhere in the name.
       + callback: function(error, data)
     => Returns: by calling @callback with:
-      + (null, []Recipe) the list of Recipes in the system with names like the provided @query.
+      + (null,
+        []{
+          "recipe":Recipe,
+          "ingredients":[]{
+            "ingredient": Ingredient,
+            "replacements": []Ingredient
+          })
+        This is a list of objects with a @recipe and @ingredients key. The Ingredients key contains a
+        list of objects with the Ingredient itself at key @ingredient and any replacements we have to suggest
+        for that Ingredient at the key @replacements. @replacements is a list of Ingredients that are
+        replacements that we suggest. All data are returned as json for display to the user, rather
+        than as objects for manipulation.
       + (Error, null) if an error occurs.
     => Code Example:
       // Search for Cupcakes.
@@ -206,20 +221,43 @@ const Recipes = (database) => {
           return;  // bail out of the handler here, listOfAllCupcakeRecipes undefined
         }
         // Got the listOfAllCupcakeRecipes.
-        console.log("listOfAllCupcakeRecipes:", listOfAllCupcakeRecipes);
-        console.log("listOfAllCupcakeRecipes as json", listOfAllCupcakeRecipes.map(recipe => recipe.toJSON()));
+        console.log("listOfAllCupcakeRecipes:", listOfAllCupcakeRecipes, "json string", JSON.stringify(listOfAllCupcakeRecipes));
       });
   */
   recipes.searchByName = ({ query }, callback) => {
     database.execute(
-      "SELECT * FROM Recipes WHERE UPPER(name) LIKE ?",
+      "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ?",
       ["%" + query.toUpperCase() + "%"],
       (err, rows) => {
         if (err) {
           callback(err, null);
           return;
         }
-        buildResponseList(err, rows, Recipe, callback);
+        const recipeIDToData = {};
+        rows.forEach((row) => {
+          recipeIDToData[row.id] = {};
+          recipeIDToData[row.id]["recipe"] = Recipe.fromDatabaseRow(row).toJSON();
+          recipeIDToData[row.id]["ingredients"] = {};
+          const thisIngredient = recipeIDToData[row.id]["ingredients"];
+          if (row.ingredients_and_replacements !== null) {
+            JSON.parse(row.ingredients_and_replacements).forEach((iar) => {
+              const ID = iar.ingredient.id;
+              thisIngredient[ID] = {};
+              thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(iar.ingredient).toJSON();
+              thisIngredient[ID]["replacements"] = [];
+              if (iar.replacements !== null) {
+                thisIngredient[ID]["replacements"] = JSON.parse(iar.replacements).map((r) => ({
+                  ...Ingredient.fromDatabaseRow(r).toJSON(),
+                  ...IngredientReplacement.fromDatabaseRow(r).toJSON(),
+                }));
+              }
+            });
+          }
+        });
+        callback(
+          null,
+          Object.keys(recipeIDToData).map((k) => recipeIDToData[k])
+        );
       }
     );
   };
