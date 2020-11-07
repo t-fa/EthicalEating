@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   db:
-    image: mariadb
+    image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: secret
     # https://stackoverflow.com/a/43331395 init database by running database-definitions.sql file

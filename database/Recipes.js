@@ -229,7 +229,6 @@ const Recipes = (database) => {
       "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ?",
       ["%" + query.toUpperCase() + "%"],
       (err, rows) => {
-        console.log(err, rows);
         if (err) {
           callback(err, null);
           return;
@@ -241,16 +240,13 @@ const Recipes = (database) => {
           recipeIDToData[row.id]["ingredients"] = {};
           const thisIngredient = recipeIDToData[row.id]["ingredients"];
           if (!nullOrUndefined(row.ingredients_and_replacements)) {
-            console.log("Row", row.ingredients_and_replacements);
-            const parsed = JSON.parse(row.ingredients_and_replacements);
-            console.log("Parsed", parsed);
-            parsed.forEach((iar) => {
+            row.ingredients_and_replacements.forEach((iar) => {
               const ID = iar.ingredient.id;
               thisIngredient[ID] = {};
               thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(iar.ingredient).toJSON();
               thisIngredient[ID]["replacements"] = [];
-              if (iar.replacements !== null) {
-                thisIngredient[ID]["replacements"] = JSON.parse(iar.replacements).map((r) => ({
+              if (!nullOrUndefined(iar.replacements)) {
+                thisIngredient[ID]["replacements"] = iar.replacements.map((r) => ({
                   ...Ingredient.fromDatabaseRow(r).toJSON(),
                   ...IngredientReplacement.fromDatabaseRow(r).toJSON(),
                 }));
