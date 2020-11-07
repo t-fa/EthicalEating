@@ -42,4 +42,9 @@ bookRouter.route('/')
 })
 
 
+// remove recipe from user's RecipeBook
+.delete('/', (req, res) => {
+    res.send("Recipe successfully removed")
+})
+
 module.exports = bookRouter;
