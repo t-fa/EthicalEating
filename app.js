@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
 const ethicalRouter = require('./routes/ethicalRouter');
+const bookRouter = require('./routes/bookRouter');
 const loginFunctions = require('./public/js/loginFunctions');
 const handlebars = require('express-handlebars');
 const path = require('path');
@@ -32,9 +33,10 @@ app.engine(
 app.set('view engine', 'handlebars');
 
 // Demo of how to create and log in a user...
-const { Users } = require('./database');
+const { Users, RecipeBooks } = require('./database');
 const { check } = require('express-validator');
 const { read } = require('fs');
+const { RecipeBook } = require('./database/RecipeBooks');
 app.get('/demo', (_, res) => {
 	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
 		console.log('user creation error:', error, 'newly created user:', user);
@@ -58,6 +60,7 @@ const requireLogin = (req, res, next) => {
 app.use('/build', buildRecipeRouter);
 app.use('/search', searchRouter);
 app.use('/ethicality', ethicalRouter);
+app.use('/book', bookRouter);
 
 app.post('/register', async (req, res) => {
 	var context = {
@@ -99,6 +102,8 @@ app.post('/register', async (req, res) => {
 						console.log('user creation error:', error, 'newly created user:', user);
 						if (!error) {
 							req.session.user_id = username;
+							user = Users.getUserByUsername({ username: username });
+							RecipeBooks.createRecipeBookForOwningUserID({ userID: user.id });
 						} else {
 							context.registerError = 'Username taken';
 							res.render('login', context);
@@ -141,6 +146,18 @@ app.post('/login', async (req, res) => {
 	});
 });
 
+app.post('/book', (req, res) => {
+	var context = {};
+	if (req.session.user_id) {
+		username = req.session.user_id
+		user_id = Users.getUserByUsername(username);
+	} else {
+		console.log('please log in first');
+		res.render('login');
+    }
+	console.log(user_id);
+});
+
 app.post('/logout', (req, res) => {
 	if (req.session.user_id) {
 		req.session.user_id = null;
@@ -161,7 +178,7 @@ app.get('/secret', requireLogin, (req, res) => {
 	res.send('This page is secret!');
 });
 
-app.get("/book", (req, res) => {
+app.get("/book", requireLogin, (req, res) => {
     res.render('book');
 })
 
@@ -175,6 +192,10 @@ app.get("/ingredientEthics", (req, res) => {
 
 app.get("/publicRecipe", (req, res) => {
 	res.render('publicRecipe');
+})
+
+app.get("/index", (req, res) => {
+	res.render('index');
 })
 
 app.use((req,res) => {
