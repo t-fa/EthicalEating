@@ -88,7 +88,7 @@ const RecipeBookRecipes = (database) => {
     );
   };
 
-  return { recipeBookRecipes, Errors, Validators };
+  return { ...recipeBookRecipes, Errors, Validators };
 };
 
 module.exports = { RecipeBookRecipes, RecipeBookRecipe };

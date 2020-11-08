@@ -3,6 +3,7 @@ const app = express();
 const recipesRouter = require('./routes/recipesRouter');
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
 const ethicalRouter = require('./routes/ethicalRouter');
+const bookRouter = require('./routes/bookRouter');
 const loginFunctions = require('./public/js/loginFunctions');
 const handlebars = require('express-handlebars');
 const path = require('path');
@@ -17,6 +18,7 @@ const bcrypt = require('bcrypt');
 // If this variable is set, use the port in the variable. Otherwise, use the default (6377).
 const port = process.env.PORT || 6377;
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'XTCkQE&t%yRV$2dyn8ZUkt3EKP98gpHB34HX8d&&yJVuPmjMe' }));
@@ -40,9 +42,11 @@ app.use(function(req, res, next){
 app.set('view engine', 'handlebars');
 
 // Demo of how to create and log in a user...
-const { Users } = require('./database');
+const { Users, RecipeBooks } = require('./database');
 const { check } = require('express-validator');
 const { read } = require('fs');
+const { RecipeBook } = require('./database/RecipeBooks');
+const RecipeBookRecipes = require('./database/RecipeBookRecipes');
 app.get('/demo', (_, res) => {
 	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
 		console.log('user creation error:', error, 'newly created user:', user);
@@ -66,11 +70,11 @@ const requireLogin = (req, res, next) => {
 app.use('/build', buildRecipeRouter);
 app.use('/', searchRouter);
 
-
 // Fetch a single recipe, e.g., GET /recipes/1 fetches Recipe with ID 1.
-app.use('/recipes', recipesRouter);
+app.use('/userRecipe', recipesRouter);
 
-app.use('/ethicality', ethicalRouter);
+app.use('/ingredientEthics', ethicalRouter);
+app.use('/book', bookRouter);
 
 app.post('/register', async (req, res) => {
 	var context = {
@@ -157,6 +161,26 @@ app.post('/login', async (req, res) => {
 	});
 });
 
+
+// Add a recipe to recipeBook
+app.post('/addRecipe', function (req, res) {
+	const recipeID = req.body.recipeID;
+	console.log('recipe id:');
+	console.log(recipeID);
+	
+	Users.getUserByUsername({ "username": req.session.user_id }, function (err, userObject) {
+		if (err) { console.log(err); return; }
+		console.log('recipe book id:')
+		console.log(userObject.recipeBookID);
+		
+		RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': userObject.recipeBookID }, function (err, data) {
+			if (err) { console.log(err); return; }
+			console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
+		});
+	});
+});
+
+
 app.post('/logout', (req, res) => {
 	if (req.session.user_id) {
 		req.session.user_id = null;
@@ -177,7 +201,7 @@ app.get('/secret', requireLogin, (req, res) => {
 	res.send('This page is secret!');
 });
 
-app.get("/book", (req, res) => {
+app.get("/book", requireLogin, (req, res) => {
     res.render('book');
 })
 
@@ -191,6 +215,10 @@ app.get("/ingredientEthics", (req, res) => {
 
 app.get("/publicRecipe", (req, res) => {
 	res.render('publicRecipe');
+})
+
+app.get("/index", (req, res) => {
+	res.render('index');
 })
 
 app.use((req,res) => {
