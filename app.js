@@ -30,6 +30,13 @@ app.engine(
 	})
 );
 
+// Put the session ID into res locals so we can render the correct status in the Header
+// Handlebars partial.
+app.use(function(req, res, next){
+	res.locals.user_id = req.session.user_id;
+	next();
+});
+
 app.set('view engine', 'handlebars');
 
 // Demo of how to create and log in a user...
@@ -105,6 +112,8 @@ app.post('/register', async (req, res) => {
 						console.log('user creation error:', error, 'newly created user:', user);
 						if (!error) {
 							req.session.user_id = username;
+							res.locals.user_id = username;
+							res.render('index');
 						} else {
 							context.registerError = 'Username taken';
 							res.render('login', context);
@@ -136,7 +145,8 @@ app.post('/login', async (req, res) => {
 					if (!error) {
 						req.session.user_id = username;
 						context.loginError = 'Logged in successfully!';
-						res.render('login', context);
+						res.locals.user_id = req.session.user_id;
+						res.render('index', context);
 					} else {
 						context.loginError = 'Invalid username or password';
 						res.render('login', context);

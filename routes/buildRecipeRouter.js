@@ -23,26 +23,27 @@ buildRecipeRouter.route('/')
 })
 .post((req, res, next) => {
     const name = req.body.name;
-    const ingredients = [];
-    Models.Recipes.createRecipe({ name: name, isPublic: false}, (err, newRecipeObject) => {
+    // TODO: set isPublic to false later as this will be "private" for the user's recipe book
+    // For now leave as public so you can see it show up in the search :)
+    if (!req.body.ingredients) {
+        // There's a problem. Redirect to build.
+        console.log("No ingredients in recipe!");
+        res.redirect('/build');
+        return;
+    }
+    let ingredients = req.body.ingredients;
+    if (!Array.isArray(ingredients)) {
+        ingredients = Array.from(ingredients);
+    }
+    Models.Recipes.createRecipeWithIngredients({ name: name, isPublic: true, ingredientIDList: ingredients}, (err, newRecipeObject) => {
         if (err) {
             console.log("Failed to create the recipe. Error:", err);
             return next(err); // bail out of the handler here, newRecipeObject undefined
           }
           // Created the recipe successfully.
           console.log("newRecipeObject:", newRecipeObject, "json:", newRecipeObject.toJSON());
-          ingredients.forEach(ingredient => {
-              Models.Recipes.addIngredientIDToRecipeID({ ingredientID: ingredient.id, recipeID: newRecipeObject.id}, (err, newIngredient) => {
-                if (err) {
-                    console.log("Failed to add ingredient to recipe. Error:", err);
-                    return next(err); // bail out of the handler here, newRecipeObject undefined
-                  }
-                  // Created the recipe successfully.
-                  console.log("newRecipeObject:", newRecipeObject, "json:", newRecipeObject.toJSON());
-              })
-          })
-        });
-    res.redirect('/')
-})
+          res.redirect('/');
+    });
+});
 
 module.exports = buildRecipeRouter;
