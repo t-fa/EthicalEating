@@ -1,3 +1,18 @@
+
+// retrieves recipeID from index.handlebars (after a search) and passes it to app.js for the POST req
+function addRecipe(recipeID) {
+    // console.log(recipeID);    
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recipeID: recipeID })
+    };
+    fetch('/addRecipe', options);
+};
+
+
 /*-----------------------------------------------------------------------------------*/
 /* Table sort code citation: https://www.w3schools.com/howto/howto_js_sort_table.asp */
 /*-----------------------------------------------------------------------------------*/

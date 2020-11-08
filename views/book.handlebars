@@ -10,67 +10,33 @@
     </p>
 
     <table id="recipeBookTable">
-
         <tr>
-            <th style="width:50%">
+            <th style="width:90%">
                 Recipe
                 <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(0)">&#9660</span>
             </th>
-            <th style="width:25%">
-                Source
+            <!--
+            <th style="width:35%">
+                Ethical Rating
                 <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(1)">&#9660</span>
             </th>
-            <th style="width:25%">
-                Ethical Rating
+            -->
+            <th style="width:30%">
+                Public
                 <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(2)">&#9660</span>
             </th>
-            <th>
-                Public
-                <span class="sortIcon" style="float:right;cursor:pointer" onclick="sortTable(3)">&#9660</span>
-            </th>
         </tr>
+        {{#each recipes}}
         <tr>
             <td class="first" id="recipeClick">
-                <span onclick="window.location.href='userRecipe'">Pumpkin Pie</span>
+                <a href="/userRecipe/{{this.id}}">{{this.name}}</a>
             </td>
-            <td>Public</td>
-            <td>4.0</td>
-            <td>Yes</td>
+            <td>{{this.isPublic}}</td>
         </tr>
-        <tr>
-            <td class="first" id="recipeClick">
-                <span onclick="window.location.href='userRecipe'">Caesar Salad</span>
-            </td>
-            <td>User</td>
-            <td>2.5</td>
-            <td>No</td>
-        </tr>
-        <tr>
-            <td class="first" id="recipeClick"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="first" id="recipeClick"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="first" id="recipeClick"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="first" id="recipeClick"></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table> <br />
-
+        {{/each}}
+    </table>
+    <br />
+    
     <!-- will link to page where user can create new recipe -->
     <button onclick="window.location.href='build'" class="createNewRecipe">
         Create New Recipe
