@@ -1,4 +1,10 @@
 <script src='js/buildRecipe.js'></script>
+<div class="card " class="border border-primary" style="width: 50rem;margin:0 auto;">
+  <div class="card-body">
+
+
+<div class="container horizontal-center">
+      <div>
 
 <h1>Build A Recipe
     {{!-- question mark in box, can be changed to image later if desired --}}
@@ -9,7 +15,7 @@
     </div>
 </h1>
 
-<form action="/build" method-"POST"></form>
+<form action="/build" method="POST">
     <p>
         <div id="ingredientFields" class='ingredient1'>
 
@@ -36,7 +42,7 @@
                     your recipe book.</div>
             </div>
         </div>
-        <input type="text" id="recipeName">
+        <input type="text" name="name" id="recipeName">
     </p>
 
     <p>
@@ -44,3 +50,8 @@
         <input type="button" id="startOver" value="Start Over">
     </p>
 </form>
+</div>
+</div>
+
+  </div>
+  </div>

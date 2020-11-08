@@ -31,6 +31,7 @@
       {{#if recipes}}
         {{#each recipes}}
         <p />
+
         <div class="card" style="width: 18rem;">
             <button class="addRecipeToBook" onclick="addRecipe({{recipe.id}})"> Add This Recipe to my Recipe Book </button>
             <ul class="list-group list-group-flush">
@@ -50,6 +51,7 @@
                         </li>
                     </ul>
                     {{/each}}
+
                 </li>
                 {{/if}}
                 {{/each}}
