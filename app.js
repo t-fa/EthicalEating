@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const recipesRouter = require('./routes/recipesRouter');
 const buildRecipeRouter = require('./routes/buildRecipeRouter');
 const ethicalRouter = require('./routes/ethicalRouter');
 const bookRouter = require('./routes/bookRouter');
@@ -61,6 +62,9 @@ const requireLogin = (req, res, next) => {
 // routes TBD
 app.use('/build', buildRecipeRouter);
 app.use('/', searchRouter);
+
+// Fetch a single recipe, e.g., GET /recipes/1 fetches Recipe with ID 1.
+app.use('/recipes', recipesRouter);
 
 app.use('/ethicality', ethicalRouter);
 app.use('/book', bookRouter);
