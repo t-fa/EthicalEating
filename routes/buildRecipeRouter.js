@@ -45,7 +45,7 @@ buildRecipeRouter.route('/')
           }
           // Created the recipe successfully.
           console.log("newRecipeObject:", newRecipeObject, "json:", newRecipeObject.toJSON());
-          res.redirect('/');
+          res.redirect('/book');
     });
 });
 

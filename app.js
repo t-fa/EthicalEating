@@ -28,7 +28,7 @@ app.engine(
 	handlebars({
 		defaultLayout: 'main',
 		layoutsDir: __dirname + '/views/layouts/',
-		partialsDir: __dirname + '/views/partials/'
+		partialsDir: __dirname + '/views/partials/',
 	})
 );
 
@@ -170,16 +170,12 @@ app.post('/addRecipe', function (req, res) {
 	const recipeID = req.body.recipeID;
 	console.log('recipe id:');
 	console.log(recipeID);
-	
-	Users.getUserByUsername({ "username": req.session.user_id }, function (err, userObject) {
+	if (!req.session.recipeBookID) {
+		return res.redirect('/login');
+	}
+	RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': req.session.recipeBookID }, function (err, data) {
 		if (err) { console.log(err); return; }
-		console.log('recipe book id:')
-		console.log(userObject.recipeBookID);
-		
-		RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': userObject.recipeBookID }, function (err, data) {
-			if (err) { console.log(err); return; }
-			console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
-		});
+		console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
 	});
 });
 
