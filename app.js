@@ -66,7 +66,7 @@ app.use('/', searchRouter);
 // Fetch a single recipe, e.g., GET /recipes/1 fetches Recipe with ID 1.
 app.use('/userRecipe', recipesRouter);
 
-app.use('/ethicality', ethicalRouter);
+app.use('/ingredientEthics', ethicalRouter);
 app.use('/book', bookRouter);
 
 app.post('/register', async (req, res) => {

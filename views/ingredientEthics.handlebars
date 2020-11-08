@@ -19,15 +19,17 @@
 
             <h3><b>Replacement Suggestions: </b></h3>
             <form>
+                {{#each ingredientReplacements}}
                 <input type="radio" id="replacement_1" name="replaceIngredient" value="replacement 1">
-                <label for="replacement_1">Replacement 1</label>
+                <label for="replacement_1">{{this.name}}</label>
                 <span class="tooltip">
                     &#11217
                     <span class='tooltiptext'>
-                        This ingredient is more ethical because water reasons!
+                        {{this.description}}
                     </span>
                 </span>
                 <br />
+                {{/each}}
 
                 <input type="radio" id="replacement_2" name="replaceIngredient" value="replacement 2">
                 <label for="replacement_2">Replacement 2</label>
