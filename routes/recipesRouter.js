@@ -14,10 +14,10 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
       if (err) {
         console.log("Failed to fetch Recipe ID:", req.params.recipeID, err);
         return next(err); // bail out of the handler here, recipeWithReplacements undefined
-      }
-      // Return the recipeWithReplacements as a JSON object
-      // This could be used to render a template, instead.
-      res.status(200).json(recipeWithReplacements);
+        }
+        context.ingredients = recipeWithReplacements
+        res.render('userRecipe', context);
+        
     }
   );
 });

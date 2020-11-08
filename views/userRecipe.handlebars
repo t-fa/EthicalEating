@@ -21,25 +21,13 @@
             <th>Details</th>
             <th id="ethicalInfo">Ethical Info</th>
         </tr>
+        
+        {{#each recipe.ingredients}}
         <tr>
-            <td class="ingredient">Ingredient 1</td>
-            <td>Details go here</td>
+            <td class="ingredient">{{this.ingredient.name}}</td>
+            <td>{{this.ingredient.description}}</td>
             <td>
-                <span>Info</span>
-                <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
-                    &#9432
-                    <span class="tooltiptext">
-                        How can I ethically improve this ingredient?
-                    </span>
-                </span>
-            </td>
-        </tr>
-        {{#each ingredient}}
-        <tr>
-            <td class="ingredient">{{this.name}}</td>
-            <td>Details go here</td>
-            <td>
-                <span>Info</span>
+                
                 <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
                     &#9432
                     <span class="tooltiptext">
