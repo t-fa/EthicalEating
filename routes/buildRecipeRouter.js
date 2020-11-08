@@ -25,7 +25,7 @@ buildRecipeRouter.route('/')
     const name = req.body.name;
     // TODO: set isPublic to false later as this will be "private" for the user's recipe book
     // For now leave as public so you can see it show up in the search :)
-    if (!req.body.ingredients) {
+    if (!req.body.ingredients || !req.session.user_id) {
         // There's a problem. Redirect to build.
         console.log("No ingredients in recipe!");
         res.redirect('/build');
@@ -35,6 +35,7 @@ buildRecipeRouter.route('/')
     if (!Array.isArray(ingredients)) {
         ingredients = Array.from(ingredients);
     }
+    console.log("Building recipe with name, ingredients, recipeBookID:", name, ingredients, res.locals.recipeBookID);
     Models.Recipes.createRecipeWithIngredients(
         {name: name, isPublic: true, ingredientIDList: ingredients, recipeBookID: res.locals.recipeBookID},
         (err, newRecipeObject) => {

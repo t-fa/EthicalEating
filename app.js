@@ -148,6 +148,7 @@ app.post('/login', async (req, res) => {
 						req.session.user_id = username;
 						context.loginError = 'Logged in successfully!';
 						res.locals.user_id = req.session.user_id;
+						req.session.recipeBookID = user.recipeBookID;
 						res.render('index', context);
 					} else {
 						context.loginError = 'Invalid username or password';

@@ -15,7 +15,11 @@
     </div>
 </h1>
 
+{{#if user_id}}
 <form action="/build" method="POST">
+{{else}}
+<form action="#" method="POST">
+{{/if}}
     <p>
         <div id="ingredientFields" class='ingredient1'>
 
@@ -49,7 +53,7 @@
         {{#if user_id}}
             <input type="submit" value="Submit">
         {{else}}
-            In order to save your own recipes, you have to <a href="/login">Create An Account</a>.<br/>
+            In order to save your own recipes, you have to <a href="login">Create An Account</a>.<br/>
         {{/if}}
         <input type="button" id="startOver" value="Start Over">
     </p>
