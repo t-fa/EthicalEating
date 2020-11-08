@@ -3,7 +3,7 @@
 </head>
 <div style="margin-left: 10%; margin-right: 10%;">
     <p>
-        <button onclick="window.location.href='userRecipe'" style="height:4em;width:16em;font-size:medium">
+        <button onclick="history.back()" style="height:4em;width:16em;font-size:medium">
             Back to [Recipe]
         </button>
     </p>
@@ -12,38 +12,36 @@
     
     <div class="ingredientCard">
         <div style="padding: 4em">
-            <h1 id="recipeBookHomeTitle">[Ingredient]</h1><br />
-            <h3><b>Ethical Impact: </b></h3>
-            <span> This ingredient has some ethical impact because of water and such and whatnot. You could consider replacing it with one of the following options.</span>
-            <br /><br />
+            <h1 id="recipeBookHomeTitle">{{ingredient.name}}</h1>
+            <h2 style="display:inline;">{{ingredient.description}}</h2>
+            <p></p>
+            <h3><b>Ethical Impact</b></h3>
+            {{#if ingredientReplacements}}
 
-            <h3><b>Replacement Suggestions: </b></h3>
+            <p> This ingredient has some ethical downsides because of the amount of water required to produce it.
+                You could consider replacing it with one of the following options.</p>
+                <br/>
+            <h3><b>Replacement Suggestions</b></h3>
             <form>
+            {{#each ingredientReplacements}}
                 <input type="radio" id="replacement_1" name="replaceIngredient" value="replacement 1">
-                <label for="replacement_1">Replacement 1</label>
+                <label for="replacement_1">{{replacementReason}} <a href="{{replacementReasonSource}}" target="_blank">[source]</a></label>
                 <span class="tooltip">
                     &#11217
-                    <span class='tooltiptext'>
-                        This ingredient is more ethical because water reasons!
-                    </span>
+                    <span class='tooltiptext'>This ingredient is more ethical because it uses less water!</span>
                 </span>
                 <br />
-
-                <input type="radio" id="replacement_2" name="replaceIngredient" value="replacement 2">
-                <label for="replacement_2">Replacement 2</label>
-                <span class="tooltip">
-                    &#11217
-                    <span class='tooltiptext'>
-                        This ingredient is more ethical because water reasons!
-                    </span>
-                </span>
-                <br>
-
-                <input type="radio" id="no_change" name="replaceIngredient" value="no_change">
+            {{/each}}
+                <input type="radio" id="no_change" name="replaceIngredient" value="no_change" checked>
                 <label for="no_change">No thanks, I'll keep it as is</label><br /><br />
 
                 <input type="submit" value="Replace Ingredient">
             </form>
+            {{else}}
+            <p>We did not identify any ethical issues with this ingredient. It requires relatively little
+                water to produce and is a great ethical choice from our perspective.
+            </p>
+            {{/if}}
         </div>
     </div>
 

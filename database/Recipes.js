@@ -89,6 +89,66 @@ const Recipes = (database) => {
     );
   };
 
+  /*
+    createRecipeWithIngredients creates the Recipe with @name and @isPublic status having
+    Ingredients with IDs given in @ingredientIDList.
+    => Receives:
+      + name: Name of the Recipe.
+      + isPublic: Whether the Recipe is publicly visible.
+      + ingredientIDList: A list of Ingredient IDs for the Ingredients in the recipe.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, Recipe) with the Recipe object that was created.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Create a Recipe with @name "foo" that is public since @isPublic = true with Ingredients ID = 1 and 2.
+      Recipes.createRecipeWithIngredients({ name: "foo", isPublic: true, ingredientIDList: [1, 2] }, (err, newRecipeObject) => {
+        if (err) {
+          console.log("Failed to create the recipe. Error:", err);
+          return; // bail out of the handler here, newRecipeObject undefined
+        }
+        // Created the recipe successfully.
+        console.log("newRecipeObject:", newRecipeObject, "json:", newRecipeObject.toJSON());
+      });
+  */
+  recipes.createRecipeWithIngredients = (
+    { name, isPublic, ingredientIDList },
+    callback
+  ) => {
+    database.execute(
+      "INSERT INTO Recipes(name, is_public) VALUES(?, ?)",
+      [name, isPublic],
+      (err, recipeInsert) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        const recipeID = recipeInsert.insertId;
+        // Sanity check ingredient IDs -- make sure all Integers.
+        const cleanedIngredientIDs = ingredientIDList
+          .filter((id) => Number.isInteger(Number(id)))
+          .map((ingredientID) => [Number(ingredientID), recipeID]);
+        database.query(
+          "INSERT INTO RecipeIngredients(ingredient_id, recipe_id) VALUES ?",
+          [cleanedIngredientIDs],
+          (err, rows) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            buildCreateResponse(
+              err,
+              rows,
+              { name, isPublic, ingredientIDList },
+              Recipe,
+              callback
+            );
+          }
+        );
+      }
+    );
+  };
+
   /**
     addIngredientIDToRecipeID adds Ingredient with ID @ingredientID to Recipe with ID @recipeID.
     => Receives:
