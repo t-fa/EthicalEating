@@ -105,8 +105,6 @@ app.post('/register', async (req, res) => {
 						console.log('user creation error:', error, 'newly created user:', user);
 						if (!error) {
 							req.session.user_id = username;
-							user = Users.getUserByUsername({ username: username });
-							RecipeBooks.createRecipeBookForOwningUserID({ userID: user.id });
 						} else {
 							context.registerError = 'Username taken';
 							res.render('login', context);
