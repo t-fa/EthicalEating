@@ -9,7 +9,13 @@ function addRecipe(recipeID) {
         },
         body: JSON.stringify({ recipeID: recipeID })
     };
-    fetch('/addRecipe', options);
+    fetch('/addRecipe', options).then(data => {
+        // Success! Redirect to recipe page.
+        window.location.href = "/book";
+    }).catch(err => {
+        // There was an error, display this to the user.
+        console.log("Error :(", err);
+    })
 };
 
 

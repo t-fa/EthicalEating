@@ -20,7 +20,9 @@ searchRouter.route('/search')
               console.log("Failed to fetch Recipes:", err);
               return next(err);  // bail out of the handler here, listOfAllRecipes undefined
             }
-            res.render('index', {"recipes": listOfAllRecipes});
+            // Pass along the user_id in context. TODO: find better way to pass around
+            // and access "App context" from all templates that might need it.
+            res.render('index', {"recipes": listOfAllRecipes, "user_id": req.session.user_id});
           });
     } else {
         res.render('index')
