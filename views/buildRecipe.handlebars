@@ -46,7 +46,11 @@
     </p>
 
     <p>
-        <input type="submit" value="Submit">
+        {{#if user_id}}
+            <input type="submit" value="Submit">
+        {{else}}
+            In order to save your own recipes, you have to <a href="/login">Create An Account</a>.<br/>
+        {{/if}}
         <input type="button" id="startOver" value="Start Over">
     </p>
 </form>

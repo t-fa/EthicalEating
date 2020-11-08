@@ -96,6 +96,7 @@ const Recipes = (database) => {
       + name: Name of the Recipe.
       + isPublic: Whether the Recipe is publicly visible.
       + ingredientIDList: A list of Ingredient IDs for the Ingredients in the recipe.
+      + recipeBookID: ID of the RecipeBook into which to add this Recipe.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Recipe) with the Recipe object that was created.
@@ -112,7 +113,7 @@ const Recipes = (database) => {
       });
   */
   recipes.createRecipeWithIngredients = (
-    { name, isPublic, ingredientIDList },
+    { name, isPublic, ingredientIDList, recipeBookID },
     callback
   ) => {
     database.execute(
@@ -136,12 +137,23 @@ const Recipes = (database) => {
               callback(err, null);
               return;
             }
-            buildCreateResponse(
-              err,
-              rows,
-              { name, isPublic, ingredientIDList },
-              Recipe,
-              callback
+
+            database.execute(
+              "INSERT INTO RecipeBookRecipes(recipe_id, recipebook_id) VALUES(?, ?)",
+              [recipeID, recipeBookID],
+              (err, recipeBookInsert) => {
+                if (err) {
+                  callback(err, null);
+                  return;
+                }
+                buildCreateResponse(
+                  err,
+                  rows,
+                  { name, isPublic, ingredientIDList },
+                  Recipe,
+                  callback
+                );
+              }
             );
           }
         );

@@ -34,6 +34,7 @@ app.engine(
 // Handlebars partial.
 app.use(function(req, res, next){
 	res.locals.user_id = req.session.user_id;
+	res.locals.recipeBookID = req.session.recipeBookID;
 	next();
 });
 
@@ -113,6 +114,7 @@ app.post('/register', async (req, res) => {
 						if (!error) {
 							req.session.user_id = username;
 							res.locals.user_id = username;
+							req.session.recipeBookID = user.recipeBookID;
 							res.render('index');
 						} else {
 							context.registerError = 'Username taken';

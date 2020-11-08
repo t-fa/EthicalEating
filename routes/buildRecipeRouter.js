@@ -35,7 +35,9 @@ buildRecipeRouter.route('/')
     if (!Array.isArray(ingredients)) {
         ingredients = Array.from(ingredients);
     }
-    Models.Recipes.createRecipeWithIngredients({ name: name, isPublic: true, ingredientIDList: ingredients}, (err, newRecipeObject) => {
+    Models.Recipes.createRecipeWithIngredients(
+        {name: name, isPublic: true, ingredientIDList: ingredients, recipeBookID: res.locals.recipeBookID},
+        (err, newRecipeObject) => {
         if (err) {
             console.log("Failed to create the recipe. Error:", err);
             return next(err); // bail out of the handler here, newRecipeObject undefined
