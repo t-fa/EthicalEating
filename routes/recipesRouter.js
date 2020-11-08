@@ -17,7 +17,6 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
         }
         context.ingredients = recipeWithReplacements
         res.render('userRecipe', context);
-        
     }
   );
 });
