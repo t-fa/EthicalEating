@@ -11,9 +11,48 @@
             </button>
         </span>
         <span style="float:right">This recipe is currently in your Recipe Book!</span>
-        
+
     </p>
 
+    <table id="userRecipeTable">
+
+        <tr>
+            <th>Ingredient</th>
+            <th>Details</th>
+            <th id="ethicalInfo">Ethical Info</th>
+        </tr>
+        <tr>
+            <td class="ingredient">Ingredient 1</td>
+            <td>Details go here</td>
+            <td>
+                <span>Info</span>
+                <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
+                    &#9432
+                    <span class="tooltiptext">
+                        How can I ethically improve this ingredient?
+                    </span>
+                </span>
+            </td>
+        </tr>
+        {{#each ingredient}}
+        <tr>
+            <td class="ingredient">{{this.name}}</td>
+            <td>Details go here</td>
+            <td>
+                <span>Info</span>
+                <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
+                    &#9432
+                    <span class="tooltiptext">
+                        How can I ethically improve this ingredient?
+                    </span>
+                </span>
+            </td>
+        </tr>
+        {{/each}}
+    </table> <br />
+
+
+    <!--
     <table id="userRecipeTable">
 
         <tr>
@@ -68,12 +107,12 @@
                 <span class="tooltipleft" style="float:right" onclick="window.location.href='ingredientEthics'">
                     &#9432
                     <span class="tooltiptext">
-                        How can I ethically improve this ingredient? 
+                        How can I ethically improve this ingredient?
                     </span>
                 </span>
             </td>
         </tr>
-    </table> <br />
+    </table> <br /> -->
 
 </div>
 

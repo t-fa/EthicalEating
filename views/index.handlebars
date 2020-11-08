@@ -31,14 +31,6 @@
       {{#if recipes}}
         {{#each recipes}}
         <p />
-        <div class = "card" style="width: 18rem;">
-          <ul class="list-group list-group-flush">
-          <div class = "card-header">{{recipe.name}}</div>
-            {{#each ingredients}}
-              <li class = "list-group-item">
-                <a href="/ingredients/{{ingredient.name}}" target="_new">{{ingredient.name}}</a>
-              </li>
-              {{#if replacements}}
                 <li style="list-style:none;">
                 {{#each replacements}}
                   <ul>
@@ -49,10 +41,22 @@
                     </li>
                   </ul>
                 {{/each}}
+                    {{#each replacements}}
+                    <ul>
+                        <li style="background-color:azure">
+                            {{replacementReason}}
+                            [<a href="{{replacementReasonSource}}" target="_new">source</a>]<br>
+                            <a href="/ingredients/{{name}}" target="_new">View Ingredient</a>
+                        </li>
+                    </ul>
+                    {{/each}}
                 </li>
               {{/if}}
             {{/each}}
           </ul>
+                {{/if}}
+                {{/each}}
+            </ul>
         </div>
         <br>
         {{/each}}
@@ -72,6 +76,8 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
     integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
     crossorigin="anonymous"></script>
+
+    <script src="js/book.js"></script>
 </body>
 
 </html>

@@ -17,6 +17,7 @@ const bcrypt = require('bcrypt');
 // If this variable is set, use the port in the variable. Otherwise, use the default (6377).
 const port = process.env.PORT || 6377;
 
+app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({ secret: 'XTCkQE&t%yRV$2dyn8ZUkt3EKP98gpHB34HX8d&&yJVuPmjMe' }));
@@ -37,6 +38,7 @@ const { Users, RecipeBooks } = require('./database');
 const { check } = require('express-validator');
 const { read } = require('fs');
 const { RecipeBook } = require('./database/RecipeBooks');
+const RecipeBookRecipes = require('./database/RecipeBookRecipes');
 app.get('/demo', (_, res) => {
 	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
 		console.log('user creation error:', error, 'newly created user:', user);
@@ -59,8 +61,6 @@ const requireLogin = (req, res, next) => {
 // routes TBD
 app.use('/build', buildRecipeRouter);
 app.use('/', searchRouter);
-
-
 
 app.use('/ethicality', ethicalRouter);
 app.use('/book', bookRouter);
@@ -149,17 +149,25 @@ app.post('/login', async (req, res) => {
 	});
 });
 
-app.post('/book', (req, res) => {
-	var context = {};
-	if (req.session.user_id) {
-		username = req.session.user_id
-		user_id = Users.getUserByUsername(username);
-	} else {
-		console.log('please log in first');
-		res.render('login');
-    }
-	console.log(user_id);
+
+// Add a recipe to recipeBook
+app.post('/addRecipe', function (req, res) {
+	const recipeID = req.body.recipeID;
+	console.log('recipe id:');
+	console.log(recipeID);
+	
+	Users.getUserByUsername({ "username": req.session.user_id }, function (err, userObject) {
+		if (err) { console.log(err); return; }
+		console.log('recipe book id:')
+		console.log(userObject.recipeBookID);
+		
+		RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': userObject.recipeBookID }, function (err, data) {
+			if (err) { console.log(err); return; }
+			console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
+		});
+	});
 });
+
 
 app.post('/logout', (req, res) => {
 	if (req.session.user_id) {
