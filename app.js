@@ -174,8 +174,12 @@ app.post('/addRecipe', function (req, res) {
 		return res.redirect('/login');
 	}
 	RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': req.session.recipeBookID }, function (err, data) {
-		if (err) { console.log(err); return; }
+		if (err) {
+			console.log("addRecipeByIDToRecipeBookWithID failed err:", err);
+			return res.status(500).json("failedToAddRecipe");
+		}
 		console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
+		return res.status(200).json("OK");
 	});
 });
 
