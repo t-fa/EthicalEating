@@ -31,6 +31,15 @@
       {{#if recipes}}
         {{#each recipes}}
         <p />
+        <div class="card" style="width: 18rem;">
+            <button class="addRecipeToBook" onclick="addRecipe({{recipe.id}})"> Add This Recipe to my Recipe Book </button>
+            <ul class="list-group list-group-flush">
+                <div class="card-header">{{recipe.name}}</div>
+                {{#each ingredients}}
+                <li class="list-group-item">
+                    <a href="/ingredients/{{ingredient.name}}" target="_new">{{ingredient.name}}</a>
+                </li>
+                {{#if replacements}}
                 <li style="list-style:none;">
                     {{#each replacements}}
                     <ul>
