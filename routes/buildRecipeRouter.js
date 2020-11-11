@@ -37,7 +37,13 @@ buildRecipeRouter.route('/')
     }
     console.log("Building recipe with name, ingredients, recipeBookID:", name, ingredients, res.locals.recipeBookID);
     Models.Recipes.createRecipeWithIngredients(
-        {name: name, isPublic: true, ingredientIDList: ingredients, recipeBookID: res.locals.recipeBookID},
+        {
+          name: name,
+          isPublic: false,
+          ingredientIDList: ingredients,
+          recipeBookID: res.locals.recipeBookID,
+          ownerID: req.session.user_id,
+        },
         (err, newRecipeObject) => {
         if (err) {
             console.log("Failed to create the recipe. Error:", err);

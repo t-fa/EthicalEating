@@ -97,6 +97,7 @@ const Recipes = (database) => {
       + isPublic: Whether the Recipe is publicly visible.
       + ingredientIDList: A list of Ingredient IDs for the Ingredients in the recipe.
       + recipeBookID: ID of the RecipeBook into which to add this Recipe.
+      + ownerID: ID of the user who owns the Recipe. This is null if it's a recipe we pre-populated.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Recipe) with the Recipe object that was created.
@@ -113,12 +114,20 @@ const Recipes = (database) => {
       });
   */
   recipes.createRecipeWithIngredients = (
-    { name, isPublic, ingredientIDList, recipeBookID },
+    { name, isPublic, ingredientIDList, recipeBookID, ownerID },
     callback
   ) => {
     database.execute(
-      "INSERT INTO Recipes(name, is_public) VALUES(?, ?)",
-      [name, isPublic],
+      `
+      INSERT INTO Recipes(name, is_public, date_created, owner_id)
+      VALUES(
+        ?,
+        ?,
+        CURDATE(),
+        (SELECT id FROM Users WHERE username = ?)
+      )
+      `,
+      [name, isPublic, ownerID],
       (err, recipeInsert) => {
         if (err) {
           callback(err, null);
