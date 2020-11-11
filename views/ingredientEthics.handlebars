@@ -1,10 +1,10 @@
 ﻿<head>
-    <link rel="stylesheet" href="/css/book.css" />
+    <link rel="stylesheet" href="/css/book.css?v=1605124590" />
 </head>
-<div style="margin-left: 10%; margin-right: 10%;">
+<div>
     <p>
-        <button onclick="history.back()" style="height:4em;width:16em;font-size:medium">
-            Back to [Recipe]
+        <button onclick="history.back()" style="height:4em;width:16em;margin-left:4em;font-size:medium">
+            <-- Back to Recipe
         </button>
     </p>
 
@@ -22,19 +22,16 @@
                 You could consider replacing it with one of the following options.</p>
                 <br/>
             <h3><b>Replacement Suggestions</b></h3>
-            <form>
+            <form id="submitIngredientReplacement">
 
             {{#each ingredientReplacements}}
-                <input type="radio" id="replacement_1" name="replaceIngredient" value="replacement 1">
-                <label for="replacement_1">{{replacementReason}} <a href="{{replacementReasonSource}}" target="_blank">[source]</a></label>
-                <span class="tooltip">
-                    &#11217
-                    <span class='tooltiptext'>This ingredient is more ethical because it uses less water!</span>
-                </span>
-                <br />
+            <div class="ingredientReplacementSuggestion">
+                <input type="radio" id="replacement_{{@index}}" name="replaceWithID" value="{{id}}">
+                <label for="replacement_{{@index}}">{{replacementReason}} <a href="{{replacementReasonSource}}" target="_blank">[source]</a></label>
+            </div>
             {{/each}}
-                <input type="radio" id="no_change" name="replaceIngredient" value="no_change" checked>
-
+                <input type="hidden" name="originalIngredientID" value="{{originalIngredient.id}}">
+                <input type="radio" id="no_change" name="replaceWithID" value="null" checked>
                 <label for="no_change">No thanks, I'll keep it as is</label><br /><br />
 
                 <input type="submit" value="Replace Ingredient">
@@ -54,4 +51,4 @@
 
 </div>
 
-<script src="/js/book.js"></script>
+<script src="/js/book.js?v=1605124590"></script>

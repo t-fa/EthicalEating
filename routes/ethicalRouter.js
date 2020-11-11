@@ -61,13 +61,9 @@ ethicalRouter.route('/:ingredientId')
           console.log("Failed to get IngredientReplacements:", err);
           return; // bail out of the handler here, listOfIngredientObjects undefined
         }
-        console.log("Fetched listOfIngredientReplacements:", listOfIngredientObjects);
-        console.log("List as JSON objects",
-          listOfIngredientObjects.map((ingredient) =>
-            ingredient.toJSON()
-          )
-        );
+        context.originalIngredient = ingredientObject;
         context.ingredientReplacements = listOfIngredientObjects;
+        console.log(context);
         res.render('ingredientEthics', context);
       }
     );
