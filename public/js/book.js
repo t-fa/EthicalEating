@@ -35,6 +35,9 @@ function handleIngredientReplacementFormSubmit(event) {
     let replaceWithID = null;
     if (replaceWith !== "null" && Number.isInteger(Number(replaceWith))) {
       replaceWithID = Number(replaceWith);
+    } else {
+      // User submitted form but chose not to change anything.
+      history.back();
     }
 
     const originalID = document.querySelector(
@@ -79,8 +82,8 @@ function handleIngredientReplacementFormSubmit(event) {
             console.log("Replacement error:", result.error);
             return;
         }
-        // Go back to the recipe page.
-        history.back();
+        // Fetch the recipe page again after replacement so user sees replacement.
+        window.location.href = `/userRecipe/${recipeID}`;
       })
       .catch((err) => {
         // There was an error, display this to the user.
