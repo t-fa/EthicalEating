@@ -164,25 +164,28 @@ app.post('/login', async (req, res) => {
 	});
 });
 
-
+const { Recipes } = require('./database');
 // Add a recipe to recipeBook
 app.post('/addRecipe', function (req, res) {
 	const recipeID = req.body.recipeID;
-	console.log('recipe id:');
-	console.log(recipeID);
 	if (!req.session.recipeBookID) {
 		return res.redirect('/login');
 	}
-	RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': req.session.recipeBookID }, function (err, data) {
+	Recipes.clone({"recipeID": recipeID, "username": req.session.user_id}, function(err, newRecipeID) {
 		if (err) {
-			console.log("addRecipeByIDToRecipeBookWithID failed err:", err);
+			console.log("clone failed err:", err);
 			return res.status(500).json("failedToAddRecipe");
 		}
-		console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
-		return res.status(200).json("OK");
+		RecipeBooks.addRecipeByIDToRecipeBookWithID({ "recipeID": newRecipeID, "recipeBookID": req.session.recipeBookID }, function (err, data) {
+			if (err) {
+				console.log("addRecipeByIDToRecipeBookWithID failed err:", err);
+				return res.status(500).json("failedToAddRecipe");
+			}
+			console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
+			return res.status(200).json("OK");
+		});
 	});
 });
-
 
 app.post('/logout', (req, res) => {
 	if (req.session.user_id) {

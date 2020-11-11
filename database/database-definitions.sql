@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS Recipes(
   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   is_public BOOLEAN NOT NULL,
-  date_created DATE
+  date_created DATE,
+  owner_id INT
 ) CHARACTER SET=utf8mb4;
 
 -- Creates the Ingredients table based on schema design
@@ -124,12 +125,12 @@ INSERT INTO Ingredients (name, description, ethical_reason) VALUES
 ('Tofu', 'A soy-based meat substitute', 'null' );
 
 -- Seed Data for the recipes table
-INSERT INTO Recipes (name, is_public, date_created) VALUES
-('Almond Cake', TRUE, '2020-11-1' ),
-('Hamburger Gravy', TRUE, '2020-11-1' ),
-('Shrimp Scampi', TRUE, '2020-11-1' ),
-('Chicken and Mushroom', TRUE, '2020-11-1' ),
-('Herb Roasted Chicken', TRUE, '2020-11-1' );
+INSERT INTO Recipes (name, is_public, date_created, owner_id) VALUES
+('Almond Cake', TRUE, '2020-11-1', null ),
+('Hamburger Gravy', TRUE, '2020-11-1', null ),
+('Shrimp Scampi', TRUE, '2020-11-1', null ),
+('Chicken and Mushroom', TRUE, '2020-11-1', null ),
+('Herb Roasted Chicken', TRUE, '2020-11-1', null );
 
 
 -- Required data for the ethical score, will create after team meeting
