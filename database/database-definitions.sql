@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS Recipes(
   name VARCHAR(255) NOT NULL,
   is_public BOOLEAN NOT NULL,
   date_created DATE,
-  owner_id INT
+  owner_id INT,
+  CONSTRAINT UNIQUE(name, owner_id)
 ) CHARACTER SET=utf8mb4;
 
 -- Creates the Ingredients table based on schema design
