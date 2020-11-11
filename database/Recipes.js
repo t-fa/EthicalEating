@@ -97,7 +97,7 @@ const Recipes = (database) => {
       + isPublic: Whether the Recipe is publicly visible.
       + ingredientIDList: A list of Ingredient IDs for the Ingredients in the recipe.
       + recipeBookID: ID of the RecipeBook into which to add this Recipe.
-      + ownerID: ID of the user who owns the Recipe. This is null if it's a recipe we pre-populated.
+      + username: username of the User who owns the Recipe. This is null if it's a recipe we pre-populated.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Recipe) with the Recipe object that was created.
@@ -114,7 +114,7 @@ const Recipes = (database) => {
       });
   */
   recipes.createRecipeWithIngredients = (
-    { name, isPublic, ingredientIDList, recipeBookID, ownerID },
+    { name, isPublic, ingredientIDList, recipeBookID, username },
     callback
   ) => {
     database.execute(
@@ -127,7 +127,7 @@ const Recipes = (database) => {
         (SELECT id FROM Users WHERE username = ?)
       )
       `,
-      [name, isPublic, ownerID],
+      [name, isPublic, username],
       (err, recipeInsert) => {
         if (err) {
           callback(err, null);
@@ -276,7 +276,7 @@ const Recipes = (database) => {
   };
 
   /**
-    searchByName searches for Recipe objects by name. Performs a fuzzy, case-insensitive search
+    searchByName searches for all *public* Recipe objects by name. Performs a fuzzy, case-insensitive search
     where name only has to contain @query somewhere. This returns more potential results at the
     cost of some accuracy. The search returns a highly nested object, but it's very information
     rich! It contains all Recipe objects matching the result, with the Ingredient objects for
@@ -312,7 +312,7 @@ const Recipes = (database) => {
   */
   recipes.searchByName = ({ query }, callback) => {
     database.execute(
-      "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ?",
+      "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ? AND is_public = TRUE",
       ["%" + query.toUpperCase() + "%"],
       (err, rows) => {
         if (err) {
@@ -429,6 +429,64 @@ const Recipes = (database) => {
           }
         });
         callback(null, recipeIDToData[recipeID]);
+      }
+    );
+  };
+
+  /**
+    clone copies the recipe with ID @recipeID to owning User @username so that future modifications
+    to the Recipe's Ingredients will not impact the original Recipe that was copied. Used before
+    inserting a public Recipe into an individual User's RecipeBook.
+    => Receives:
+      + recipeID: ID of the Recipe to clone.
+      + username: username of the User to which the new Recipe belongs.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, recipeID) the ID of the recipe that was cloned.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Clone recipeID 2 and assign owner as User with username "testuser123"
+      Recipes.clone({ "recipeID": 2, "username": "testuser123" }, (err, clonedRecipeID) => {
+        if (err) {
+          console.log("Failed to clone Recipe:", err);
+          return;  // bail out of the handler here, clonedRecipeID undefined
+        }
+        console.log("clonedRecipeID:", clonedRecipeID);
+      });
+    => Attribution: First Insert Recipe name select trick: https://stackoverflow.com/a/43610081
+  */
+  recipes.clone = ({ recipeID, username }, callback) => {
+    database.execute(
+      `
+      INSERT INTO Recipes(name, is_public, date_created, owner_id) VALUES
+      (
+        (SELECT * FROM (SELECT name FROM Recipes WHERE id = ?) as newRecipe),
+        FALSE,
+        CURDATE(),
+        (SELECT id FROM Users WHERE username = ?)
+      );
+      `,
+      [recipeID, username],
+      (err, insertResult) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        const newRecipeID = insertResult.insertId;
+        database.execute(
+          `
+          INSERT INTO RecipeIngredients(recipe_id, ingredient_id)
+          (SELECT ? as recipe_id, ingredient_id FROM RecipeIngredients WHERE recipe_id = ?);
+          `,
+          [newRecipeID, recipeID],
+          (err, rows) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            callback(null, newRecipeID);
+          }
+        );
       }
     );
   };

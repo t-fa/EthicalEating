@@ -42,7 +42,7 @@ buildRecipeRouter.route('/')
           isPublic: false,
           ingredientIDList: ingredients,
           recipeBookID: res.locals.recipeBookID,
-          ownerID: req.session.user_id,
+          username: req.session.user_id,
         },
         (err, newRecipeObject) => {
         if (err) {
