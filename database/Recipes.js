@@ -47,6 +47,7 @@ const Recipes = (database) => {
   // Define any Error messages or Data Validator functions for the module.
   const Errors = {
     recipeBookAlreadyExists: "RecipeBook already exists for user.",
+    recipeWithNameAlreadyExists: "Your RecipeBook already has a Recipe with this name.",
   };
   const Validators = {};
 
@@ -197,6 +198,50 @@ const Recipes = (database) => {
     database.execute(
       "INSERT INTO RecipeIngredients(ingredient_id, recipe_id) VALUES (?, ?)",
       [ingredientID, recipeID],
+      (err) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        callback(null, null);
+      }
+    );
+  };
+
+  /**
+    replaceIngredientForRecipeID replaces Ingredient with ID @toReplaceID with Ingredient with
+    ID @replaceWithID for Recipe with ID @recipeID.
+    => Receives:
+      + toReplaceID: ID of the Ingredient to replace.
+      + replaceWithID: ID of the Ingredient to replace with.
+      + recipeID: ID of the Recipe in which to make the replacement.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, null) returns nothing on success
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Replace Ingredient with ID 1 for Ingredient with ID 2 in Recipe with ID 3
+      Recipes.replaceIngredientForRecipeID({ toReplaceID: 1, replaceWithID: 2, recipeID: 3 }, (err, data) => {
+        if (err) {
+          console.log("Failed to replace the ingredient. Error:", err);
+          return;
+        }
+        // Made the replacement successfully. err null, data may be ignored.
+        return;
+      });
+  */
+  recipes.replaceIngredientForRecipeID = (
+    { toReplaceID, replaceWithID, recipeID },
+    callback
+  ) => {
+    database.execute(
+      `
+      UPDATE RecipeIngredients SET ingredient_id = ?
+      WHERE id = (SELECT * FROM (
+        SELECT id FROM RecipeIngredients WHERE ingredient_id = ? AND recipe_id = ?
+      ) as subquery);
+      `,
+      [replaceWithID, toReplaceID, recipeID],
       (err) => {
         if (err) {
           callback(err, null);
@@ -469,6 +514,10 @@ const Recipes = (database) => {
       [recipeID, username],
       (err, insertResult) => {
         if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            callback(Errors.recipeWithNameAlreadyExists, null);
+            return;
+          }
           callback(err, null);
           return;
         }

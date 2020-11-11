@@ -174,7 +174,7 @@ app.post('/addRecipe', function (req, res) {
 	Recipes.clone({"recipeID": recipeID, "username": req.session.user_id}, function(err, newRecipeID) {
 		if (err) {
 			console.log("clone failed err:", err);
-			return res.status(500).json("failedToAddRecipe");
+			return res.status(500).json({"error": err});
 		}
 		RecipeBooks.addRecipeByIDToRecipeBookWithID({ "recipeID": newRecipeID, "recipeBookID": req.session.recipeBookID }, function (err, data) {
 			if (err) {

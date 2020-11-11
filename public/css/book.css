@@ -7,7 +7,7 @@
 }
 
 table {
-    display: block;
+    width: 80vw;
     border: 2px solid;
     border-collapse: collapse;
     Overflow-y: scroll;
@@ -20,7 +20,6 @@ th, td {
 }
 
 tbody {
-    display: block;
     width: 100%;
 }
 
@@ -29,12 +28,35 @@ th {
     font-size: large;
 }
 
-#ethicalInfo {
-    min-width:39em;
+td {
+    padding: 0px 8px;
+}
+
+input {
+    cursor: pointer;
+}
+
+input[type='radio'] {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+}
+
+label {
+    display: inline;
+}
+
+div.ingredientReplacementSuggestion {
+    margin: 16px auto;
 }
 
 .sortIcon:hover {
     color:slategrey;
+}
+
+a span.tooltiptext {
+    text-decoration: underline;
+    color: blue;
 }
 
 #recipeClick:hover {
