@@ -9,9 +9,94 @@ function addRecipe(recipeID) {
         },
         body: JSON.stringify({ recipeID: recipeID })
     };
-    fetch('/addRecipe', options);
+    fetch('/addRecipe', options)
+        .then(data => data.json())
+        .then(result => {
+        // Success! Redirect to recipe page.
+        if (result.error !== null && typeof result.error !== "undefined") {
+            window.alert(result.error);
+        } else {
+            window.location.href = "/book";
+        }
+    }).catch(err => {
+        // There was an error, display this to the user.
+        console.log("Error :(", err);
+    });
 };
 
+
+function handleIngredientReplacementFormSubmit(event) {
+    // Prevent default submit behavior.
+    event.preventDefault();
+
+    const replaceWith = document.querySelector(
+      `input[name="replaceWithID"]:checked`
+    ).value;
+    let replaceWithID = null;
+    if (replaceWith !== "null" && Number.isInteger(Number(replaceWith))) {
+      replaceWithID = Number(replaceWith);
+    } else {
+      // User submitted form but chose not to change anything.
+      history.back();
+    }
+
+    const originalID = document.querySelector(
+      `input[name="originalIngredientID"]`
+    ).value;
+    let toReplaceID = null;
+    if (originalID !== null && Number.isInteger(Number(originalID))) {
+      toReplaceID = Number(originalID);
+    }
+
+    const urlObj = new URL(window.location.href);
+    const recipeIDParam = urlObj.searchParams.get("recipeID");
+
+    let recipeID = null;
+    if (recipeIDParam !== null && Number.isInteger(Number(recipeIDParam))) {
+      recipeID = Number(recipeIDParam);
+    }
+
+    if (toReplaceID === null || replaceWithID === null || recipeID === null) {
+      console.log(
+        "one or more require params null,",
+        toReplaceID,
+        replaceWithID,
+        recipeID
+      );
+      return;
+    }
+
+    const options = {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ toReplaceID, replaceWithID }),
+    };
+    // recipe ID query parameter
+    fetch(`/userRecipe/${recipeID}/ingredients`, options)
+      .then(data => data.json())
+      .then(result => {
+        // Success! Redirect to recipe page.
+        if (result.error) {
+            console.log("Replacement error:", result.error);
+            return;
+        }
+        // Fetch the recipe page again after replacement so user sees replacement.
+        window.location.href = `/userRecipe/${recipeID}`;
+      })
+      .catch((err) => {
+        // There was an error, display this to the user.
+        console.log("Replacement Error :(", err);
+      });
+}
+
+function attachListeners() {
+    const ingredientReplacementForm = document.getElementById("submitIngredientReplacement");
+    if (ingredientReplacementForm) {
+        ingredientReplacementForm.addEventListener("submit", handleIngredientReplacementFormSubmit);
+    }
+};
 
 /*-----------------------------------------------------------------------------------*/
 /* Table sort code citation: https://www.w3schools.com/howto/howto_js_sort_table.asp */
@@ -74,3 +159,4 @@ function sortTable(n) {
     }
 }
 
+document.addEventListener("DOMContentLoaded", attachListeners);

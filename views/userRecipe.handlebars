@@ -1,12 +1,12 @@
 ﻿<head>
-    <link rel="stylesheet" href="css/book.css" />
+    <link rel="stylesheet" href="/css/book.css?v=1605124590" />
 </head>
 <div style="margin-left: 10%; margin-right: 10%;">
-    <h1 id="recipeBookHomeTitle">[Recipe Name]</h1><br />
+    <h1 id="recipeBookHomeTitle">{{ingredients.recipe.name}}</h1><br />
 
     <p>
         <span>
-            <button onclick="window.location.href='book'" style="height:4em;width:16em;font-size:medium">
+            <button onclick="window.location.href='/book'" style="height:4em;width:16em;font-size:medium">
                 My Recipes Home
             </button>
         </span>
@@ -22,18 +22,22 @@
             <th id="ethicalInfo">Ethical Info</th>
         </tr>
         
-        {{#each recipe.ingredients}}
+        {{#each ingredients.ingredients}}
         <tr>
             <td class="ingredient">{{this.ingredient.name}}</td>
             <td>{{this.ingredient.description}}</td>
             <td>
-                
-                <span class="tooltipleft" style="float:right">
-                    <a href="/ingredientEthics/{{this.id}}">&#9432</a>
-                    <span class="tooltiptext">
-                        How can I ethically improve this ingredient?
+                {{#if this.replacements}}
+                    <span class="tooltipleft" style="float:right">
+                        <a href="/ingredientEthics/{{this.ingredient.id}}?recipeID={{../ingredients.recipe.id}}">&#9432
+                        <span class="tooltiptext">
+                            How can I ethically improve this ingredient?
+                        </span>
+                        </a>
                     </span>
-                </span>
+                {{else}}
+                    This ingredient is ethically OK.
+                {{/if}}
             </td>
         </tr>
         {{/each}}
@@ -117,7 +121,7 @@
 
     <!-- Buttons for Create, Edit, and Delete recipe -->
     <p>
-        <button onclick="window.location.href='build'" class="createNewRecipe">
+        <button onclick="window.location.href='/build'" class="createNewRecipe">
             Create New Recipe
         </button>
         <button class="editRecipe" style="margin-left:40%">
@@ -130,4 +134,4 @@
 
 </div>
 
-<script src="js/book.js"></script>
+<script src="/js/book.js?v=1605125568"></script>

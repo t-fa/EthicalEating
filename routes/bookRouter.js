@@ -12,14 +12,13 @@ bookRouter.route('/')
 .get((req, res, next) => {
     context = {}
     console.log(req.session.user_id);
-
-    Models.Users.getUserByUsername({ "username": req.session.user_id }, function (err, userObject) {
+    if (!req.session.user_id) {
+		return res.redirect('/login');
+	}
+    Models.RecipeBookRecipes.getAllRecipes({ "recipeBookID": req.session.recipeBookID }, function (err, recipeBookList) {
         if (err) { console.log(err); return; }
-        Models.RecipeBookRecipes.getAllRecipes({ "recipeBookID": userObject.recipeBookID }, function (err, recipeBookList) {
-            if (err) { console.log(err); return; }
-            console.log(recipeBookList);
-            res.render('book', { recipes: recipeBookList });
-        });
+        console.log(recipeBookList);
+        res.render('book', { recipes: recipeBookList });
     });
 });
 

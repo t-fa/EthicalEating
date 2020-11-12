@@ -49,6 +49,7 @@ const Recipes = (database) => {
   // Define any Error messages or Data Validator functions for the module.
   const Errors = {
     recipeBookAlreadyExists: "RecipeBook already exists for user.",
+    recipeWithNameAlreadyExists: "Your RecipeBook already has a Recipe with this name.",
   };
   const Validators = {};
 
@@ -98,6 +99,8 @@ const Recipes = (database) => {
       + name: Name of the Recipe.
       + isPublic: Whether the Recipe is publicly visible.
       + ingredientIDList: A list of Ingredient IDs for the Ingredients in the recipe.
+      + recipeBookID: ID of the RecipeBook into which to add this Recipe.
+      + username: username of the User who owns the Recipe. This is null if it's a recipe we pre-populated.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Recipe) with the Recipe object that was created.
@@ -114,12 +117,20 @@ const Recipes = (database) => {
       });
   */
   recipes.createRecipeWithIngredients = (
-    { name, isPublic, ingredientIDList },
+    { name, isPublic, ingredientIDList, recipeBookID, username },
     callback
   ) => {
     database.execute(
-      "INSERT INTO Recipes(name, is_public) VALUES(?, ?)",
-      [name, isPublic],
+      `
+      INSERT INTO Recipes(name, is_public, date_created, owner_id)
+      VALUES(
+        ?,
+        ?,
+        CURDATE(),
+        (SELECT id FROM Users WHERE username = ?)
+      )
+      `,
+      [name, isPublic, username],
       (err, recipeInsert) => {
         if (err) {
           callback(err, null);
@@ -138,12 +149,23 @@ const Recipes = (database) => {
               callback(err, null);
               return;
             }
-            buildCreateResponse(
-              err,
-              rows,
-              { name, isPublic, ingredientIDList },
-              Recipe,
-              callback
+
+            database.execute(
+              "INSERT INTO RecipeBookRecipes(recipe_id, recipebook_id) VALUES(?, ?)",
+              [recipeID, recipeBookID],
+              (err, recipeBookInsert) => {
+                if (err) {
+                  callback(err, null);
+                  return;
+                }
+                buildCreateResponse(
+                  err,
+                  rows,
+                  { name, isPublic, ingredientIDList },
+                  Recipe,
+                  callback
+                );
+              }
             );
           }
         );
@@ -178,6 +200,50 @@ const Recipes = (database) => {
     database.execute(
       "INSERT INTO RecipeIngredients(ingredient_id, recipe_id) VALUES (?, ?)",
       [ingredientID, recipeID],
+      (err) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        callback(null, null);
+      }
+    );
+  };
+
+  /**
+    replaceIngredientForRecipeID replaces Ingredient with ID @toReplaceID with Ingredient with
+    ID @replaceWithID for Recipe with ID @recipeID.
+    => Receives:
+      + toReplaceID: ID of the Ingredient to replace.
+      + replaceWithID: ID of the Ingredient to replace with.
+      + recipeID: ID of the Recipe in which to make the replacement.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, null) returns nothing on success
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Replace Ingredient with ID 1 for Ingredient with ID 2 in Recipe with ID 3
+      Recipes.replaceIngredientForRecipeID({ toReplaceID: 1, replaceWithID: 2, recipeID: 3 }, (err, data) => {
+        if (err) {
+          console.log("Failed to replace the ingredient. Error:", err);
+          return;
+        }
+        // Made the replacement successfully. err null, data may be ignored.
+        return;
+      });
+  */
+  recipes.replaceIngredientForRecipeID = (
+    { toReplaceID, replaceWithID, recipeID },
+    callback
+  ) => {
+    database.execute(
+      `
+      UPDATE RecipeIngredients SET ingredient_id = ?
+      WHERE id = (SELECT * FROM (
+        SELECT id FROM RecipeIngredients WHERE ingredient_id = ? AND recipe_id = ?
+      ) as subquery);
+      `,
+      [replaceWithID, toReplaceID, recipeID],
       (err) => {
         if (err) {
           callback(err, null);
@@ -257,7 +323,7 @@ const Recipes = (database) => {
   };
 
   /**
-    searchByName searches for Recipe objects by name. Performs a fuzzy, case-insensitive search
+    searchByName searches for all *public* Recipe objects by name. Performs a fuzzy, case-insensitive search
     where name only has to contain @query somewhere. This returns more potential results at the
     cost of some accuracy. The search returns a highly nested object, but it's very information
     rich! It contains all Recipe objects matching the result, with the Ingredient objects for
@@ -293,7 +359,7 @@ const Recipes = (database) => {
   */
   recipes.searchByName = ({ query }, callback) => {
     database.execute(
-      "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ?",
+      "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE UPPER(name) LIKE ? AND is_public = TRUE",
       ["%" + query.toUpperCase() + "%"],
       (err, rows) => {
         if (err) {
@@ -410,6 +476,68 @@ const Recipes = (database) => {
           }
         });
         callback(null, recipeIDToData[recipeID]);
+      }
+    );
+  };
+
+  /**
+    clone copies the recipe with ID @recipeID to owning User @username so that future modifications
+    to the Recipe's Ingredients will not impact the original Recipe that was copied. Used before
+    inserting a public Recipe into an individual User's RecipeBook.
+    => Receives:
+      + recipeID: ID of the Recipe to clone.
+      + username: username of the User to which the new Recipe belongs.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, recipeID) the ID of the recipe that was cloned.
+      + (Error, null) if an error occurs.
+    => Code Example:
+      // Clone recipeID 2 and assign owner as User with username "testuser123"
+      Recipes.clone({ "recipeID": 2, "username": "testuser123" }, (err, clonedRecipeID) => {
+        if (err) {
+          console.log("Failed to clone Recipe:", err);
+          return;  // bail out of the handler here, clonedRecipeID undefined
+        }
+        console.log("clonedRecipeID:", clonedRecipeID);
+      });
+    => Attribution: First Insert Recipe name select trick: https://stackoverflow.com/a/43610081
+  */
+  recipes.clone = ({ recipeID, username }, callback) => {
+    database.execute(
+      `
+      INSERT INTO Recipes(name, is_public, date_created, owner_id) VALUES
+      (
+        (SELECT * FROM (SELECT name FROM Recipes WHERE id = ?) as newRecipe),
+        FALSE,
+        CURDATE(),
+        (SELECT id FROM Users WHERE username = ?)
+      );
+      `,
+      [recipeID, username],
+      (err, insertResult) => {
+        if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            callback(Errors.recipeWithNameAlreadyExists, null);
+            return;
+          }
+          callback(err, null);
+          return;
+        }
+        const newRecipeID = insertResult.insertId;
+        database.execute(
+          `
+          INSERT INTO RecipeIngredients(recipe_id, ingredient_id)
+          (SELECT ? as recipe_id, ingredient_id FROM RecipeIngredients WHERE recipe_id = ?);
+          `,
+          [newRecipeID, recipeID],
+          (err, rows) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            callback(null, newRecipeID);
+          }
+        );
       }
     );
   };

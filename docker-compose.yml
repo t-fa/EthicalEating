@@ -15,8 +15,8 @@ services:
       # port 3306, user "root" password "secret". If it is just "3306" then it is
       # only available from another Docker container running in this compose file.
       # See: https://stackoverflow.com/a/46220742
-      # - "3306"
-      - "127.0.0.1:3306:3306"
+      - "3306"
+      # - "127.0.0.1:3306:3306"
   webapp:
     build:
       context: .

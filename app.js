@@ -28,7 +28,7 @@ app.engine(
 	handlebars({
 		defaultLayout: 'main',
 		layoutsDir: __dirname + '/views/layouts/',
-		partialsDir: __dirname + '/views/partials/'
+		partialsDir: __dirname + '/views/partials/',
 	})
 );
 
@@ -36,6 +36,7 @@ app.engine(
 // Handlebars partial.
 app.use(function(req, res, next){
 	res.locals.user_id = req.session.user_id;
+	res.locals.recipeBookID = req.session.recipeBookID;
 	next();
 });
 
@@ -117,6 +118,7 @@ app.post('/register', async (req, res) => {
 						if (!error) {
 							req.session.user_id = username;
 							res.locals.user_id = username;
+							req.session.recipeBookID = user.recipeBookID;
 							res.render('index');
 						} else {
 							context.registerError = 'Username taken';
@@ -150,6 +152,7 @@ app.post('/login', async (req, res) => {
 						req.session.user_id = username;
 						context.loginError = 'Logged in successfully!';
 						res.locals.user_id = req.session.user_id;
+						req.session.recipeBookID = user.recipeBookID;
 						res.render('index', context);
 					} else {
 						context.loginError = 'Invalid username or password';
@@ -161,25 +164,28 @@ app.post('/login', async (req, res) => {
 	});
 });
 
-
+const { Recipes } = require('./database');
 // Add a recipe to recipeBook
 app.post('/addRecipe', function (req, res) {
 	const recipeID = req.body.recipeID;
-	console.log('recipe id:');
-	console.log(recipeID);
-	
-	Users.getUserByUsername({ "username": req.session.user_id }, function (err, userObject) {
-		if (err) { console.log(err); return; }
-		console.log('recipe book id:')
-		console.log(userObject.recipeBookID);
-		
-		RecipeBooks.addRecipeByIDToRecipeBookWithID({ 'recipeID': recipeID, 'recipeBookID': userObject.recipeBookID }, function (err, data) {
-			if (err) { console.log(err); return; }
+	if (!req.session.recipeBookID) {
+		return res.redirect('/login');
+	}
+	Recipes.clone({"recipeID": recipeID, "username": req.session.user_id}, function(err, newRecipeID) {
+		if (err) {
+			console.log("clone failed err:", err);
+			return res.status(500).json({"error": err});
+		}
+		RecipeBooks.addRecipeByIDToRecipeBookWithID({ "recipeID": newRecipeID, "recipeBookID": req.session.recipeBookID }, function (err, data) {
+			if (err) {
+				console.log("addRecipeByIDToRecipeBookWithID failed err:", err);
+				return res.status(500).json("failedToAddRecipe");
+			}
 			console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
+			return res.status(200).json("OK");
 		});
 	});
 });
-
 
 app.post('/logout', (req, res) => {
 	if (req.session.user_id) {
