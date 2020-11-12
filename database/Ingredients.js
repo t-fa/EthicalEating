@@ -13,10 +13,11 @@ in multiple Recipes.
 
 // Ingredient class. A database query for Ingredients returns instances of the Ingredient class.
 class Ingredient {
-  constructor({ id, name, description } = {}) {
+  constructor({ id, name, description, isEthical } = {}) {
     this.id = id;
     this.name = name;
     this.description = description;
+    this.isEthical = isEthical;
   }
 
   // fromDatabaseRow returns an instance of the class, populating data from database row @dbRow.
@@ -25,6 +26,7 @@ class Ingredient {
       id: dbRow.id,
       name: dbRow.name,
       description: dbRow.description,
+      isEthical: dbRow.isEthical,
     });
   }
 
@@ -58,13 +60,14 @@ const Ingredients = (database) => {
     => Receives:
       + name: Name of the Ingredient.
       + description: Description of the Ingredient.
+      + is_ethical: 1 for True, 0 for False.
       + callback: function(error, data)
     => Returns: by calling @callback with:
       + (null, Ingredient) with the Ingredient object that was created.
       + (Error, null) if an error occurs.
     => Code Example:
-      // Create an Ingredient with @name "foo" and @description "desc".
-      Ingredients.createIngredient({ name: "foo", description: "desc" }, (err, newIngredientObject) => {
+      // Create an Ingredient with @name "foo", @description "desc", and @isEthical "1".
+      Ingredients.createIngredient({ name: "foo", description: "desc", isEthical: "1" }, (err, newIngredientObject) => {
         if (err) {
           console.log("Failed to create the ingredient. Error:", err);
           return; // bail out of the handler here, newIngredientObject undefined
@@ -76,7 +79,7 @@ const Ingredients = (database) => {
   ingredients.createIngredient = ({ name, description }, callback) => {
     database.execute(
       "INSERT INTO Ingredients(name, description) VALUES(?, ?)",
-      [name, description],
+      [name, description, isEthical],
       (err, rows) => {
         console.log(err, rows);
         if (err) {
@@ -86,7 +89,7 @@ const Ingredients = (database) => {
         buildCreateResponse(
           err,
           rows,
-          { name, description },
+          { name, description, isEthical },
           Ingredient,
           callback
         );
