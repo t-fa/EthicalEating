@@ -14,7 +14,7 @@ bookRouter.route('/')
     console.log(req.session.user_id);
     if (!req.session.user_id) {
 		return res.redirect('/login');
-	}
+    }
     Models.RecipeBookRecipes.getAllRecipes({ "recipeBookID": req.session.recipeBookID }, function (err, recipeBookList) {
         if (err) { console.log(err); return; }
         console.log(recipeBookList);
