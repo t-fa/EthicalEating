@@ -10,7 +10,7 @@ searchRouter.use(bodyParser.json());
 and associated ingredients accesible in context.recipes and context.ingredients, respectively.s
 */
 searchRouter.route('/search')
-.get((req, res) => {
+.get((req, res, next) => {
     if(req.query.recipe_search) {
         context = {};
         const search = req.query.recipe_search;

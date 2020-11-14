@@ -1,5 +1,5 @@
 ﻿<head>
-    <link rel="stylesheet" href="/css/book.css?v=1605124590" />
+    <link rel="stylesheet" href="/css/book.css?v=1605382769" />
 </head>
 <div style="margin-left: 10%; margin-right: 10%;">
     <h1 id="recipeBookHomeTitle">{{ingredients.recipe.name}}</h1><br />
@@ -13,6 +13,12 @@
         <span style="float:right">This recipe is currently in your Recipe Book!</span>
 
     </p>
+
+    {{#if undo}}
+        <div class="undo-message">
+            {{{undo.msg}}}
+        </div>
+    {{/if}}
 
     <table id="userRecipeTable">
 
@@ -134,4 +140,4 @@
 
 </div>
 
-<script src="/js/book.js?v=1605125568"></script>
+<script src="/js/book.js?v=1605382131"></script>
