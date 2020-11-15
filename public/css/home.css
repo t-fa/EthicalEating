@@ -1,0 +1,55 @@
+html, body, div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    background-image: none; /*removes default background image */
+}
+
+h1#homepage {
+    font-size: 50px;
+    text-align: center;
+    padding-top: 10px;
+    padding-bottom: 0;
+}
+
+div#banner {
+    width: 100%;
+    position: relative;
+    
+}
+
+div#banner img {
+    width: 100%;
+}
+
+div#banner:after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: linear-gradient(to bottom, 
+                      rgba(255,255,255, 0), 
+                      rgba(189,216,233, 1) 90%);
+    width: 200%;
+    height: 4em;
+  }
+div#homepage {
+    padding-left: 10%;
+    padding-right: 10%;
+    padding-top: 20px;
+    background-color: rgb(189, 216, 233);
+}
+
+div#toBottom {
+    background-color: rgb(189, 216, 233);
+}
+
+div#homepage p {
+    font-size: 20px;
+    margin-bottom: 40px;
+}
