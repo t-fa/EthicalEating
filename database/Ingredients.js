@@ -62,16 +62,6 @@ const Ingredients = (database) => {
     => Returns: by calling @callback with:
       + (null, Ingredient) with the Ingredient object that was created.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Create an Ingredient with @name "foo" and @description "desc".
-      Ingredients.createIngredient({ name: "foo", description: "desc" }, (err, newIngredientObject) => {
-        if (err) {
-          console.log("Failed to create the ingredient. Error:", err);
-          return; // bail out of the handler here, newIngredientObject undefined
-        }
-        // Created the ingredient successfully.
-        console.log("newIngredientObject:", newIngredientObject, "json:", newIngredientObject.toJSON());
-    });
   */
   ingredients.createIngredient = ({ name, description }, callback) => {
     database.execute(
@@ -101,17 +91,6 @@ const Ingredients = (database) => {
     => Returns: by calling @callback with:
       + (null, []Ingredients) the list of Ingredients in the system.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Get all the Ingredients.
-      Ingredients.getAllIngredients((err, listOfAllIngredients) => {
-        if (err) {
-          console.log("Failed to fetch Ingredients:", err);
-          return;  // bail out of the handler here, listOfAllIngredients undefined
-        }
-        // Got the list of Ingredients.
-        console.log("listOfAllIngredients:", listOfAllIngredients);
-        console.log("listOfAllIngredients as json", listOfAllIngredients.map(ingredient => ingredient.toJSON()));
-      });
   */
  ingredients.getAllIngredients = (callback) => {
   database.execute("SELECT * FROM Ingredients", (err, rows) => {
@@ -132,21 +111,6 @@ const Ingredients = (database) => {
       + (null, Ingredient) with the Ingredient object that was fetched.
       + (Ingrdients.Errors.notFound, null) if the Ingredient could not be found.
       + (Error, null) if another error occurs.
-    => Code Example:
-      // Fetch an Ingredient with ID @ingredientID = 2.
-      Ingredients.getIngredient({ ingredientID: 2 }, (err, ingredientObject) => {
-        if (err) {
-          if (err === Ingredients.Errors.notFound) {
-            console.log("Could not find the ingredient.");
-            return; // bail out of the handler here, ingredientObject undefined
-          }
-          // Another error occurred.
-          console.log("An error occurred with the query. Error:", err);
-          return; // bail out of the handler here, ingredientObject undefined
-        }
-        // Fetched the Ingredient successfully.
-        console.log("ingredientObject:", ingredientObject, "json:", ingredientObject.toJSON());
-      });
   */
   ingredients.getIngredient = ({ ingredientID }, callback) => {
     database.execute(
@@ -176,17 +140,6 @@ const Ingredients = (database) => {
     => Returns: by calling @callback with:
       + (null, []Ingredient) the list of Ingredients in the system with names like the provided @query.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Search for flour.
-      Ingredients.searchByName({"query": "flour"}, (err, listOfFlourIngredients) => {
-        if (err) {
-          console.log("Failed to fetch Ingredients:", err);
-          return;  // bail out of the handler here, listOfFlourIngredients undefined
-        }
-        // Got the listOfFlourIngredients.
-        console.log("listOfFlourIngredients:", listOfFlourIngredients);
-        console.log("listOfFlourIngredients as json", listOfFlourIngredients.map(ingredient => ingredient.toJSON()));
-      });
   */
   ingredients.searchByName = ({ query }, callback) => {
     database.execute(

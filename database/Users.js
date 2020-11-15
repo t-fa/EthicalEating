@@ -80,20 +80,6 @@ const Users = (database) => {
       TODO: of course for a production system, you should hash the password and
       store the hash, not the password in plaintext. For dev and testing, this
       has been omitted but is crucial if you're storing real user data.
-    => Code Example:
-      Users.createUserWithUsernameAndPassword({"username": "foo", "password": "bar"}, (err, newUserObject) => {
-        if (err) {
-          if (err === Users.Errors.usernameInUse) {
-            // Inform the user they must pick a different username. newUserObject is null.
-            console.log(err);
-            return; // bail out of the handler here, newUserObject undefined
-          }
-          // Another error occurred.
-          console.log(err); // bail out of the handler here, newUserObject undefined
-        }
-        // User created successfully.
-        console.log("newUserObject:", newUserObject, "user JSON:", newUserObject.toJSON());
-      });
   */
   user.createUserWithUsernameAndPassword = (
     { username, password },
@@ -155,21 +141,6 @@ const Users = (database) => {
       + (null, Instance of the User object) if the user successfully authenticated.
       + (Users.Errors.invalidUsernameOrPassword, null) if the @username or @password are invalid.
       + (Error, null) if another error occurs.
-    => Code Example:
-      // Attempt to log in user with @username "foo" and @password "bar"
-      Users.logInWithUsernameAndPassword(
-        { username: "foo", password: "bar" },
-        (err, userObject) => {
-          if (err === Users.Errors.invalidUsernameOrPassword) {
-            // Let the user know they entered the wrong username or password...
-            console.log(err);
-            return; // bail out of the handler here, userObject undefined
-          }
-          // Now we have the User object. Probably set up a session here on the server
-          // and give the user a cookie to send back and send on future requests.
-          console.log("User object:", userObject, "user JSON": userObject.toJSON());
-        }
-      );
   */
   user.logInWithUsernameAndPassword = ({ username, password }, callback) => {
     database.execute(
@@ -194,16 +165,6 @@ const Users = (database) => {
       + (null, Instance of the User object) if such a User exists
       + (Users.Errors.notFound, null) if no such User with @username can be found.
       + (Error, null) if another error occurs.
-    => Code Example:
-      // Fetch a User by username foo, if user exists.
-      Users.getUserByUsername({ username: "foo" }, (err, userObject) => {
-        if (err) {
-          console.log("Couldn't fetch user. Error:", err);
-          return; // bail out of the handler here, userObject undefined
-        }
-        // Do something with the User object.
-        console.log("userObject:", userObject, "json:", userObject.toJSON());
-      });
   */
   user.getUserByUsername = ({ username }, callback) => {
     database.execute(

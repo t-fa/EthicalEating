@@ -58,16 +58,6 @@ const RecipeBookRecipes = (database) => {
     => Returns: by calling @callback with:
       + (null, []Recipe) a list of Recipe objects on query success. List may be empty.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Get a list of every Recipe object in RecipeBook with ID @recipeBookID = 1.
-      RecipeBookRecipes.getAllRecipes({recipeBookID: 1}, (err, listOfRecipeObjects) => {
-        if (err) { // Couldn't fetch the recipes.
-          console.log(err);
-          return; // bail out of the handler here, listOfRecipeObjects undefined
-        }
-        // Fetched list of Recipes in RecipeBook.
-        console.log("listOfRecipeObjects:", listOfRecipeObjects);
-      });
   */
   recipeBookRecipes.getAllRecipes = ({ recipeBookID }, callback) => {
     database.execute(

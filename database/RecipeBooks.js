@@ -60,14 +60,6 @@ const RecipeBooks = (database) => {
     => Returns: by calling @callback with:
       + (null, insertionInfo) on addition success.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Add Recipe with ID @recipeID = 2 to RecipeBook with ID @recipeBookId = 1.
-      RecipeBooks.addRecipeByIDToRecipeBookWithID({recipeID: 2, recipeBookID: 1}, (err, insertionInfo) => {
-        if (err) { // addition failed
-          return;  // bail out of the handler here, insertionInfo undefined
-        }
-        // Addition successful. @insertionInfo contains info about the insert if needed.
-      });
   */
   recipeBook.addRecipeByIDToRecipeBookWithID = (
     { recipeID, recipeBookID },
@@ -89,24 +81,6 @@ const RecipeBooks = (database) => {
     => Returns by calling @callback with:
       + (null, []Recipe) array of Recipe objects on query success. Array may be empty.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Get a list of every Recipe object for RecipeBook with ID @recipeBookID = 1.
-      RecipeBooks.getRecipesForRecipeBookID(
-        { recipeBookID: 1 },
-        (err, listOfRecipeObjects) => {
-          if (err) {
-            if (err === RecipeBooks.Errors.notFound) {
-              // No RecipeBook Recipes found.
-              console.log(err);
-              return; // bail out of the handler here, listOfRecipeObjects undefined
-            }
-            console.log("Some other database error:", err);
-            return; // bail out of the handler here, listOfRecipeObjects undefined
-          }
-          // Fetched list of Recipes successfully.
-          console.log("data", listOfRecipeObjects);
-        }
-      );
   */
   recipeBook.getRecipesForRecipeBookID = ({ recipeBookID }, callback) => {
     database.execute(

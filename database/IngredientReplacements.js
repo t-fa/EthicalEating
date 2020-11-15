@@ -73,20 +73,6 @@ const IngredientReplacements = (database) => {
     => Returns: by calling @callback with:
       + (null, Instance of created IngredientReplacement object) on creation success.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Create an IngredientReplacement, replacing Ingredient with ID = 1 with Ingredient with
-      // ID = 2 for reason @replacementReason.
-      IngredientReplacements.createIngredientReplacement({
-        ingredientIDReplaces: 1,
-        ingredientIDReplacement: 2,
-        replacementReason: "This ingredient requires less water to produce.",
-      }, (err, newIngredientReplacement) => {
-        if (err) {
-          console.log("Failed to create IngredientReplacement:", err);
-          return; // bail out of the handler here, newIngredientReplacement undefined
-        }
-        console.log("Created newIngredientReplacement:", newIngredientReplacement, "json: ", newIngredientReplacement.toJSON());
-      });
     */
   ingredientReplacement.createIngredientReplacement = (
     { ingredientIDReplaces, ingredientIDReplacement, replacementReason },
@@ -138,23 +124,6 @@ const IngredientReplacements = (database) => {
     => Returns: by calling @callback with:
       + (null, []IngredientReplacement objects) on query success. List may be empty.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Find IngredientReplacements for Ingredient with @ingredientID = 1.
-      IngredientReplacements.getReplacementsForIngredient(
-        { ingredientID: 1 },
-        (err, listOfIngredientReplacements) => {
-          if (err) {
-            console.log("Failed to get IngredientReplacements:", err);
-            return; // bail out of the handler here, listOfIngredientReplacements undefined
-          }
-          console.log("Fetched listOfIngredientReplacements:", listOfIngredientReplacements);
-          console.log("List as JSON objects",
-            listOfIngredientReplacements.map((ingredientReplacement) =>
-              ingredientReplacement.toJSON()
-            )
-          );
-        }
-      );
   */
   ingredientReplacement.getReplacementsForIngredient = (
     { ingredientID },
@@ -183,23 +152,6 @@ const IngredientReplacements = (database) => {
     => Returns: by calling @callback with:
       + (null, []Ingredient objects) on query success. List may be empty.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Find IngredientReplacements for Ingredient with @ingredientIDToReplace = 19.
-      IngredientReplacements.getReplacementsForIngredientAsIngredientObjects(
-        { ingredientIDToReplace: 19 },
-        (err, listOfIngredientObjects) => {
-          if (err) {
-            console.log("Failed to get IngredientReplacements:", err);
-            return; // bail out of the handler here, listOfIngredientObjects undefined
-          }
-          console.log("Fetched listOfIngredientReplacements:", listOfIngredientObjects);
-          console.log("List as JSON objects",
-            listOfIngredientObjects.map((ingredient) =>
-              ingredient.toJSON()
-            )
-          );
-        }
-      );
   */
 
   ingredientReplacement.getReplacementsForIngredientAsIngredientObjects = (
