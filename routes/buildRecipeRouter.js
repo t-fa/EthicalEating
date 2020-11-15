@@ -17,7 +17,8 @@ buildRecipeRouter.route('/')
           // Got the list of Ingredients.
           console.log("listOfAllIngredients:", listOfAllIngredients);
           console.log("listOfAllIngredients as json", listOfAllIngredients.map(ingredient => ingredient.toJSON()));
-          context.ingredients = listOfAllIngredients;
+          context.ingredients = listOfAllIngredients.sort((a, b) => (a.name > b.name) ? 1 : -1);
+          console.log("sorted list", context.ingredients)
           res.render('buildRecipe', context);
     })
 })
