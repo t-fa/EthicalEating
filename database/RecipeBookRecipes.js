@@ -39,9 +39,8 @@ class RecipeBookRecipe {
 // RecipeBookRecipes defines queries for RecipeBookRecipes. Instantiated with
 // @database, a reference to the mysql connection pool to be used for queries.
 const RecipeBookRecipes = (database) => {
-  // Define any Error messages or Data Validator functions for the module.
+  // Define any Error messages for the module.
   const Errors = {};
-  const Validators = {};
 
   // ======> BEGIN QUERIES <======
 
@@ -58,16 +57,6 @@ const RecipeBookRecipes = (database) => {
     => Returns: by calling @callback with:
       + (null, []Recipe) a list of Recipe objects on query success. List may be empty.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Get a list of every Recipe object in RecipeBook with ID @recipeBookID = 1.
-      RecipeBookRecipes.getAllRecipes({recipeBookID: 1}, (err, listOfRecipeObjects) => {
-        if (err) { // Couldn't fetch the recipes.
-          console.log(err);
-          return; // bail out of the handler here, listOfRecipeObjects undefined
-        }
-        // Fetched list of Recipes in RecipeBook.
-        console.log("listOfRecipeObjects:", listOfRecipeObjects);
-      });
   */
   recipeBookRecipes.getAllRecipes = ({ recipeBookID }, callback) => {
     database.execute(
@@ -83,12 +72,12 @@ const RecipeBookRecipes = (database) => {
           callback(err, null);
           return;
         }
-        buildResponseList(err, rows, Recipe, callback);
+        buildResponseList({ err, rows, callback, entity: Recipe });
       }
     );
   };
 
-  return { ...recipeBookRecipes, Errors, Validators };
+  return { ...recipeBookRecipes, Errors };
 };
 
 module.exports = { RecipeBookRecipes, RecipeBookRecipe };
