@@ -97,7 +97,7 @@ app.get('/undo', async (req, res) => {
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
-app.use('/search', searchRouter);
+app.use('/', searchRouter);
 
 // Fetch a single recipe, e.g., GET /recipes/1 fetches Recipe with ID 1.
 app.use('/userRecipe', recipesRouter);
@@ -147,7 +147,7 @@ app.post('/register', async (req, res) => {
 							req.session.user_id = username;
 							res.locals.user_id = username;
 							req.session.recipeBookID = user.recipeBookID;
-							res.redirect('/book');
+							res.render('index');
 						} else {
 							context.registerError = 'Username taken';
 							res.render('login', context);
@@ -181,7 +181,7 @@ app.post('/login', async (req, res) => {
 						context.loginError = 'Logged in successfully!';
 						res.locals.user_id = req.session.user_id;
 						req.session.recipeBookID = user.recipeBookID;
-						res.redirect('/book');
+						res.render('index', context);
 					} else {
 						context.loginError = 'Invalid username or password';
 						res.render('login', context);
@@ -222,16 +222,16 @@ app.post('/logout', (req, res) => {
 	}
 });
 
-app.get("/", (req, res) => {
-	res.render('home');
-})
-
 app.get('/login', (req, res) => {
 	res.render('login');
 });
 
-app.get('/search', (req, res) => {
-	res.render('search');
+app.get('/home', (req, res) => {
+	res.render('home');
+});
+
+app.get('/', (req, res) => {
+	res.render('index');
 });
 
 // Example page to show authentication. User must be logged in to visit this page
@@ -255,9 +255,9 @@ app.get("/publicRecipe", (req, res) => {
 	res.render('publicRecipe');
 })
 
-// app.get("/index", (req, res) => {
-// 	res.render('index');
-// })
+app.get("/index", (req, res) => {
+	res.render('index');
+})
 
 app.use((req,res) => {
     res.status(404);
