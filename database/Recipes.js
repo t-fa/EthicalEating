@@ -56,30 +56,6 @@ const Recipes = (database) => {
   const recipes = {};
 
   /*
-    createRecipe creates the Recipe with @name and @isPublic status.
-    => Receives:
-      + name: Name of the Recipe.
-      + isPublic: Whether the Recipe is publicly visible.
-      + callback: function(error, data)
-    => Returns: by calling @callback with:
-      + (null, Recipe) with the Recipe object that was created.
-      + (Error, null) if an error occurs.
-  */
-  recipes.createRecipe = ({ name, isPublic }, callback) => {
-    database.execute(
-      "INSERT INTO Recipes(name, is_public) VALUES(?, ?)",
-      [name, isPublic],
-      (err, rows) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        buildCreateResponse(err, rows, { name, isPublic }, Recipe, callback);
-      }
-    );
-  };
-
-  /*
     createRecipeWithIngredients creates the Recipe with @name and @isPublic status having
     Ingredients with IDs given in @ingredientIDList.
     => Receives:
@@ -151,33 +127,6 @@ const Recipes = (database) => {
   };
 
   /**
-    addIngredientIDToRecipeID adds Ingredient with ID @ingredientID to Recipe with ID @recipeID.
-    => Receives:
-      + ingredientID: ID of the Ingredient to add to Recipe.
-      + recipeID: ID of the Recipe to which to add the Ingredient.
-      + callback: function(error, data)
-    => Returns: by calling @callback with:
-      + (null, null) returns nothing on success
-      + (Error, null) if an error occurs.
-  */
-  recipes.addIngredientIDToRecipeID = (
-    { ingredientID, recipeID },
-    callback
-  ) => {
-    database.execute(
-      "INSERT INTO RecipeIngredients(ingredient_id, recipe_id) VALUES (?, ?)",
-      [ingredientID, recipeID],
-      (err) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        callback(null, null);
-      }
-    );
-  };
-
-  /**
     replaceIngredientForRecipeID replaces Ingredient with ID @toReplaceID with Ingredient with
     ID @replaceWithID for Recipe with ID @recipeID.
     => Receives:
@@ -207,34 +156,6 @@ const Recipes = (database) => {
           return;
         }
         callback(null, null);
-      }
-    );
-  };
-
-  /**
-    getIngredients gets a list of Ingredient objects for Recipe with ID @recipeID
-    => Receives:
-      + recipeID: ID of the Recipe for which to fetch the list of Ingredients.
-      + callback: function(error, data)
-    => Returns: by calling @callback with:
-      + (null, []Ingredients) a list of Ingredient objects in the Recipe.
-      + (Error, null) if an error occurs.
-  */
-  recipes.getIngredients = ({ recipeID }, callback) => {
-    database.execute(
-      `
-      SELECT * FROM Ingredients i
-      INNER JOIN RecipeIngredients ri
-      ON i.id = ri.ingredient_id
-      WHERE ri.recipe_id = ?
-      `,
-      [recipeID],
-      (err, rows) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        buildResponseList(err, rows, Ingredient, callback);
       }
     );
   };

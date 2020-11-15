@@ -37,10 +37,7 @@ class RecipeBook {
 // a reference to the mysql connection pool to be used for queries.
 const RecipeBooks = (database) => {
   // Define any Error messages for the module.
-  const Errors = {
-    notFound: "No RecipeBook with that ID exists.",
-    recipeBookAlreadyExists: "RecipeBook already exists for user.",
-  };
+  const Errors = {};
 
   // ======> BEGIN QUERIES <======
 
@@ -67,34 +64,6 @@ const RecipeBooks = (database) => {
       "INSERT INTO RecipeBookRecipes(recipe_id, recipebook_id) VALUES(?, ?)",
       [recipeID, recipeBookID],
       (err, data) => callback(err, data)
-    );
-  };
-
-  /**
-    getRecipesForRecipeBookID returns a list of Recipe objects for all the Recipes in
-    the RecipeBook with ID = @recipeBookID. Returns both public and private Recipes.
-    => Receives:
-      + recipeBookID: ID of RecipeBook from which to fetch list of Recipes.
-      + callback: function(error, data)
-    => Returns by calling @callback with:
-      + (null, []Recipe) array of Recipe objects on query success. Array may be empty.
-      + (Error, null) if an error occurs.
-  */
-  recipeBook.getRecipesForRecipeBookID = ({ recipeBookID }, callback) => {
-    database.execute(
-      `
-      SELECT r.* FROM RecipeBookRecipes rbr
-      INNER JOIN Recipes r ON r.id = rbr.recipe_id
-      WHERE recipebook_id = ?
-      `,
-      [recipeBookID],
-      (err, rows) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        buildResponseList(err, rows, Recipe, callback);
-      }
     );
   };
 

@@ -57,90 +57,6 @@ const IngredientReplacements = (database) => {
   const ingredientReplacement = {};
 
   /**
-    createIngredientReplacement creates an IngredientReplacement replacing Ingredient with
-    ID @ingredientIDReplaces with Ingredient with ID @ingredientIDReplacement for ethical
-    reason @replacementReason.
-
-    Creation fails if either of the two Ingredients do not exist or if the Ingredient IDs are
-    the same (since an Ingredient cannot replace itself).
-    => Receives:
-      + ingredientIDReplaces: ID of the Ingredient A to replace.
-      + ingredientIDReplacement: ID of the Ingredient to replace Ingredient A with.
-      + replacementReason: Description of the reason why we are making the replacement.
-      + replacementReasonSource: Source for the rationale we're using to suggest the replacement.
-      + callback: function(error, data)
-    => Returns: by calling @callback with:
-      + (null, Instance of created IngredientReplacement object) on creation success.
-      + (Error, null) if an error occurs.
-    */
-  ingredientReplacement.createIngredientReplacement = (
-    { ingredientIDReplaces, ingredientIDReplacement, replacementReason },
-    callback
-  ) => {
-    if (ingredientIDReplaces === ingredientIDReplacement) {
-      callback(
-        new Error(
-          "You cannot create an IngredientReplacement that replaces an Ingredient with itself."
-        ),
-        null
-      );
-      return;
-    }
-    database.execute(
-      `
-      INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replacement, replacement_reason, replacement_reason_source)
-      VALUES (?, ?, ?, ?)
-      `,
-      [
-        ingredientIDReplaces,
-        ingredientIDReplacement,
-        replacementReason,
-        replacementReasonSource,
-      ],
-      (err, rows) =>
-        buildCreateResponse(
-          err,
-          rows,
-          {
-            ingredientIDReplaces,
-            ingredientIDReplacement,
-            replacementReason,
-            replacementReasonSource,
-          },
-          IngredientReplacement,
-          callback
-        )
-    );
-  };
-
-  /**
-    getReplacementsForIngredient returns a list of IngredientReplacements for Ingredient
-    with ID @ingredientIDToReplace. The list may be empty if no replacements exist or
-    if the Ingredient with @ingredientIDToReplace does not exist.
-    => Receives:
-      + ingredientIDToReplace: ID of the Ingredient to find IngredientReplacements for.
-      + callback: function(error, data)
-    => Returns: by calling @callback with:
-      + (null, []IngredientReplacement objects) on query success. List may be empty.
-      + (Error, null) if an error occurs.
-  */
-  ingredientReplacement.getReplacementsForIngredient = (
-    { ingredientID },
-    callback
-  ) => {
-    database.execute(
-      "SELECT * FROM IngredientReplacements WHERE ingredient_id_replaces = ?",
-      [ingredientID],
-      (err, rows) => {
-        if (err) {
-          callback(err, null);
-        }
-        buildResponseList(err, rows, IngredientReplacement, callback);
-      }
-    );
-  };
-
-  /**
     getReplacementsForIngredientAsIngredientObjects returns a list of Ingredients for each
     IngredientReplacement that we suggest for the Ingredient with the ID @ingredientIDToReplace.
     The list may be empty if no replacements exist or if the Ingredient with @ingredientIDToReplace
@@ -180,7 +96,7 @@ const IngredientReplacements = (database) => {
     );
   };
 
-  return { ...ingredientReplacement, Errors, Validators };
+  return { ...ingredientReplacement, Errors };
 };
 
 module.exports = { IngredientReplacements, IngredientReplacement };

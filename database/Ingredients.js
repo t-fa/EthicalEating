@@ -53,37 +53,6 @@ const Ingredients = (database) => {
   const ingredients = {};
 
   /**
-    createIngredient creates a new Ingredient with name @name and description @description.
-    => Receives:
-      + name: Name of the Ingredient.
-      + description: Description of the Ingredient.
-      + callback: function(error, data)
-    => Returns: by calling @callback with:
-      + (null, Ingredient) with the Ingredient object that was created.
-      + (Error, null) if an error occurs.
-  */
-  ingredients.createIngredient = ({ name, description }, callback) => {
-    database.execute(
-      "INSERT INTO Ingredients(name, description) VALUES(?, ?)",
-      [name, description],
-      (err, rows) => {
-        console.log(err, rows);
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        buildCreateResponse(
-          err,
-          rows,
-          { name, description },
-          Ingredient,
-          callback
-        );
-      }
-    );
-  };
-
-  /**
     getAllIngredients fetches a list of all the Ingredient objects in the system.
     => Receives:
       + callback: function(error, data)
@@ -116,7 +85,6 @@ const Ingredients = (database) => {
       "SELECT * FROM Ingredients WHERE id = ?",
       [ingredientID],
       (err, rows) => {
-        console.log(err, rows);
         if (err) {
           callback(err, null);
           return;
