@@ -39,9 +39,8 @@ class RecipeBookRecipe {
 // RecipeBookRecipes defines queries for RecipeBookRecipes. Instantiated with
 // @database, a reference to the mysql connection pool to be used for queries.
 const RecipeBookRecipes = (database) => {
-  // Define any Error messages or Data Validator functions for the module.
+  // Define any Error messages for the module.
   const Errors = {};
-  const Validators = {};
 
   // ======> BEGIN QUERIES <======
 
@@ -78,7 +77,7 @@ const RecipeBookRecipes = (database) => {
     );
   };
 
-  return { ...recipeBookRecipes, Errors, Validators };
+  return { ...recipeBookRecipes, Errors };
 };
 
 module.exports = { RecipeBookRecipes, RecipeBookRecipe };

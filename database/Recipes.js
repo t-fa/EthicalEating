@@ -49,7 +49,6 @@ const Recipes = (database) => {
     recipeBookAlreadyExists: "RecipeBook already exists for user.",
     recipeWithNameAlreadyExists: "Your RecipeBook already has a Recipe with this name.",
   };
-  const Validators = {};
 
   // ======> BEGIN QUERIES <======
 
@@ -444,7 +443,7 @@ const Recipes = (database) => {
     );
   };
 
-  return { ...recipes, Errors, Validators };
+  return { ...recipes, Errors };
 };
 
 module.exports = { Recipes, Recipe };

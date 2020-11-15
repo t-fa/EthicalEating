@@ -48,9 +48,8 @@ class IngredientReplacement {
 // IngredientReplacements. Defines queries for IngredientReplacements. Instantiated with
 // @database, a reference to the mysql connection pool to be used for queries.
 const IngredientReplacements = (database) => {
-  // Define any Error messages or Data Validator functions for the module.
+  // Define any Error messages for the module.
   const Errors = {};
-  const Validators = {};
 
   // ======> BEGIN QUERIES <======
 

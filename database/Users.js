@@ -44,20 +44,11 @@ class User {
 // Users defines queries for Users. Instantiated with @database, a
 // reference to the mysql connection pool to be used for queries.
 const Users = (database) => {
-  // Define any Error messages or Data Validator functions for the module.
+  // Define any Error messages for the module.
   const Errors = {
     notFound: "No user with that Username exists.",
     usernameInUse: "Username is already in use.",
     invalidUsernameOrPassword: "Invalid Username or Password.",
-  };
-
-  // TODO update these to do REAL validation that we want for our usernames and passwords.
-  const Validators = {
-    // returns True if username is valid, False if not.
-    // Note: "valid" does not mean "in use". See: Users.Errors.usernameInUse.
-    usernameIsValid: (username) => username.length > 2,
-    // returns True if password is valid, False if not.
-    passwordIsValid: (password) => password.length > 2,
   };
 
   // ======> BEGIN QUERIES <======
@@ -180,7 +171,7 @@ const Users = (database) => {
     );
   };
 
-  return { ...user, Errors, Validators };
+  return { ...user, Errors };
 };
 
 module.exports = { Users, User };

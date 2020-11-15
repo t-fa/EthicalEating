@@ -42,11 +42,10 @@ class Ingredient {
 // Ingredients defines queries for Ingredients. Instantiated with @database,
 // a reference to the mysql connection pool to be used for queries.
 const Ingredients = (database) => {
-  // Define any Error messages or data Validator functions for the module.
+  // Define any Error messages for the module.
   const Errors = {
     notFound: "That ingredient does not exist.",
   };
-  const Validators = {};
 
   // ======> BEGIN QUERIES <======
 
@@ -155,7 +154,7 @@ const Ingredients = (database) => {
     );
   };
 
-  return { ...ingredients, Errors, Validators };
+  return { ...ingredients, Errors };
 };
 
 module.exports = { Ingredients, Ingredient };
