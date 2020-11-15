@@ -47,7 +47,8 @@ const Recipes = (database) => {
   // Define any Error messages or Data Validator functions for the module.
   const Errors = {
     recipeBookAlreadyExists: "RecipeBook already exists for user.",
-    recipeWithNameAlreadyExists: "Your RecipeBook already has a Recipe with this name.",
+    recipeWithNameAlreadyExists:
+      "Your RecipeBook already has a Recipe with this name.",
   };
 
   // ======> BEGIN QUERIES <======
@@ -111,13 +112,13 @@ const Recipes = (database) => {
                   callback(err, null);
                   return;
                 }
-                buildCreateResponse(
+                buildCreateResponse({
                   err,
                   rows,
-                  { name, isPublic, ingredientIDList },
-                  Recipe,
-                  callback
-                );
+                  callback,
+                  entity: Recipe,
+                  creationParams: { name, isPublic, ingredientIDList },
+                });
               }
             );
           }
@@ -174,7 +175,7 @@ const Recipes = (database) => {
         callback(err, null);
         return;
       }
-      buildResponseList(err, rows, Recipe, callback);
+      buildResponseList({ err, rows, callback, entity: Recipe });
     });
   };
 

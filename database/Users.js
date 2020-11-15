@@ -107,13 +107,17 @@ const Users = (database) => {
                   callback(err, null);
                   return;
                 }
-                buildCreateResponse(
+                buildCreateResponse({
                   err,
-                  userRows,
-                  { username, password, recipeBookID: recipeBook.insertId },
-                  User,
-                  callback
-                );
+                  rows: userRows,
+                  callback,
+                  entity: User,
+                  creationParams: {
+                    username,
+                    password,
+                    recipeBookID: recipeBook.insertId,
+                  },
+                });
               }
             );
           }
@@ -139,10 +143,15 @@ const Users = (database) => {
       [username, password],
       (err, rows) => {
         if (!rows || rows.length !== 1) {
-          buildResponse(Errors.invalidUsernameOrPassword, rows, User, callback);
+          buildResponse({
+            err: Errors.invalidUsernameOrPassword,
+            rows,
+            callback,
+            entity: User,
+          });
           return;
         }
-        buildResponse(err, rows, User, callback);
+        buildResponse({ err, rows, callback, entity: User });
       }
     );
   };
@@ -163,10 +172,10 @@ const Users = (database) => {
       [username],
       (err, rows) => {
         if (!rows || rows.length === 0) {
-          buildResponse(Errors.notFound, rows, User, callback);
+          buildResponse({ err: Errors.notFound, rows, callback, entity: User });
           return;
         }
-        buildResponse(err, rows, User, callback);
+        buildResponse({ err, rows, callback, entity: User });
       }
     );
   };

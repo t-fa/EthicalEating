@@ -6,7 +6,7 @@
 // @callback function with the appropriate (err, data) response. Used for initial
 // entity creation: adds the insertId to the object. If data is present, it calls the
 // @callback with an instance of class of type @entity instantiated with data from @rows.
-const buildCreateResponse = (err, rows, creationParams, entity, callback) => {
+const buildCreateResponse = ({err, rows, creationParams, entity, callback} = {}) => {
   if (!nullOrUndefined(err)) {
     callback(err, null);
     return;
@@ -22,7 +22,7 @@ const buildCreateResponse = (err, rows, creationParams, entity, callback) => {
 // @callback function with the appropriate (err, data) response. If data is present,
 // it calls the @callback with an instance of class of type @entity instantiated
 // with data from @rows.
-const buildResponse = (err, rows, entity, callback) => {
+const buildResponse = ({err, rows, entity, callback} = {}) => {
   if (!nullOrUndefined(err)) {
     callback(err, null);
     return;
@@ -38,7 +38,7 @@ const buildResponse = (err, rows, entity, callback) => {
 // @callback function with the appropriate (err, data) response. If data is present, it
 // calls the @callback with a list of instances of class of type @entity instantiated
 // with data from @rows.
-const buildResponseList = (err, rows, entity, callback) => {
+const buildResponseList = ({err, rows, entity, callback} = {}) => {
   if (!nullOrUndefined(err)) {
     callback(err, null);
     return;

@@ -72,7 +72,7 @@ const RecipeBookRecipes = (database) => {
           callback(err, null);
           return;
         }
-        buildResponseList(err, rows, Recipe, callback);
+        buildResponseList({ err, rows, callback, entity: Recipe });
       }
     );
   };

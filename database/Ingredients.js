@@ -60,15 +60,15 @@ const Ingredients = (database) => {
       + (null, []Ingredients) the list of Ingredients in the system.
       + (Error, null) if an error occurs.
   */
- ingredients.getAllIngredients = (callback) => {
-  database.execute("SELECT * FROM Ingredients", (err, rows) => {
-    if (err) {
-      callback(err, null);
-      return;
-    }
-    buildResponseList(err, rows, Ingredient, callback);
-  });
-};
+  ingredients.getAllIngredients = (callback) => {
+    database.execute("SELECT * FROM Ingredients", (err, rows) => {
+      if (err) {
+        callback(err, null);
+        return;
+      }
+      buildResponseList({ err, rows, callback, entity: Ingredient });
+    });
+  };
 
   /**
     getIngredient fetches the Ingredient with ID @ingredientID if it exists.
@@ -92,7 +92,7 @@ const Ingredients = (database) => {
         if (!rows || rows.length !== 1) {
           callback(Errors.notFound, null);
         }
-        buildResponse(err, rows, Ingredient, callback);
+        buildResponse({ err, rows, callback, entity: Ingredient });
       }
     );
   };
@@ -117,7 +117,7 @@ const Ingredients = (database) => {
           callback(err, null);
           return;
         }
-        buildResponseList(err, rows, Ingredient, callback);
+        buildResponseList({ err, rows, callback, entity: Ingredient });
       }
     );
   };
