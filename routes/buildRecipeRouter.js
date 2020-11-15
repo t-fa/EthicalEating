@@ -24,6 +24,8 @@ buildRecipeRouter.route('/')
 })
 .post((req, res, next) => {
     const name = req.body.name;
+    const isPublic = req.body.isPublic;
+    console.log(isPublic)
     // TODO: set isPublic to false later as this will be "private" for the user's recipe book
     // For now leave as public so you can see it show up in the search :)
     if (!req.body.ingredients || !req.session.user_id) {
@@ -40,7 +42,7 @@ buildRecipeRouter.route('/')
     Models.Recipes.createRecipeWithIngredients(
         {
           name: name,
-          isPublic: false,
+          isPublic: isPublic,
           ingredientIDList: ingredients,
           recipeBookID: res.locals.recipeBookID,
           username: req.session.user_id,
