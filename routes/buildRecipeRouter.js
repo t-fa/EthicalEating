@@ -26,8 +26,6 @@ buildRecipeRouter.route('/')
     const name = req.body.name;
     const isPublic = req.body.isPublic;
     console.log(isPublic)
-    // TODO: set isPublic to false later as this will be "private" for the user's recipe book
-    // For now leave as public so you can see it show up in the search :)
     if (!req.body.ingredients || !req.session.user_id) {
         // There's a problem. Redirect to build.
         console.log("No ingredients in recipe!");
