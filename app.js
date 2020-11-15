@@ -52,21 +52,7 @@ app.use(function(req, res, next){
 
 app.set('view engine', 'handlebars');
 
-// Demo of how to create and log in a user...
 const { Users, RecipeBooks } = require('./database');
-const { check } = require('express-validator');
-const { read } = require('fs');
-const { RecipeBook } = require('./database/RecipeBooks');
-const RecipeBookRecipes = require('./database/RecipeBookRecipes');
-app.get('/demo', (_, res) => {
-	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
-		console.log('user creation error:', error, 'newly created user:', user);
-		Users.logInWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
-			console.log('login error:', error, 'logged in user:', user);
-		});
-	});
-	res.status(200).send('demo ok');
-});
 
 // Run this program as a parameter on any page that requires login
 // See '/secret' page for example
