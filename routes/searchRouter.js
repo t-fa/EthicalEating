@@ -9,7 +9,7 @@ searchRouter.use(bodyParser.json());
 /* Endpoint for searching for recipes. Returns a list of recipes matching a search term
 and associated ingredients accesible in context.recipes and context.ingredients, respectively.s
 */
-searchRouter.route('/search')
+searchRouter.route('/')
 .get((req, res, next) => {
     if(req.query.recipe_search) {
         context = {};
@@ -25,7 +25,7 @@ searchRouter.route('/search')
             res.render('index', {"recipes": listOfAllRecipes, "user_id": req.session.user_id});
           });
     } else {
-        res.render('index')
+        res.render('search')
     }
 });
 

@@ -97,7 +97,7 @@ app.get('/undo', async (req, res) => {
 
 // routes TBD
 app.use('/build', buildRecipeRouter);
-app.use('/', searchRouter);
+app.use('/search', searchRouter);
 
 // Fetch a single recipe, e.g., GET /recipes/1 fetches Recipe with ID 1.
 app.use('/userRecipe', recipesRouter);
@@ -224,10 +224,6 @@ app.post('/logout', (req, res) => {
 
 app.get('/login', (req, res) => {
 	res.render('login');
-});
-
-app.get('/home', (req, res) => {
-	res.render('home');
 });
 
 app.get('/', (req, res) => {
