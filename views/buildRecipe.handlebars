@@ -35,13 +35,32 @@
 
                             <div id="ingredientSelect">
                                 <label>Enter Ingredient</label><br>
-                                <select name="ingredients" id="ingredients">
+                                <select name="ingredients" id="ingredients" onChange = "getVal();">
+					
                                     {{#each ingredients}}
+                                    
                                     <option value={{this.id}}>{{this.name}}</option>
-                                    {{/each}}
+                                    	
+					{{/each}}
+					
                                 </select>
+				
                             </div>
+				<a href="/ingredientEthics/1" id = "recipe_link">Ingredient Detail</a>
 
+<script>
+getVal()
+function getVal()
+{
+var selectedVal = document.getElementById("ingredients").value;
+var link = document.getElementById("recipe_link");
+var final = /ingredientEthics/ + selectedVal
+   link.setAttribute("href", final);
+console.log(selectedVal);
+}
+</script>
+
+			
                             {{!-- other ingredients added here via buildRecipe.js --}}
                         </div>
                         </p>
@@ -79,3 +98,5 @@
 
     </div>
 </div>
+
+
