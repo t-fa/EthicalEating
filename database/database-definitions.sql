@@ -13,7 +13,7 @@ USE EthicalEating;
 -- Creates the recipe table based on schema design
 CREATE TABLE IF NOT EXISTS Recipes(
   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
+  name VARCHAR(255) UNIQUE NOT NULL,
   is_public BOOLEAN NOT NULL,
   date_created DATE,
   owner_id INT,
