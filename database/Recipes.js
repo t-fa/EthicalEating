@@ -49,6 +49,8 @@ const Recipes = (database) => {
     recipeBookAlreadyExists: "RecipeBook already exists for user.",
     recipeWithNameAlreadyExists:
       "Your RecipeBook already has a Recipe with this name.",
+     recipeWithNameAlreadyExistsTryAgain:
+      "Your RecipeBook already has a Recipe with this name, please try a different recipe name"
   };
 
   // ======> BEGIN QUERIES <======
@@ -87,6 +89,10 @@ const Recipes = (database) => {
       [name, isPublic, username],
       (err, recipeInsert) => {
         if (err) {
+          if (err.code === "ER_DUP_ENTRY") {
+            callback(Errors.recipeWithNameAlreadyExistsTryAgain, null);
+            return;
+          }
           callback(err, null);
           return;
         }
