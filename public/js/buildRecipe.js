@@ -15,7 +15,7 @@ function addIngredients() {
     ingredientSelect.className = 'added ' + className
     let htmlContent = document.getElementById('ingredientSelect').innerHTML
     htmlContent += '<button onclick="removeIngredient(\'' + className + '\');">Remove Ingredient</button>'
-    htmlContent += '<a href="/ingredientEthics/1">Ingredient Detail</a>'
+    htmlContent += '<a href="/ingredientEthics/1"><button>Link Text</button></a>'
     console.log("Ingredients are")
     ingredientSelect.innerHTML = htmlContent
     ingredientFields.appendChild(ingredientSelect)
