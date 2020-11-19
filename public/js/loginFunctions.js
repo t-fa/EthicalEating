@@ -3,8 +3,14 @@ function onlyAlphanumerical(str) {
 }
 
 function validatePassword(password) {
-	let letter = false;
-	let number = false;
+	let chars = verifyPasswordCharacters(password);
+	let length = verifyPasswordLength(password, 8);
+	return chars && length;
+}
+
+function verifyPasswordCharacters(password) {
+	let letter = false,
+		number = false;
 	for (let i = 0; i < password.length; i++) {
 		let str = password[i];
 		if (str.match('^[A-Za-z]+$')) {
@@ -13,11 +19,11 @@ function validatePassword(password) {
 			number = true;
 		}
 	}
-	if (letter && number && password.length > 7) {
-		return true;
-	} else {
-		return false;
-	}
+	return letter && number;
+}
+
+function verifyPasswordLength(password, length) {
+	return password.length >= length;
 }
 
 module.exports = { onlyAlphanumerical, validatePassword };
