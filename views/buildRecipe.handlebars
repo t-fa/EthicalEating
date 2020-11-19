@@ -35,7 +35,7 @@
 
                             <div id="ingredientSelect">
                                 <label>Enter Ingredient</label><br>
-                                <select name="ingredients" id="ingredients" onChange = "getVal();">
+                                <select name="ingredients" id="ingredients1" onchange = "getVal(1);">
 					
                                     {{#each ingredients}}
                                     
@@ -46,19 +46,7 @@
                                 </select>
 				
                             </div>
-				<a href="/ingredientEthics/1" id = "recipe_link">Ingredient Detail</a>
-
-<script>
-getVal()
-function getVal()
-{
-var selectedVal = document.getElementById("ingredients").value;
-var link = document.getElementById("recipe_link");
-var final = /ingredientEthics/ + selectedVal
-   link.setAttribute("href", final);
-console.log(selectedVal);
-}
-</script>
+				<a href="/ingredientEthics/1" id = "recipe_link1">Ingredient Detail</a>
 
 			
                             {{!-- other ingredients added here via buildRecipe.js --}}
@@ -97,6 +85,19 @@ console.log(selectedVal);
         </div>
 
     </div>
+</div>
+<div id="first">
+<script>
+getVal(1)
+function getVal(num)
+{
+var selectedVal = document.getElementById("ingredients"+num).value;
+var link = document.getElementById("recipe_link"+num);
+var final = /ingredientEthics/ + selectedVal
+   link.setAttribute("href", final);
+console.log(selectedVal);
+}
+</script>
 </div>
 
 
