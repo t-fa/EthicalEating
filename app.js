@@ -230,10 +230,6 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-// Example page to show authentication. User must be logged in to visit this page
-app.get('/secret', requireLogin, (req, res) => {
-	res.send('This page is secret!');
-});
 
 app.get("/book", requireLogin, (req, res) => {
     res.render('book');
