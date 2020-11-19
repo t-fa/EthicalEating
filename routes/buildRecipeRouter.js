@@ -34,7 +34,11 @@ buildRecipeRouter.route('/')
     }
     let ingredients = req.body.ingredients;
     if (!Array.isArray(ingredients)) {
-        ingredients = Array.from(ingredients);
+        // If recipe has just one ingredient, req.body.ingredients will be a
+        // single ID, like "14" instead of an array. createRecipeWithIngredients
+        // requires an array of ingredients, so make an array with a single
+        // ingredient ID in this case.
+        ingredients = [ingredients];
     }
     console.log("Building recipe with name, ingredients, recipeBookID:", name, ingredients, res.locals.recipeBookID);
     Models.Recipes.createRecipeWithIngredients(
