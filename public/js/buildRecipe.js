@@ -19,20 +19,18 @@ function addIngredients() {
     
     ingredientSelect.innerHTML = htmlContent
     ingredientFields.appendChild(ingredientSelect)
-
-
-    //Gets the child node containing the Recipe dropdown ID
-    temp_dropdown = document.getElementsByClassName(className)[0].childNodes[4]
+    addCustomLink(className, ingredientCount)
     
-    // Changes the child node ID to match the class ID
-    temp_dropdown.id = "ingredients"+ ingredientCount
-    // Changes the onChange attribute to the script that listens for value selection change
-    document.getElementById("ingredients"+ingredientCount).setAttribute('onchange','getVal('+ingredientCount+');');
-    
-    // Updates the first value after new recipe is created
-    getVal(ingredientCount)
     }
 
+//Creates a direct link for the ingredient selected at the current selection box
+function addCustomLink(currentClass, currentCount){
+
+    temp_dropdown = document.getElementsByClassName(currentClass)[0].childNodes[4]
+    temp_dropdown.id = "ingredients"+ currentCount 
+    document.getElementById("ingredients"+currentCount).setAttribute('onchange','getVal('+currentCount+');');
+    getVal(currentCount)
+}
 
 
 // removes element that contains the button
