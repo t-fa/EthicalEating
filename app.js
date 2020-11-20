@@ -37,26 +37,22 @@ app.engine(
 app.use(function(req, res, next){
 	res.locals.user_id = req.session.user_id;
 	res.locals.recipeBookID = req.session.recipeBookID;
+
+	// If there's an undo action on the session, decrement its time-to-live (TTL) by 1
+	// for each page navigation. If it's ttl is expired then clear the undo action --
+	// this means the user will no longer be able to have the option to undo this.
+	if (req.session.undo && req.session.undo.ttl !== null && typeof req.session.undo.ttl !== "undefined") {
+		req.session.undo.ttl -= 1;
+		if (req.session.undo.ttl <= 0) {
+			req.session.undo = null;
+		}
+	}
 	next();
 });
 
 app.set('view engine', 'handlebars');
 
-// Demo of how to create and log in a user...
 const { Users, RecipeBooks } = require('./database');
-const { check } = require('express-validator');
-const { read } = require('fs');
-const { RecipeBook } = require('./database/RecipeBooks');
-const RecipeBookRecipes = require('./database/RecipeBookRecipes');
-app.get('/demo', (_, res) => {
-	Users.createUserWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
-		console.log('user creation error:', error, 'newly created user:', user);
-		Users.logInWithUsernameAndPassword({ username: 'foo', password: 'bar' }, (error, user) => {
-			console.log('login error:', error, 'logged in user:', user);
-		});
-	});
-	res.status(200).send('demo ok');
-});
 
 // Run this program as a parameter on any page that requires login
 // See '/secret' page for example
@@ -67,9 +63,41 @@ const requireLogin = (req, res, next) => {
 	next();
 };
 
+// undo allows a user to undo the last action in their session, if that action is un-doable.
+// actions can put themselves on the User's session after taken with an "undo" action.
+app.get('/undo', async (req, res) => {
+	if (req && req.session && req.session.undo && typeof req.session.undo.data !== "undefined") {
+		const { model, fn, args } = req.session.undo.data;
+
+		// Reset the undo data on the session so that we don't process it again.
+		req.session.undo = null;
+
+		// Rather than using eval, the undo action right now defines a model, fn, and args
+		// to apply -- then the undo action runs the db function. Could make a bit more
+		// robust if we do a lot more un-doing.
+		if (model === "Recipes") {
+			if (fn === "replaceIngredientForRecipeID") {
+				const { Recipes } = require('./database');
+				Recipes.replaceIngredientForRecipeID(args, (err, data) => {
+					if (err !== null) {
+						console.log("Undo error:", err);
+						res.status(500).json(err);
+						return;
+					  }
+					  console.log("Undo successful:", data);
+					  return res.redirect(req.header("Referer"));
+				});
+			}
+		}
+	} else {
+		console.log("No undo object found...")
+		return res.status(200).json("OK");
+	}
+});
+
 // routes TBD
 app.use('/build', buildRecipeRouter);
-app.use('/', searchRouter);
+app.use('/search', searchRouter);
 
 // Fetch a single recipe, e.g., GET /recipes/1 fetches Recipe with ID 1.
 app.use('/userRecipe', recipesRouter);
@@ -202,10 +230,6 @@ app.get('/', (req, res) => {
 	res.render('index');
 });
 
-// Example page to show authentication. User must be logged in to visit this page
-app.get('/secret', requireLogin, (req, res) => {
-	res.send('This page is secret!');
-});
 
 app.get("/book", requireLogin, (req, res) => {
     res.render('book');

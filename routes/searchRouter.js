@@ -9,23 +9,28 @@ searchRouter.use(bodyParser.json());
 /* Endpoint for searching for recipes. Returns a list of recipes matching a search term
 and associated ingredients accesible in context.recipes and context.ingredients, respectively.s
 */
-searchRouter.route('/search')
-.get((req, res) => {
+searchRouter.route('/')
+.get((req, res, next) => {
     if(req.query.recipe_search) {
-        context = {};
         const search = req.query.recipe_search;
-
-        Models.Recipes.searchByName({"query": search}, (err, listOfAllRecipes) => {
-            if (err) {
-              console.log("Failed to fetch Recipes:", err);
-              return next(err);  // bail out of the handler here, listOfAllRecipes undefined
-            }
-            // Pass along the user_id in context. TODO: find better way to pass around
-            // and access "App context" from all templates that might need it.
-            res.render('index', {"recipes": listOfAllRecipes, "user_id": req.session.user_id});
-          });
+            Models.Recipes.searchByName({"query": search}, (err, listOfAllRecipes) => {
+                if (err) {
+                  console.log("Failed to fetch Recipes:", err);
+                  return next(err);  // bail out of the handler here, listOfAllRecipes undefined
+                }
+                // Pass along the user_id in context. TODO: find better way to pass around
+                // and access "App context" from all templates that might need it.
+                res.render('search', {"recipes": listOfAllRecipes, "user_id": req.session.user_id});
+              });
+    // user did not search for anything - return all recipes     
     } else {
-        res.render('index')
+        Models.Recipes.getAllRecipes((err, listOfAllRecipes) => {
+            if(err) {
+                console.log("Failed to fetch Recipes:", err);
+                return next(err);  // bail out of the handler here, listOfAllRecipes undefined
+            }
+            res.render('search', {"recipes": listOfAllRecipes, "user_id": req.session.user_id})
+        })
     }
 });
 

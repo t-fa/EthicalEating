@@ -1,93 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<link rel='stylesheet' href='/css/home.css'>
 
-<head>
-  <!--Required for Bootstrap -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-  <title>Index</title>
-</head>
+<h1 id="homepage">Water you doing to save the planet?</h1>
 
-<body>
-
-<div class="card " class="border border-primary" style="width: 50rem;margin:0 auto;">
-  <div class="card-body">
-
-    <nav class="nav nav-pills nav-justified">
-  <a class="nav-item nav-link active" href="/">Recipe</a>
-  <a class="nav-item nav-link " href="/ingredient_search">Ingredient</a>
-</nav>
-<br>
-<br>
-  
-  <div class="container horizontal-center">
-      <div>
-        <form action="/search" method="get">
-          <input type="text" name="recipe_search">
-          <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-      </div>
-      <br>
-      {{#if recipes}}
-        {{#each recipes}}
-        <p />
-
-        <div class="card" style="width: 18rem;">
-            {{#if ../user_id}}
-              <button class="addRecipeToBook" onclick="addRecipe({{recipe.id}})"> Add This Recipe to my Recipe Book </button>
-            {{/if}}
-            <ul class="list-group list-group-flush">
-                <div class="card-header">{{recipe.name}}</div>
-                {{#each ingredients}}
-                <li class="list-group-item">
-                    <a href="/ingredientEthics/{{ingredient.id}}">{{ingredient.name}}</a>
-                    {{#if replacements}}
-                      | <a href="#" class="toggle-replacements" data-toggle-li="{{../recipe.id}}_{{ingredient.id}}_{{@index}}">(see Alternatives)</a>
-                    {{/if}}
-                </li>
-                {{#if replacements}}
-                  <li style="list-style:none;" class="hidden" id="{{../recipe.id}}_{{ingredient.id}}_{{@index}}">
-                    {{#each replacements}}
-                    <ul>
-                        <li style="background-color:azure">
-                            {{replacementReason}}
-                            [<a href="{{replacementReasonSource}}" target="_new">source</a>]<br>
-                            <a href="/ingredientEthics/{{id}}">View Ingredient</a>
-                        </li>
-                    </ul>
-                    {{/each}}
-                </li>
-                {{/if}}
-                {{/each}}
-            </ul>
-        </div>
-        <br>
-        {{/each}}
-      {{else}}
-        No matching Recipes were found. Please search for a different Recipe.
-      {{/if}}
-  </div>
-
-  </div>
+<div id="banner">
+    <img id="homepage" src="images/waterBanner.jpg">
 </div>
 
-  <!-- Required code for bootstrap to work, obtained from Bootstrap website -->
-  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
-    <script src="js/search.js"></script>
-    <style>
-      li.hidden {
-        display: none;
-      }
-    </style>
+<div id="homepage">
+    <p>
+        On the Zero Rows Returned team, we think that water is a very important resource
+        to our global ecosystem. Controversial opinion, we know. However, many people don't
+        realize that the food they choose to eat can have a much larger water footprint
+        than expected. Have no fear, though. We've made this easy to use app that can give
+        you alternative ingredients that use less water!
+    </p>
+    <p>
+        Using <del>AI and machine learning</del> a simple math equation, our system will
+        determinethe ethical score of a recipe by taking the ratio between water-saving
+        ingredients and total ingredients in a recipe.
+    </p>
+    <p>
+        <a href="/login">Creating an account</a> is easy! When you sign up, you will gain
+        access to a recipe book where you can save your recipes and quickly make water-saving
+        adjustments. Or if you prefer to remain a guest, <a href="/search">the search function</a>
+        offers a multitude of recipes and ingredients, and can give you alternatives at a moment's
+        notice.
+    </p>
+    <p>
+        However you use the site, you can rest assurred that you are doing your part to lower
+        our global water consumption.<br>
+        <b>Because every drop counts.</b>
+    </p>
+</div>
 
-    <script src="js/book.js"></script>
-</body>
-
-</html>
-
+<div id="toBottom"></div>

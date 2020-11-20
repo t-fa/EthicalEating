@@ -1,65 +1,103 @@
 <script src='js/buildRecipe.js'></script>
 <div class="card " class="border border-primary" style="width: 50rem;margin:0 auto;">
-  <div class="card-body">
+    <div class="card-body">
 
 
-<div class="container horizontal-center">
-      <div>
+        <div class="container horizontal-center">
+            <div>
 
-<h1>Build A Recipe
-    {{!-- question mark in box, can be changed to image later if desired --}}
-    <div class='tooltip'>&#9072;
-        <div class='tooltiptext'>Create your own recipe using ingredients from 
-            our database. This is a good way to figure out if your home cooking 
-            is ethical or not.</div>
-    </div>
-</h1>
+                <h1>Build A Recipe
+                    {{!-- question mark in box, can be changed to image later if desired --}}
+                    <div class='tooltip'>&#9072;
+                        <div class='tooltiptext'>Create your own recipe using ingredients from
+                            our database. This is a good way to figure out if your home cooking
+                            is ethical or not.</div>
+                    </div>
+                </h1>
 
-{{#if user_id}}
-<form action="/build" method="POST">
-{{else}}
-<form action="#" method="POST">
-{{/if}}
-    <p>
-        <div id="ingredientFields" class='ingredient1'>
+                <h4>To create a recipe:</h4>
+                <ol>
+                    <li>Select an ingredient</li>
+                    <li>Click "Add Another Ingredient" if you wish to add another ingredient</li>
+                    <li>If you make a mistake, you can click "Remove Ingredient" to remove that ingredient.</li>
+                    <li>Type in the name of your recipe</li>
+                    <li>Review your recipe</li>
+                    <li>Submit!</li>
+                </ol>
 
-                <div id="ingredientSelect">
-                        <label>Enter Ingredient</label><br>
-                        <select name="ingredients" id="ingredients">
-                            {{#each ingredients}}
-                            <option value={{this.id}}>{{this.name}}</option>
-                            {{/each}}
-                        </select>
-                </div>
-    
-        {{!-- other ingredients added here via buildRecipe.js --}}
-        </div>
-    </p>
-    <p>
-        <input type="button" id="addIngredient" value="Add Another Ingredient">
-    </p>
+                {{#if user_id}}
+                <form action="/build" method="POST">
+                    {{else}}
+                    <form action="#" method="POST">
+                        {{/if}}
+                        <p>
+                        <div id="ingredientFields" class='ingredient1'>
 
-    <p>
-        <div>Name your recipe
-            <div class='tooltip'>&#9072;
-                <div class='tooltiptext'>The name your recipe will be saved as in 
-                    your recipe book.</div>
+                            <div id="ingredientSelect">
+                                <label>Enter Ingredient</label><br>
+                                <select name="ingredients" id="ingredients1" onchange = "getVal(1);">
+					
+                                    {{#each ingredients}}
+                                    
+                                    <option value={{this.id}}>{{this.name}}</option>
+                                    	
+					{{/each}}
+					
+                                </select>
+				
+                            </div>
+				<a href="/ingredientEthics/1" id = "recipe_link1">Ingredient Detail</a>
+
+			
+                            {{!-- other ingredients added here via buildRecipe.js --}}
+                        </div>
+                        </p>
+                        <p>
+                            <input type="button" id="addIngredient" value="Add Another Ingredient">
+                        </p>
+
+                        <p>
+                        <div>Name your recipe
+                            <div class='tooltip'>&#9072;
+                                <div class='tooltiptext'>The name your recipe will be saved as in
+                                    your recipe book.</div>
+                            </div>
+                        </div>
+                        <input type="text" name="name" id="recipeName">
+
+                        <input type="radio" id="false" name="isPublic" value="0" checked>
+                        <label for="private" private>Private</label>
+
+                        <input type="radio" id="true" name="isPublic" value="1">
+                        <label for="public" public>Public</label>
+                        </p>
+
+                        <p>
+                            {{#if user_id}}
+                            <input type="submit" value="Submit">
+                            {{else}}
+                            In order to save your own recipes, you have to <a href="login">Create An Account</a>.<br />
+                            {{/if}}
+                            <input type="button" id="startOver" value="Start Over">
+                        </p>
+                    </form>
             </div>
         </div>
-        <input type="text" name="name" id="recipeName">
-    </p>
 
-    <p>
-        {{#if user_id}}
-            <input type="submit" value="Submit">
-        {{else}}
-            In order to save your own recipes, you have to <a href="login">Create An Account</a>.<br/>
-        {{/if}}
-        <input type="button" id="startOver" value="Start Over">
-    </p>
-</form>
+    </div>
 </div>
+<div id="first">
+<script>
+getVal(1)
+function getVal(num)
+{
+var selectedVal = document.getElementById("ingredients"+num).value;
+var link = document.getElementById("recipe_link"+num);
+var final = /ingredientEthics/ + selectedVal
+   link.setAttribute("href", final);
+console.log(selectedVal);
+}
+</script>
 </div>
 
-  </div>
-  </div>
+

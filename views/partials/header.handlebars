@@ -1,34 +1,38 @@
 <header id="header-bar">
-<h1>Ethical Eating</h1>
+    <h1>Ethical Eating</h1>
 
-<ul>
-    <li>
-        <a href="/">Home</a>
-    </li>
+    <ul>
+        <li>
+            <a href="/">Home</a>
+        </li>
 
-    <li>
-        <a href="/build">Build a recipe</a>
-    </li>
+        <li>
+            <a href="/search">Recipe Search</a>
+        </li>
 
-    <li>
-        <a href="/book">Recipe Book</a>
-    </li>
+        <li>
+            <a href="/build">Build a Recipe</a>
+        </li>
 
-    {{#unless user_id}}
+        <li>
+            <a href="/book">Recipe Book</a>
+        </li>
+
+        {{#unless user_id}}
         <li>
             <a href="/login">Login</a>
         </li>
-    {{/unless}}
+        {{/unless}}
 
-{{#if user_id}}
-    <li style="list-style:none;">
-        Welcome, {{user_id}}!
-        <form action="/logout" method="POST">
-            <button>Log out</button>
-        </form>
-    </li>
-{{/if}}
-</ul>
+        {{#if user_id}}
+        <li style="list-style:none;">
+            Welcome, {{user_id}}!
+            <form action="/logout" method="POST">
+                <button>Log out</button>
+            </form>
+        </li>
+        {{/if}}
+    </ul>
 </header>
 <hr class="header-divider">
 
@@ -39,9 +43,11 @@
         align-items: flex-end;
         justify-content: center;
     }
+
     header#header-bar {
         padding: 32px 16px 16px 32px;
     }
+
     header#header-bar ul {
         display: flex;
         flex-flow: row nowrap;
@@ -50,6 +56,7 @@
         font-size: 18px;
         justify-content: space-around;
     }
+
     hr.header-divider {
         margin: 0px auto 32px auto;
     }

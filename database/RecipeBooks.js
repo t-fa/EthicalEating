@@ -36,13 +36,8 @@ class RecipeBook {
 // RecipeBooks defines queries for RecipeBooks. Instantiated with @database,
 // a reference to the mysql connection pool to be used for queries.
 const RecipeBooks = (database) => {
-  // Define any Error messages or Data Validator functions for the module.
-  const Errors = {
-    notFound: "No RecipeBook with that ID exists.",
-    recipeBookAlreadyExists: "RecipeBook already exists for user.",
-  };
-
-  const Validators = {};
+  // Define any Error messages for the module.
+  const Errors = {};
 
   // ======> BEGIN QUERIES <======
 
@@ -60,14 +55,6 @@ const RecipeBooks = (database) => {
     => Returns: by calling @callback with:
       + (null, insertionInfo) on addition success.
       + (Error, null) if an error occurs.
-    => Code Example:
-      // Add Recipe with ID @recipeID = 2 to RecipeBook with ID @recipeBookId = 1.
-      RecipeBooks.addRecipeByIDToRecipeBookWithID({recipeID: 2, recipeBookID: 1}, (err, insertionInfo) => {
-        if (err) { // addition failed
-          return;  // bail out of the handler here, insertionInfo undefined
-        }
-        // Addition successful. @insertionInfo contains info about the insert if needed.
-      });
   */
   recipeBook.addRecipeByIDToRecipeBookWithID = (
     { recipeID, recipeBookID },
@@ -80,53 +67,7 @@ const RecipeBooks = (database) => {
     );
   };
 
-  /**
-    getRecipesForRecipeBookID returns a list of Recipe objects for all the Recipes in
-    the RecipeBook with ID = @recipeBookID. Returns both public and private Recipes.
-    => Receives:
-      + recipeBookID: ID of RecipeBook from which to fetch list of Recipes.
-      + callback: function(error, data)
-    => Returns by calling @callback with:
-      + (null, []Recipe) array of Recipe objects on query success. Array may be empty.
-      + (Error, null) if an error occurs.
-    => Code Example:
-      // Get a list of every Recipe object for RecipeBook with ID @recipeBookID = 1.
-      RecipeBooks.getRecipesForRecipeBookID(
-        { recipeBookID: 1 },
-        (err, listOfRecipeObjects) => {
-          if (err) {
-            if (err === RecipeBooks.Errors.notFound) {
-              // No RecipeBook Recipes found.
-              console.log(err);
-              return; // bail out of the handler here, listOfRecipeObjects undefined
-            }
-            console.log("Some other database error:", err);
-            return; // bail out of the handler here, listOfRecipeObjects undefined
-          }
-          // Fetched list of Recipes successfully.
-          console.log("data", listOfRecipeObjects);
-        }
-      );
-  */
-  recipeBook.getRecipesForRecipeBookID = ({ recipeBookID }, callback) => {
-    database.execute(
-      `
-      SELECT r.* FROM RecipeBookRecipes rbr
-      INNER JOIN Recipes r ON r.id = rbr.recipe_id
-      WHERE recipebook_id = ?
-      `,
-      [recipeBookID],
-      (err, rows) => {
-        if (err) {
-          callback(err, null);
-          return;
-        }
-        buildResponseList(err, rows, Recipe, callback);
-      }
-    );
-  };
-
-  return { ...recipeBook, Errors, Validators };
+  return { ...recipeBook, Errors };
 };
 
 module.exports = { RecipeBooks, RecipeBook };

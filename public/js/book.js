@@ -29,15 +29,28 @@ function handleIngredientReplacementFormSubmit(event) {
     // Prevent default submit behavior.
     event.preventDefault();
 
+    // replaceWithIDName is the ID of the Ingredient to replace with, and its name,
+    // separated by an underscore.
     const replaceWith = document.querySelector(
-      `input[name="replaceWithID"]:checked`
+      `input[name="replaceWithIDName"]:checked`
     ).value;
-    let replaceWithID = null;
-    if (replaceWith !== "null" && Number.isInteger(Number(replaceWith))) {
-      replaceWithID = Number(replaceWith);
-    } else {
+
+    if (replaceWith === "null") {
       // User submitted form but chose not to change anything.
       history.back();
+      return;
+    }
+
+    // replaceWith looks like e.g., "3_Coconut Milk"
+    let [replaceWithID, replaceWithName] = replaceWith.split("_");
+
+    if (!Number.isInteger(Number(replaceWithID))) {
+      // Something's wrong with the ID...
+      console.log("Invalid replaceWithID", replaceWithID);
+      history.back();
+      return;
+    } else {
+      replaceWithID = Number(replaceWithID);
     }
 
     const originalID = document.querySelector(
@@ -56,6 +69,10 @@ function handleIngredientReplacementFormSubmit(event) {
       recipeID = Number(recipeIDParam);
     }
 
+    const originalName = document.querySelector(
+      `input[name="originalIngredientName"]`
+    ).value;
+
     if (toReplaceID === null || replaceWithID === null || recipeID === null) {
       console.log(
         "one or more require params null,",
@@ -71,7 +88,7 @@ function handleIngredientReplacementFormSubmit(event) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ toReplaceID, replaceWithID }),
+      body: JSON.stringify({ toReplaceID, replaceWithID, originalName, replaceWithName }),
     };
     // recipe ID query parameter
     fetch(`/userRecipe/${recipeID}/ingredients`, options)

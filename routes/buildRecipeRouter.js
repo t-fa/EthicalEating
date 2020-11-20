@@ -17,14 +17,15 @@ buildRecipeRouter.route('/')
           // Got the list of Ingredients.
           console.log("listOfAllIngredients:", listOfAllIngredients);
           console.log("listOfAllIngredients as json", listOfAllIngredients.map(ingredient => ingredient.toJSON()));
-          context.ingredients = listOfAllIngredients;
+          context.ingredients = listOfAllIngredients.sort((a, b) => (a.name > b.name) ? 1 : -1);
+          console.log("sorted list", context.ingredients)
           res.render('buildRecipe', context);
     })
 })
 .post((req, res, next) => {
     const name = req.body.name;
-    // TODO: set isPublic to false later as this will be "private" for the user's recipe book
-    // For now leave as public so you can see it show up in the search :)
+    const isPublic = req.body.isPublic;
+    console.log(isPublic)
     if (!req.body.ingredients || !req.session.user_id) {
         // There's a problem. Redirect to build.
         console.log("No ingredients in recipe!");
@@ -33,13 +34,17 @@ buildRecipeRouter.route('/')
     }
     let ingredients = req.body.ingredients;
     if (!Array.isArray(ingredients)) {
-        ingredients = Array.from(ingredients);
+        // If recipe has just one ingredient, req.body.ingredients will be a
+        // single ID, like "14" instead of an array. createRecipeWithIngredients
+        // requires an array of ingredients, so make an array with a single
+        // ingredient ID in this case.
+        ingredients = [ingredients];
     }
     console.log("Building recipe with name, ingredients, recipeBookID:", name, ingredients, res.locals.recipeBookID);
     Models.Recipes.createRecipeWithIngredients(
         {
           name: name,
-          isPublic: false,
+          isPublic: isPublic,
           ingredientIDList: ingredients,
           recipeBookID: res.locals.recipeBookID,
           username: req.session.user_id,

@@ -13,7 +13,7 @@ USE EthicalEating;
 -- Creates the recipe table based on schema design
 CREATE TABLE IF NOT EXISTS Recipes(
   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
   is_public BOOLEAN NOT NULL,
   date_created DATE,
   owner_id INT,
@@ -76,54 +76,54 @@ CREATE TABLE IF NOT EXISTS IngredientReplacements(
 -- after testing has been performed.
 
 -- Seed data for the ingredients
-INSERT INTO Ingredients (name, description, ethical_reason) VALUES
-('Olive Oil', 'Olive based cooking Oil' , 'null'),
-('White Flour', 'Wheat based baking flour', 'null' ),
-('Butter', 'Semi-solid dairy product', 'null' ),
-('Chicken', 'Meat, Poultry, Animal product', 'null' ),
-('Salmon', 'Fish, Animal product', 'null' ),
-('Sugar', 'Sweetening agent', 'null'),
-('Coconut Sugar', 'Sweetening agent', 'null'),
-('Salt', 'Spice','null'),
-('Egg', 'Chicken Egg, Animal product', 'null' ),
-('Flaxseed', 'Egg replacement', 'null' ),
-('Rice', 'Cereal grain', 'null' ),
-('Pasta', 'Cereal grain', 'null' ),
-('Potatoes', 'A classic tuber', 'null'),
-('Vegetable Oil', 'Corn based cooking oil', 'null' ),
-('Sunflower Oil (cold-pressed)', 'Seed based cooking oil', 'null' ),
-('Pork', 'Pork, Bacon, Ham, Animal Product', 'null' ),
-('Tempeh', 'Fermented soybean meat substitute', 'null' ),
-('Beyond Meat Meat Substitute', 'Meat substitute', 'null' ),
-('Beef', 'Cow, Beef, Hamburger','null' ),
-('Cheese', 'Fermented Dairy Product, Animal product', 'null' ),
-('Garlic', 'Garnish, Spice', 'null'),
-('Orange', 'Fruit', 'null'),
-('Turkey', 'Turkey meat, Animal product', 'null'),
-('Onion', 'Vegetable, Spice, Garnish', 'null' ),
-('Corn', 'Corn, Maize, Cereal grain ', 'null'),
-('Whole Milk', 'Cows Milk, Animal product', 'null' ),
-('Mayonnaise', 'Egg based condiment', 'null'),
-('Chiles', 'Plant product, Spice', 'null' ),
-('Almonds', 'Plant product', 'null'),
-('Bacon', 'Bacon, Pork, Animal product', 'null' ),
-('Mushrooms', 'Plant based product, Garnish', 'null'),
-('Coconut', 'Fruit', 'null' ),
-('Coconut Milk', 'A plant-based milk', 'null' ),
-('Beets', 'Root Vegetable','null' ),
-('Strawberries', 'Fruit', 'null' ),
-('Fennel', 'Vegetable, Herb, Spice', 'null' ),
-('Lamb', 'Lamb, Animal based product', 'null'),
-('Apple', 'Fruit', 'null' ),
-('Shrimp', 'Shrimp, Animal based product', 'null' ),
-('Green Onions', 'Vegetable, Garnish, ', 'null'),
-('Pepper', 'Spice', 'null'),
-('Water', 'Water', 'null' ),
-('Cashew', 'Legume', 'null' ),
-('Lentils', 'Legume', 'null' ),
-('Hazlenuts', 'Legume', 'null' ),
-('Sunflower Seeds', 'A small seed', 'null' ),
-('Tofu', 'A soy-based meat substitute', 'null' );
+INSERT INTO Ingredients (name, description, is_ethical) VALUES
+('Olive Oil', 'Olive based cooking Oil' , '1'),
+('White Flour', 'Wheat based baking flour', '1' ),
+('Butter', 'Semi-solid dairy product', '0' ),
+('Chicken', 'Meat, Poultry, Animal product', '1' ),
+('Salmon', 'Fish, Animal product', '1' ),
+('Sugar', 'Sweetening agent', '0'),
+('Coconut Sugar', 'Sweetening agent', '1'),
+('Salt', 'Spice','1'),
+('Egg', 'Chicken Egg, Animal product', '0' ),
+('Flaxseed', 'Egg replacement', '1' ),
+('Rice', 'Cereal grain', '0' ),
+('Pasta', 'Cereal grain', '1' ),
+('Potatoes', 'A classic tuber', '1'),
+('Vegetable Oil', 'Corn based cooking oil', '0' ),
+('Sunflower Oil (cold-pressed)', 'Seed based cooking oil', '1' ),
+('Pork', 'Pork, Bacon, Ham, Animal Product', '0' ),
+('Tempeh', 'Fermented soybean meat substitute', '1' ),
+('Beyond Meat Meat Substitute', 'Meat substitute', '1' ),
+('Beef', 'Cow, Beef, Hamburger','0' ),
+('Cheese', 'Fermented Dairy Product, Animal product', '1' ),
+('Garlic', 'Garnish, Spice', '1'),
+('Orange', 'Fruit', '1'),
+('Turkey', 'Turkey meat, Animal product', '1'),
+('Onion', 'Vegetable, Spice, Garnish', '1' ),
+('Corn', 'Corn, Maize, Cereal grain ', '1'),
+('Whole Milk', 'Cows Milk, Animal product', '0' ),
+('Mayonnaise', 'Egg based condiment', '1'),
+('Chiles', 'Plant product, Spice', '1' ),
+('Almonds', 'Plant product', '0'),
+('Bacon', 'Bacon, Pork, Animal product', '0' ),
+('Mushrooms', 'Plant based product, Garnish', '1'),
+('Coconut', 'Fruit', '1' ),
+('Coconut Milk', 'A plant-based milk', '1' ),
+('Beets', 'Root Vegetable','1' ),
+('Strawberries', 'Fruit', '1' ),
+('Fennel', 'Vegetable, Herb, Spice', '1' ),
+('Lamb', 'Lamb, Animal based product', '0'),
+('Apple', 'Fruit', '1' ),
+('Shrimp', 'Shrimp, Animal based product', '1' ),
+('Green Onions', 'Vegetable, Garnish, ', '1'),
+('Pepper', 'Spice', '1'),
+('Water', 'Water', '1' ),
+('Cashew', 'Legume', '0' ),
+('Lentils', 'Legume', '0' ),
+('Hazlenuts', 'Legume', '1' ),
+('Sunflower Seeds', 'A small seed', '1' ),
+('Tofu', 'A soy-based meat substitute', '1' );
 
 -- Seed Data for the recipes table
 INSERT INTO Recipes (name, is_public, date_created, owner_id) VALUES
@@ -279,145 +279,145 @@ INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replace
 (
   (SELECT id FROM Ingredients WHERE name = "Butter"),
   (SELECT id FROM Ingredients WHERE name = "Olive Oil"),
-  "can be used as a substitute for butter in many recipes. Butter, an animal product, requires lots more water to produce.",
+  "Olive oil can be used as a substitute for butter in many recipes. Butter, an animal product, requires lots more water to produce.",
   "https://waterfootprint.org/media/downloads/Report-48-WaterFootprint-AnimalProducts-Vol1_1.pdf"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Sugar"),
   (SELECT id FROM Ingredients WHERE name = "Coconut Sugar"),
-  "can be grown using less water with higher crop yields for a given size plot of land.",
+  "Coconut sugar can be grown using less water with higher crop yields for a given size plot of land.",
   "https://www.thegivingnature.com/coconut-sugar/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Egg"),
   (SELECT id FROM Ingredients WHERE name = "Flaxseed"),
-  "can be used as an egg substitute in many recipes. It is more environmentally sustainable than animal products.",
+  "Flaxseed can be used as an egg substitute in many recipes. It is more environmentally sustainable than animal products.",
   "https://healabel.com/f-ingredients/flaxseed"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Rice"),
   (SELECT id FROM Ingredients WHERE name = "Potatoes"),
-  "require almost five times less water to produce than rice.",
+  "Potatoes require almost five times less water to produce than rice.",
   "https://www.potatobusiness.com/trends-news/potatoes-have-a-lower-environmental-impact-than-rice-or-pasta-research-says/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Rice"),
   (SELECT id FROM Ingredients WHERE name = "Pasta"),
-  "requires less water to produce than rice.",
+  "Pasta requires less water to produce than rice.",
   "https://www.potatobusiness.com/trends-news/potatoes-have-a-lower-environmental-impact-than-rice-or-pasta-research-says/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Vegetable Oil"),
   (SELECT id FROM Ingredients WHERE name = "Sunflower Oil (cold-pressed)"),
-  "is extracted with hazardous solvents and can have a higher environmental impact than cold-pressed, natural extraction methods.",
+  "Vegetable oil is extracted with hazardous solvents and can have a higher environmental impact than cold-pressed, natural extraction methods.",
   "https://www.sciencedirect.com/science/article/abs/pii/S0960308511000198"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Pork"),
   (SELECT id FROM Ingredients WHERE name = "Beyond Meat Meat Substitute"),
-  "takes lots of water to produce. Beyond Meat requires 99% less water.",
+  "Beef takes lots of water to produce. Beyond Meat requires 99% less water.",
   "http://css.umich.edu/publication/beyond-meats-beyond-burger-life-cycle-assessment-detailed-comparison-between-plant-based"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Pork"),
   (SELECT id FROM Ingredients WHERE name = "Tempeh"),
-  "has a low water footprint and does not have an impact on the environment from livestock raising.",
+  "Tempeh has a low water footprint and does not have an impact on the environment from livestock raising.",
   "https://healabel.com/t-ingredients/tempeh"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Beef"),
   (SELECT id FROM Ingredients WHERE name = "Beyond Meat Meat Substitute"),
-  "requires 99% less water to produce than animal meat.",
+  "Beef takes lots of water to produce. Beyond Meat requires 99% less water.",
   "http://css.umich.edu/publication/beyond-meats-beyond-burger-life-cycle-assessment-detailed-comparison-between-plant-based"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Beef"),
   (SELECT id FROM Ingredients WHERE name = "Chicken"),
-  "requires less water to produce than beef.",
+  "Chicken requires less water to produce than beef.",
   "https://waterfootprint.org/media/downloads/Report-48-WaterFootprint-AnimalProducts-Vol1_1.pdf"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Beef"),
   (SELECT id FROM Ingredients WHERE name = "Salmon"),
-  "has a lower environmental impact than meat and can often be a substitute.",
+  "Salmon has a lower environmental impact than meat and can often be a substitute.",
   "https://www.ecoandbeyond.co/articles/most-environmentally-friendly-meat/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Beef"),
   (SELECT id FROM Ingredients WHERE name = "Tempeh"),
-  "has a low water footprint and does not have an impact on the environment from livestock raising.",
+  "Tempeh has a low water footprint and does not have an impact on the environment from livestock raising.",
   "https://healabel.com/t-ingredients/tempeh"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Whole Milk"),
   (SELECT id FROM Ingredients WHERE name = "Coconut Milk"),
-  "has a lower environmental impact to produce than whole milk.",
+  "Coconut milk has a lower environmental impact to produce than whole milk.",
   "https://www.greenmatters.com/p/eco-friendly-non-dairy-milks"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Almonds"),
   (SELECT id FROM Ingredients WHERE name = "Hazlenuts"),
-  "require less water to produce than other nuts like Almonds or Cashews.",
+  "Hazlenuts require less water to produce than other nuts like Almonds or Cashews.",
   "https://healabel.com/a-ingredients/almonds https://healabel.com/h-ingredients/hazelnuts"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Almonds"),
   (SELECT id FROM Ingredients WHERE name = "Sunflower Seeds"),
-  "require less water to produce than Almonds.",
+  "Sunflower Seeds require less water to produce than Almonds.",
   "https://www.nomeatathlete.com/sunflower-seed-sauce/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Bacon"),
   (SELECT id FROM Ingredients WHERE name = "Chicken"),
-  "requires less water to produce than bacon.",
+  "Chicken requires less water to produce than bacon.",
   "https://waterfootprint.org/media/downloads/Report-48-WaterFootprint-AnimalProducts-Vol1_1.pdf"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Bacon"),
   (SELECT id FROM Ingredients WHERE name = "Tempeh"),
-  "has a low water footprint and does not have an impact on the environment from livestock raising.",
+  "Tempeh has a low water footprint and does not have an impact on the environment from livestock raising.",
   "https://healabel.com/t-ingredients/tempeh"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Lamb"),
   (SELECT id FROM Ingredients WHERE name = "Turkey"),
-  "requires less impact than some other meats like beef or lamb.",
+  "Turkey requires less impact than some other meats like beef or lamb.",
   "https://www.ecoandbeyond.co/articles/most-environmentally-friendly-meat/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Lamb"),
   (SELECT id FROM Ingredients WHERE name = "Salmon"),
-  "has a lower environmental impact than meat and can often be a substitute.",
+  "Salmon has a lower environmental impact than meat and can often be a substitute.",
   "https://www.ecoandbeyond.co/articles/most-environmentally-friendly-meat/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Lamb"),
   (SELECT id FROM Ingredients WHERE name = "Beyond Meat Meat Substitute"),
-  "requires 99% less water to produce than animal meat.",
+  "Lamb takes lots of water to produce. Beyond Meat requires 99% less water.",
   "http://css.umich.edu/publication/beyond-meats-beyond-burger-life-cycle-assessment-detailed-comparison-between-plant-based"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Lamb"),
   (SELECT id FROM Ingredients WHERE name = "Tempeh"),
-  "has a low water footprint and does not have an impact on the environment from livestock raising.",
+  "Tempeh has a low water footprint and does not have an impact on the environment from livestock raising.",
   "https://healabel.com/t-ingredients/tempeh"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Cashew"),
   (SELECT id FROM Ingredients WHERE name = "Sunflower Seeds"),
-  "require less water to produce than Cashews.",
+  "Sunflower Seeds require less water to produce than Cashews.",
   "https://www.nomeatathlete.com/sunflower-seed-sauce/"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Cashew"),
   (SELECT id FROM Ingredients WHERE name = "Hazlenuts"),
-  "require less water to produce than other nuts like Cashews.",
+  "Hazlenuts require less water to produce than other nuts like Cashews.",
   "https://www.huffpost.com/entry/food-water-footprint_n_5952862"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Lentils"),
   (SELECT id FROM Ingredients WHERE name = "Tofu"),
-  "requires less than half the water to produce than lentils.",
+  "Tofu requires less than half the water to produce than lentils.",
   "https://www.huffpost.com/entry/food-water-footprint_n_5952862"
 );
 
