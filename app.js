@@ -41,7 +41,9 @@ app.use(function(req, res, next) {
 	// If there's an undo action on the session, decrement its time-to-live (TTL) by 1
 	// for each page navigation. If it's ttl is expired then clear the undo action --
 	// this means the user will no longer be able to have the option to undo this.
+
 	if (req.session.undo && req.session.undo.ttl !== null && typeof req.session.undo.ttl !== 'undefined') {
+
 		req.session.undo.ttl -= 1;
 		if (req.session.undo.ttl <= 0) {
 			req.session.undo = null;
@@ -66,7 +68,9 @@ const requireLogin = (req, res, next) => {
 // undo allows a user to undo the last action in their session, if that action is un-doable.
 // actions can put themselves on the User's session after taken with an "undo" action.
 app.get('/undo', async (req, res) => {
+
 	if (req && req.session && req.session.undo && typeof req.session.undo.data !== 'undefined') {
+
 		const { model, fn, args } = req.session.undo.data;
 
 		// Reset the undo data on the session so that we don't process it again.
@@ -75,6 +79,7 @@ app.get('/undo', async (req, res) => {
 		// Rather than using eval, the undo action right now defines a model, fn, and args
 		// to apply -- then the undo action runs the db function. Could make a bit more
 		// robust if we do a lot more un-doing.
+
 		if (model === 'Recipes') {
 			if (fn === 'replaceIngredientForRecipeID') {
 				const { Recipes } = require('./database');
@@ -86,12 +91,15 @@ app.get('/undo', async (req, res) => {
 					}
 					console.log('Undo successful:', data);
 					return res.redirect(req.header('Referer'));
+
 				});
 			}
 		}
 	} else {
+
 		console.log('No undo object found...');
 		return res.status(200).json('OK');
+
 	}
 });
 
@@ -234,6 +242,7 @@ app.get('/login', (req, res) => {
 app.get('/', (req, res) => {
 	res.render('index');
 });
+
 
 app.get('/book', requireLogin, (req, res) => {
 	res.render('book');

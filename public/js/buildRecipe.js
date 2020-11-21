@@ -19,6 +19,7 @@ function addIngredients() {
     
     ingredientSelect.innerHTML = htmlContent
     ingredientFields.appendChild(ingredientSelect)
+
     addCustomLink(className, ingredientCount)
     
     }

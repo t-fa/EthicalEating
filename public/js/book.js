@@ -115,6 +115,46 @@ function attachListeners() {
     }
 };
 
+
+/* Displays recipe.isPublic as 'Private' for values of 'false' and 'Public' for values of 'true'*/
+/* isPublicdb also updates the button text to 'Switch Recipe to {whichever the current state isn't}' */
+function isPublicdb() {
+    var publicCells = document.getElementsByClassName("isPublic");
+    var publicButtons = document.getElementsByClassName("UpdateIsPublic");
+
+
+    for (var i = 0, cell; cell = publicCells[i]; i++) {
+
+        if (cell.innerHTML === 'false') {
+            cell.innerHTML = 'Private';
+            publicButtons[i].innerHTML = 'Switch Recipe to Public';
+        } else {
+            cell.innerHTML = 'Public';
+            publicButtons[i].innerHTML = 'Switch Recipe to Private';
+        };
+    };
+};
+
+isPublicdb();
+
+
+
+/*
+function calculateEthicalScore(recipeID) {
+    var recipe = Recipe.getByIDWithIngredientsAndReplacements(recipeID);
+    console.log(recipe.ingredients.replacements)
+};
+
+
+
+function updateIsPublic() {
+
+};
+
+*/
+
+
+
 /*-----------------------------------------------------------------------------------*/
 /* Table sort code citation: https://www.w3schools.com/howto/howto_js_sort_table.asp */
 /*-----------------------------------------------------------------------------------*/
