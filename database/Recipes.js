@@ -169,6 +169,42 @@ const Recipes = (database) => {
     );
   };
 
+
+  /**
+  replaceIngredientForRecipeID replaces Ingredient with ID @toReplaceID with Ingredient with
+  ID @replaceWithID for Recipe with ID @recipeID.
+  => Receives:
+      + toReplaceID: ID of the Ingredient to replace.
+      + replaceWithID: ID of the Ingredient to replace with.
+      + recipeID: ID of the Recipe in which to make the replacement.
+      + callback: function(error, data)
+  => Returns: by calling @callback with:
+      + (null, null) returns nothing on success
+      + (Error, null) if an error occurs.
+  */
+  recipes.togglePublicPrivate = (
+    { currentPublicity, resultantPublicity },
+    callback
+  ) => {
+    database.execute(
+      `
+      UPDATE RecipeBookRecips 
+      SET isPublic = ?
+      WHERE id = (SELECT * FROM (
+      SELECT id FROM Recipes WHERE recipe_id = ? AND recipe_id = ?
+      ) as subquery);
+      `,
+      [replaceWithID, toReplaceID, recipeID],
+      (err) => {
+        if (err) {
+          callback(err, null);
+            return;
+        }
+        callback(null, null);
+      }
+    );
+  };
+
   /**
     getAllRecipes fetches a list of all the Recipe objects in the system.
     => Receives:
@@ -322,7 +358,8 @@ const Recipes = (database) => {
 
 
 /**
-getByIDWithIngredientsAndReplacements returns the Recipe with ID @recipeID if it exists.
+getByIDWithIngredientsAndReplacementsAsync returns the Recipe with ID @recipeID if it exists.
+The difference being that it does so asynchronously.
 The result contains the Recipe object, Ingredient objects for every Ingredient in the Recipe,
 and also the IngredientReplacements (as Ingredients) for all the Ingredients in each of the
 Recipes returned by the search.
