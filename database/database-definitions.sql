@@ -131,7 +131,12 @@ INSERT INTO Recipes (name, is_public, date_created, owner_id) VALUES
 ('Hamburger Gravy', TRUE, '2020-11-1', null ),
 ('Shrimp Scampi', TRUE, '2020-11-1', null ),
 ('Chicken and Mushroom', TRUE, '2020-11-1', null ),
-('Herb Roasted Chicken', TRUE, '2020-11-1', null );
+('Herb Roasted Chicken', TRUE, '2020-11-1', null ),
+('Bacon Frittata', TRUE, '2020-11-20', null ),
+('Fennel Stuffing', TRUE, '2020-11-20', null ),
+('Baked Lamb with Rice', TRUE, '2020-11-20', null ),
+('Coconut Curry', TRUE, '2020-11-20', null ),
+('Slow Roasted Turkey', TRUE, '2020-11-20', null );
 
 
 -- Required data for the ethical score, will create after team meeting
