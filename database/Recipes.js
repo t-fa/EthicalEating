@@ -169,32 +169,28 @@ const Recipes = (database) => {
     );
   };
 
-
   /**
-  replaceIngredientForRecipeID replaces Ingredient with ID @toReplaceID with Ingredient with
-  ID @replaceWithID for Recipe with ID @recipeID.
+  togglePublicPrivate toggles a recipe from private to public, or public to private
+  using recipeID
   => Receives:
-      + toReplaceID: ID of the Ingredient to replace.
-      + replaceWithID: ID of the Ingredient to replace with.
-      + recipeID: ID of the Recipe in which to make the replacement.
+      + resultantPublicity: 'true' for set to Public, 'false' for set to Private
+      + recipeID: ID of the Recipe in which to make the toggle.
       + callback: function(error, data)
   => Returns: by calling @callback with:
       + (null, null) returns nothing on success
       + (Error, null) if an error occurs.
   */
   recipes.togglePublicPrivate = (
-    { currentPublicity, resultantPublicity },
+    { resultantPublicity, recipeID },
     callback
   ) => {
     database.execute(
       `
-      UPDATE RecipeBookRecips 
-      SET isPublic = ?
-      WHERE id = (SELECT * FROM (
-      SELECT id FROM Recipes WHERE recipe_id = ? AND recipe_id = ?
-      ) as subquery);
+      UPDATE Recipes 
+      SET is_Public = ?
+      WHERE id = ?
       `,
-      [replaceWithID, toReplaceID, recipeID],
+      [resultantPublicity, recipeID],
       (err) => {
         if (err) {
           callback(err, null);

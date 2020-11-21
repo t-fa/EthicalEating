@@ -27,7 +27,6 @@ bookRouter.route('/')
                 id = parseInt(recipe.id)
                 const ethicalRating = await Models.Recipes.getByIDWithIngredientsAndReplacementsAsync({ "recipeID": id });
            
-
                     var ingInfo = Object.values(ethicalRating.ingredients)
 
                     // ingLength is the number of ingredients in any given recipe
@@ -41,29 +40,16 @@ bookRouter.route('/')
                         if (rep.length === 0) {
                             ethicalCount++;
                         }
-
                     }
             } catch (err){
                 console.log('something went wrong');
             }
 
-                ethicalRating = ((ethicalCount / ingLength) * 10)
-                ethicalRating = ethicalRating.toFixed(1)
+            ethicalRating = ((ethicalCount / ingLength) * 10)
+            ethicalRating = ethicalRating.toFixed(1)
                 
-            
             recipeBookList[i].ethicalScore = ethicalRating;
-
-
         };
-
-
-        console.log(recipeBookList)
-        console.log('test book list here')
-        console.log(recipeBookList[0])
-        console.log(recipeBookList[0].id)
-        console.log(typeof recipeBookList[0])
-
-
         res.render('book', { recipes: recipeBookList });
     });
 
@@ -71,12 +57,26 @@ bookRouter.route('/')
 
 
 
-bookRouter.route('/:recipeID')
-// update privacy to opposite of current state
-.patch((req, res, next) => {
-    const recipeID = Number(req.params.recipeID);
-    var recipe = Models.Recipes.getByIDWithIngredientsAndReplacements(recipeID);
-    var currentIsPublic = recipe.recipe.isPublic;
+bookRouter.route('/:id/:public')
+// update privacy/publicity to opposite of current state
+.get((req, res, next) => {
+    context = {};
+    const recipeID = Number(req.params.id);
+    const currentIsPublic = String(req.params.public)
+
+    var resultantPublicity = '';
+
+    // determine which state to switch to
+    if (currentIsPublic === 'false') {
+        resultantPublicity = true;
+    } else {
+        resultantPublicity = false;
+    };
+
+    Models.Recipes.togglePublicPrivate({ resultantPublicity, recipeID }, function (err, _) {
+        if (err) { console.log(err); return; }
+        res.redirect('..');
+    })
 });
 
 

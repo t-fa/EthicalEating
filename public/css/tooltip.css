@@ -38,7 +38,26 @@
     padding: 5px;
     position: absolute;
     z-index: 1;
-    right: 13%;
+    right: 11%;
+    font-weight: normal;
+}
+
+/* tool tip style for ethicality description in book*/
+.tooltipethical .tooltiptext {
+    visibility: hidden;
+    width: 265px;
+    background-color: white;
+    font-size: medium;
+    color: black;
+    text-align: left;
+    border-radius: 6px;
+    border-style: solid;
+    border-color: black;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    right: 40.75%;
+    top: 37%;
     font-weight: normal;
 }
 
@@ -49,5 +68,9 @@
   }
 
 .tooltipleft:hover .tooltiptext {
+    visibility: visible;
+}
+
+.tooltipethical:hover .tooltiptext {
     visibility: visible;
 }
