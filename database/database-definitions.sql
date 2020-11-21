@@ -655,6 +655,7 @@ SELECT
     r.name,
     r.is_public,
     r.date_created,
+    r.owner_id,
     JSON_ARRAYAGG(
         json_object(
             "ingredient",

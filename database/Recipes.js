@@ -15,10 +15,11 @@ can be placed into a RecipeBook.
 
 // Recipe class. A database query for Recipes returns instances of the Recipe class.
 class Recipe {
-  constructor({ id, name, isPublic } = {}) {
+  constructor({ id, name, isPublic, ownerId } = {}) {
     this.id = id;
     this.name = name;
     this.isPublic = isPublic;
+    this.ownerId = ownerId;
   }
 
   // fromDatabaseRow returns an instance of the class, populating data from database row @dbRow.
@@ -27,6 +28,7 @@ class Recipe {
       id: dbRow.id,
       name: dbRow.name,
       isPublic: dbRow.is_public === 1 ? true : false,
+      ownerId: dbRow.owner_id,
     });
   }
 
