@@ -131,7 +131,12 @@ INSERT INTO Recipes (name, is_public, date_created, owner_id) VALUES
 ('Hamburger Gravy', TRUE, '2020-11-1', null ),
 ('Shrimp Scampi', TRUE, '2020-11-1', null ),
 ('Chicken and Mushroom', TRUE, '2020-11-1', null ),
-('Herb Roasted Chicken', TRUE, '2020-11-1', null );
+('Herb Roasted Chicken', TRUE, '2020-11-1', null ),
+('Bacon Frittata', TRUE, '2020-11-20', null ),
+('Fennel Stuffing', TRUE, '2020-11-20', null ),
+('Baked Lamb with Rice', TRUE, '2020-11-20', null ),
+('Coconut Curry', TRUE, '2020-11-20', null ),
+('Slow Roasted Turkey', TRUE, '2020-11-20', null );
 
 
 -- Required data for the ethical score, will create after team meeting
@@ -272,6 +277,163 @@ INSERT INTO RecipeIngredients(recipe_id, ingredient_id) VALUES
 (
   (SELECT id FROM Recipes WHERE name = 'Herb Roasted Chicken'),
   (SELECT id FROM Ingredients WHERE name = 'Beets')
+),
+-- Baked Lamb With Rice
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Lamb')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Olive Oil')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Pepper')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Fennel')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Rice')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Water')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Baked Lamb with Rice'),
+  (SELECT id FROM Ingredients WHERE name = 'Garlic')
+),
+-- Coconut Curry
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Coconut Milk')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Green Onions')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Chicken')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Chiles')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Shrimp')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Olive Oil')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Rice')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Coconut Curry'),
+  (SELECT id FROM Ingredients WHERE name = 'Butter')
+),
+-- Slow Roasted Turkey
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Turkey')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Pepper')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Coconut Milk')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Mushrooms')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Cashews')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Water')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Garlic')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Butter')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Slow Roasted Turkey'),
+  (SELECT id FROM Ingredients WHERE name = 'Onion')
+),
+-- Bacon Frittata
+(
+  (SELECT id FROM Recipes WHERE name = 'Bacon Frittata'),
+  (SELECT id FROM Ingredients WHERE name = 'Bacon')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Bacon Frittata'),
+  (SELECT id FROM Ingredients WHERE name = 'Egg')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Bacon Frittata'),
+  (SELECT id FROM Ingredients WHERE name = 'Salt')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Bacon Frittata'),
+  (SELECT id FROM Ingredients WHERE name = 'Pepper')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Bacon Frittata'),
+  (SELECT id FROM Ingredients WHERE name = 'White Flour')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Bacon Frittata'),
+  (SELECT id FROM Ingredients WHERE name = 'Whole Milk')
+),
+-- Fennel Stuffing
+(
+  (SELECT id FROM Recipes WHERE name = 'Fennel Stuffing'),
+  (SELECT id FROM Ingredients WHERE name = 'Fennel')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Fennel Stuffing'),
+  (SELECT id FROM Ingredients WHERE name = 'Bacon')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Fennel Stuffing'),
+  (SELECT id FROM Ingredients WHERE name = 'Almonds')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Fennel Stuffing'),
+  (SELECT id FROM Ingredients WHERE name = 'Water')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Fennel Stuffing'),
+  (SELECT id FROM Ingredients WHERE name = 'Corn')
+),
+(
+  (SELECT id FROM Recipes WHERE name = 'Fennel Stuffing'),
+  (SELECT id FROM Ingredients WHERE name = 'Onion')
 );
 
 -- Add Ingredient Replacements
