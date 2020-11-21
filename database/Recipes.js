@@ -41,6 +41,8 @@ class Recipe {
   }
 }
 
+
+
 // Recipes defines queries for Recipes. Instantiated with @database,
 // a reference to the mysql connection pool to be used for queries.
 const Recipes = (database) => {
@@ -317,6 +319,74 @@ const Recipes = (database) => {
       }
     );
   };
+
+
+/**
+getByIDWithIngredientsAndReplacements returns the Recipe with ID @recipeID if it exists.
+The result contains the Recipe object, Ingredient objects for every Ingredient in the Recipe,
+and also the IngredientReplacements (as Ingredients) for all the Ingredients in each of the
+Recipes returned by the search.
+=> Receives:
+    + recipeID: the ID of the Recipe to return.
+    + callback: function(error, data)
+=> Returns: by calling @callback with:
+    + (null,
+    {
+        "recipe":Recipe,
+        "ingredients":[]{
+        "ingredient": Ingredient,
+        "replacements": []Ingredient
+        })
+    This is an object with a @recipe and @ingredients key. The Ingredients key contains a list
+    of objects with the Ingredient itself at key @ingredient and any replacements we have to suggest
+    for that Ingredient at the key @replacements. @replacements is a list of Ingredients that are
+    replacements that we suggest. All data are returned as json for display to the user, rather
+    than as objects for manipulation.
+    + (Error, null) if an error occurs.
+*/
+
+    recipes.getByIDWithIngredientsAndReplacementsAsync = async ({ recipeID }) => {
+        return new Promise(function (resolve, reject) {
+            database.execute(
+                "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE id = ?",
+                [recipeID],
+                (err, rows) => {
+                    if (err) {
+                        reject(err);
+                    };
+                    const recipeIDToData = {};
+                    rows.forEach((row) => {
+                        recipeIDToData[row.id] = {};
+                        recipeIDToData[row.id]["recipe"] = Recipe.fromDatabaseRow(
+                            row
+                        ).toJSON();
+                        recipeIDToData[row.id]["ingredients"] = {};
+                        const thisIngredient = recipeIDToData[row.id]["ingredients"];
+                        if (!nullOrUndefined(row.ingredients_and_replacements)) {
+                            row.ingredients_and_replacements.forEach((iar) => {
+                                const ID = iar.ingredient.id;
+                                thisIngredient[ID] = {};
+                                thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(
+                                    iar.ingredient
+                                ).toJSON();
+                                thisIngredient[ID]["replacements"] = [];
+                                if (!nullOrUndefined(iar.replacements)) {
+                                    thisIngredient[ID]["replacements"] = iar.replacements.map(
+                                        (r) => ({
+                                            ...Ingredient.fromDatabaseRow(r).toJSON(),
+                                            ...IngredientReplacement.fromDatabaseRow(r).toJSON(),
+                                        })
+                                    );
+                                }
+                            });
+                        }
+                    });
+                    resolve(recipeIDToData[recipeID]);
+                }
+            );
+        });
+    };
+
 
   /**
     clone copies the recipe with ID @recipeID to owning User @username so that future modifications

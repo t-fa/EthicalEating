@@ -62,4 +62,10 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
   );
 });
 
+
+// this will delete a recipe from a user's RecipeBook
+recipesRouter.route("/:recipeID").delete((req, res, next) => {
+    const { id } = req.params.recipeID;
+})
+
 module.exports = recipesRouter;
