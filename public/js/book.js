@@ -127,32 +127,15 @@ function isPublicdb() {
 
         if (cell.innerHTML === 'false') {
             cell.innerHTML = 'Private';
-            publicButtons[i].innerHTML = 'Switch Recipe to Public';
+            publicButtons[i].value = 'Switch Recipe to Public';
         } else {
             cell.innerHTML = 'Public';
-            publicButtons[i].innerHTML = 'Switch Recipe to Private';
+            publicButtons[i].value = 'Switch Recipe to Private';
         };
     };
 };
 
 isPublicdb();
-
-
-
-/*
-function calculateEthicalScore(recipeID) {
-    var recipe = Recipe.getByIDWithIngredientsAndReplacements(recipeID);
-    console.log(recipe.ingredients.replacements)
-};
-
-
-
-function updateIsPublic() {
-
-};
-
-*/
-
 
 
 /*-----------------------------------------------------------------------------------*/
