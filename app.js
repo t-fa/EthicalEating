@@ -28,20 +28,22 @@ app.engine(
 	handlebars({
 		defaultLayout: 'main',
 		layoutsDir: __dirname + '/views/layouts/',
-		partialsDir: __dirname + '/views/partials/',
+		partialsDir: __dirname + '/views/partials/'
 	})
 );
 
 // Put the session ID into res locals so we can render the correct status in the Header
 // Handlebars partial.
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
 	res.locals.user_id = req.session.user_id;
 	res.locals.recipeBookID = req.session.recipeBookID;
 
 	// If there's an undo action on the session, decrement its time-to-live (TTL) by 1
 	// for each page navigation. If it's ttl is expired then clear the undo action --
 	// this means the user will no longer be able to have the option to undo this.
-	if (req.session.undo && req.session.undo.ttl !== null && typeof req.session.undo.ttl !== "undefined") {
+
+	if (req.session.undo && req.session.undo.ttl !== null && typeof req.session.undo.ttl !== 'undefined') {
+
 		req.session.undo.ttl -= 1;
 		if (req.session.undo.ttl <= 0) {
 			req.session.undo = null;
@@ -66,7 +68,9 @@ const requireLogin = (req, res, next) => {
 // undo allows a user to undo the last action in their session, if that action is un-doable.
 // actions can put themselves on the User's session after taken with an "undo" action.
 app.get('/undo', async (req, res) => {
-	if (req && req.session && req.session.undo && typeof req.session.undo.data !== "undefined") {
+
+	if (req && req.session && req.session.undo && typeof req.session.undo.data !== 'undefined') {
+
 		const { model, fn, args } = req.session.undo.data;
 
 		// Reset the undo data on the session so that we don't process it again.
@@ -75,23 +79,27 @@ app.get('/undo', async (req, res) => {
 		// Rather than using eval, the undo action right now defines a model, fn, and args
 		// to apply -- then the undo action runs the db function. Could make a bit more
 		// robust if we do a lot more un-doing.
-		if (model === "Recipes") {
-			if (fn === "replaceIngredientForRecipeID") {
+
+		if (model === 'Recipes') {
+			if (fn === 'replaceIngredientForRecipeID') {
 				const { Recipes } = require('./database');
 				Recipes.replaceIngredientForRecipeID(args, (err, data) => {
 					if (err !== null) {
-						console.log("Undo error:", err);
+						console.log('Undo error:', err);
 						res.status(500).json(err);
 						return;
-					  }
-					  console.log("Undo successful:", data);
-					  return res.redirect(req.header("Referer"));
+					}
+					console.log('Undo successful:', data);
+					return res.redirect(req.header('Referer'));
+
 				});
 			}
 		}
 	} else {
-		console.log("No undo object found...")
-		return res.status(200).json("OK");
+
+		console.log('No undo object found...');
+		return res.status(200).json('OK');
+
 	}
 });
 
@@ -121,7 +129,9 @@ app.post('/register', async (req, res) => {
 	}
 
 	// check password content
-	if (!loginFunctions.validatePassword(password)) {
+	var validChars = await loginFunctions.verifyPasswordCharacters(password);
+	var validLength = await loginFunctions.verifyPasswordLength(password, 8);
+	if (!(validChars && validLength)) {
 		context.registerError = 'Invalid username or password';
 		res.render('login', context);
 	}
@@ -134,7 +144,7 @@ app.post('/register', async (req, res) => {
 
 	// if validation passes, create new user
 	if (loginFunctions.onlyAlphanumerical(username) && username.length > 2) {
-		if (loginFunctions.validatePassword(password)) {
+		if (validChars && validLength) {
 			if (password == confirmPassword) {
 				Users.createUserWithUsernameAndPassword(
 					{
@@ -194,24 +204,27 @@ app.post('/login', async (req, res) => {
 
 const { Recipes } = require('./database');
 // Add a recipe to recipeBook
-app.post('/addRecipe', function (req, res) {
+app.post('/addRecipe', function(req, res) {
 	const recipeID = req.body.recipeID;
 	if (!req.session.recipeBookID) {
 		return res.redirect('/login');
 	}
-	Recipes.clone({"recipeID": recipeID, "username": req.session.user_id}, function(err, newRecipeID) {
+	Recipes.clone({ recipeID: recipeID, username: req.session.user_id }, function(err, newRecipeID) {
 		if (err) {
-			console.log("clone failed err:", err);
-			return res.status(500).json({"error": err});
+			console.log('clone failed err:', err);
+			return res.status(500).json({ error: err });
 		}
-		RecipeBooks.addRecipeByIDToRecipeBookWithID({ "recipeID": newRecipeID, "recipeBookID": req.session.recipeBookID }, function (err, data) {
-			if (err) {
-				console.log("addRecipeByIDToRecipeBookWithID failed err:", err);
-				return res.status(500).json("failedToAddRecipe");
+		RecipeBooks.addRecipeByIDToRecipeBookWithID(
+			{ recipeID: newRecipeID, recipeBookID: req.session.recipeBookID },
+			function(err, data) {
+				if (err) {
+					console.log('addRecipeByIDToRecipeBookWithID failed err:', err);
+					return res.status(500).json('failedToAddRecipe');
+				}
+				console.log('Recipe Successfully added to your Recipe Book! Take a look.. ');
+				return res.status(200).json('OK');
 			}
-			console.log('Recipe Successfully added to your Recipe Book! Take a look.. ')
-			return res.status(200).json("OK");
-		});
+		);
 	});
 });
 
@@ -231,29 +244,29 @@ app.get('/', (req, res) => {
 });
 
 
-app.get("/book", requireLogin, (req, res) => {
-    res.render('book');
-})
+app.get('/book', requireLogin, (req, res) => {
+	res.render('book');
+});
 
-app.get("/userRecipe", (req, res) => {
-    res.render('userRecipe');
-})
+app.get('/userRecipe', (req, res) => {
+	res.render('userRecipe');
+});
 
-app.get("/ingredientEthics", (req, res) => {
-    res.render('ingredientEthics');
-})
+app.get('/ingredientEthics', (req, res) => {
+	res.render('ingredientEthics');
+});
 
-app.get("/publicRecipe", (req, res) => {
+app.get('/publicRecipe', (req, res) => {
 	res.render('publicRecipe');
-})
+});
 
-app.get("/index", (req, res) => {
+app.get('/index', (req, res) => {
 	res.render('index');
-})
+});
 
-app.use((req,res) => {
-    res.status(404);
-    res.render('404');
+app.use((req, res) => {
+	res.status(404);
+	res.render('404');
 });
 
 app.use((req, res) => {
