@@ -1,4 +1,9 @@
 body {
+    /*
+    Background Photo Credit:
+    https://www.istockphoto.com/photo/the-water-surface-with-underwater-bubbles-gm512543300-87208021
+    by Evgeny_P. Obtained Standard License for use (https://www.istockphoto.com/help/licenses)
+    */
     background-image: url('../images/waterBanner.jpg');
     background-repeat: no-repeat;
     background-attachment: fixed;
