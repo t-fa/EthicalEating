@@ -13,7 +13,7 @@ USE EthicalEating;
 -- Creates the recipe table based on schema design
 CREATE TABLE IF NOT EXISTS Recipes(
   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-  name VARCHAR(255) UNIQUE NOT NULL,
+  name VARCHAR(255) NOT NULL,
   is_public BOOLEAN NOT NULL,
   date_created DATE,
   owner_id INT,
@@ -655,6 +655,7 @@ SELECT
     r.name,
     r.is_public,
     r.date_created,
+    r.owner_id,
     JSON_ARRAYAGG(
         json_object(
             "ingredient",

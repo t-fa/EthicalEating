@@ -15,10 +15,11 @@ can be placed into a RecipeBook.
 
 // Recipe class. A database query for Recipes returns instances of the Recipe class.
 class Recipe {
-  constructor({ id, name, isPublic } = {}) {
+  constructor({ id, name, isPublic, ownerId } = {}) {
     this.id = id;
     this.name = name;
     this.isPublic = isPublic;
+    this.ownerId = ownerId;
   }
 
   // fromDatabaseRow returns an instance of the class, populating data from database row @dbRow.
@@ -27,6 +28,7 @@ class Recipe {
       id: dbRow.id,
       name: dbRow.name,
       isPublic: dbRow.is_public === 1 ? true : false,
+      ownerId: dbRow.owner_id,
     });
   }
 
@@ -41,8 +43,6 @@ class Recipe {
   }
 }
 
-
-
 // Recipes defines queries for Recipes. Instantiated with @database,
 // a reference to the mysql connection pool to be used for queries.
 const Recipes = (database) => {
@@ -51,8 +51,8 @@ const Recipes = (database) => {
     recipeBookAlreadyExists: "RecipeBook already exists for user.",
     recipeWithNameAlreadyExists:
       "Your RecipeBook already has a Recipe with this name.",
-     recipeWithNameAlreadyExistsTryAgain:
-      "Your RecipeBook already has a Recipe with this name, please try a different recipe name"
+    recipeWithNameAlreadyExistsTryAgain:
+      "Your RecipeBook already has a Recipe with this name, please try a different recipe name",
   };
 
   // ======> BEGIN QUERIES <======
@@ -194,7 +194,7 @@ const Recipes = (database) => {
       (err) => {
         if (err) {
           callback(err, null);
-            return;
+          return;
         }
         callback(null, null);
       }
@@ -210,13 +210,46 @@ const Recipes = (database) => {
       + (Error, null) if an error occurs.
   */
   recipes.getAllRecipes = (callback) => {
-    database.execute("SELECT * FROM Recipes", (err, rows) => {
-      if (err) {
-        callback(err, null);
-        return;
+    database.execute(
+      "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE is_public = TRUE",
+      (err, rows) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        const recipeIDToData = {};
+        rows.forEach((row) => {
+          recipeIDToData[row.id] = {};
+          recipeIDToData[row.id]["recipe"] = Recipe.fromDatabaseRow(
+            row
+          ).toJSON();
+          recipeIDToData[row.id]["ingredients"] = {};
+          const thisIngredient = recipeIDToData[row.id]["ingredients"];
+          if (!nullOrUndefined(row.ingredients_and_replacements)) {
+            row.ingredients_and_replacements.forEach((iar) => {
+              const ID = iar.ingredient.id;
+              thisIngredient[ID] = {};
+              thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(
+                iar.ingredient
+              ).toJSON();
+              thisIngredient[ID]["replacements"] = [];
+              if (!nullOrUndefined(iar.replacements)) {
+                thisIngredient[ID]["replacements"] = iar.replacements.map(
+                  (r) => ({
+                    ...Ingredient.fromDatabaseRow(r).toJSON(),
+                    ...IngredientReplacement.fromDatabaseRow(r).toJSON(),
+                  })
+                );
+              }
+            });
+          }
+        });
+        callback(
+          null,
+          Object.keys(recipeIDToData).map((k) => recipeIDToData[k])
+        );
       }
-      buildResponseList({ err, rows, callback, entity: Recipe });
-    });
+    );
   };
 
   /**
@@ -352,8 +385,7 @@ const Recipes = (database) => {
     );
   };
 
-
-/**
+  /**
 getByIDWithIngredientsAndReplacementsAsync returns the Recipe with ID @recipeID if it exists.
 The difference being that it does so asynchronously.
 The result contains the Recipe object, Ingredient objects for every Ingredient in the Recipe,
@@ -378,48 +410,47 @@ Recipes returned by the search.
     + (Error, null) if an error occurs.
 */
 
-    recipes.getByIDWithIngredientsAndReplacementsAsync = async ({ recipeID }) => {
-        return new Promise(function (resolve, reject) {
-            database.execute(
-                "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE id = ?",
-                [recipeID],
-                (err, rows) => {
-                    if (err) {
-                        reject(err);
-                    };
-                    const recipeIDToData = {};
-                    rows.forEach((row) => {
-                        recipeIDToData[row.id] = {};
-                        recipeIDToData[row.id]["recipe"] = Recipe.fromDatabaseRow(
-                            row
-                        ).toJSON();
-                        recipeIDToData[row.id]["ingredients"] = {};
-                        const thisIngredient = recipeIDToData[row.id]["ingredients"];
-                        if (!nullOrUndefined(row.ingredients_and_replacements)) {
-                            row.ingredients_and_replacements.forEach((iar) => {
-                                const ID = iar.ingredient.id;
-                                thisIngredient[ID] = {};
-                                thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(
-                                    iar.ingredient
-                                ).toJSON();
-                                thisIngredient[ID]["replacements"] = [];
-                                if (!nullOrUndefined(iar.replacements)) {
-                                    thisIngredient[ID]["replacements"] = iar.replacements.map(
-                                        (r) => ({
-                                            ...Ingredient.fromDatabaseRow(r).toJSON(),
-                                            ...IngredientReplacement.fromDatabaseRow(r).toJSON(),
-                                        })
-                                    );
-                                }
-                            });
-                        }
-                    });
-                    resolve(recipeIDToData[recipeID]);
+  recipes.getByIDWithIngredientsAndReplacementsAsync = async ({ recipeID }) => {
+    return new Promise(function (resolve, reject) {
+      database.execute(
+        "SELECT * FROM RecipeItsIngredientsAndTheirReplacements WHERE id = ?",
+        [recipeID],
+        (err, rows) => {
+          if (err) {
+            reject(err);
+          }
+          const recipeIDToData = {};
+          rows.forEach((row) => {
+            recipeIDToData[row.id] = {};
+            recipeIDToData[row.id]["recipe"] = Recipe.fromDatabaseRow(
+              row
+            ).toJSON();
+            recipeIDToData[row.id]["ingredients"] = {};
+            const thisIngredient = recipeIDToData[row.id]["ingredients"];
+            if (!nullOrUndefined(row.ingredients_and_replacements)) {
+              row.ingredients_and_replacements.forEach((iar) => {
+                const ID = iar.ingredient.id;
+                thisIngredient[ID] = {};
+                thisIngredient[ID]["ingredient"] = Ingredient.fromDatabaseRow(
+                  iar.ingredient
+                ).toJSON();
+                thisIngredient[ID]["replacements"] = [];
+                if (!nullOrUndefined(iar.replacements)) {
+                  thisIngredient[ID]["replacements"] = iar.replacements.map(
+                    (r) => ({
+                      ...Ingredient.fromDatabaseRow(r).toJSON(),
+                      ...IngredientReplacement.fromDatabaseRow(r).toJSON(),
+                    })
+                  );
                 }
-            );
-        });
-    };
-
+              });
+            }
+          });
+          resolve(recipeIDToData[recipeID]);
+        }
+      );
+    });
+  };
 
   /**
     clone copies the recipe with ID @recipeID to owning User @username so that future modifications

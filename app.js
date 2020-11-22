@@ -37,6 +37,7 @@ app.engine(
 app.use(function(req, res, next) {
 	res.locals.user_id = req.session.user_id;
 	res.locals.recipeBookID = req.session.recipeBookID;
+	res.locals.user_id_numeric = req.session.user_id_numeric;
 
 	// If there's an undo action on the session, decrement its time-to-live (TTL) by 1
 	// for each page navigation. If it's ttl is expired then clear the undo action --
@@ -191,6 +192,7 @@ app.post('/login', async (req, res) => {
 						context.loginError = 'Logged in successfully!';
 						res.locals.user_id = req.session.user_id;
 						req.session.recipeBookID = user.recipeBookID;
+						req.session.user_id_numeric = user.id;
 						res.render('index', context);
 					} else {
 						context.loginError = 'Invalid username or password';
