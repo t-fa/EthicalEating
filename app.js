@@ -158,6 +158,7 @@ app.post('/register', async (req, res) => {
 							req.session.user_id = username;
 							res.locals.user_id = username;
 							req.session.recipeBookID = user.recipeBookID;
+							req.session.user_id_numeric = user.id;
 							res.render('index');
 						} else {
 							context.registerError = 'Username taken';
