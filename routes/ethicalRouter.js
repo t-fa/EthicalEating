@@ -34,24 +34,19 @@ context.ingredientReplacements
 */
 ethicalRouter.route('/:ingredientId')
 .get((req, res, next) => {
-  console.log(req.params.ingredientId)
   context = {};
 
   // Get ingredient info from DB
   Models.Ingredients.getIngredient({ ingredientID: req.params.ingredientId }, (err, ingredientObject) => {
     if (err) {
       if (err === Models.Ingredients.Errors.notFound) {
-        console.log("Could not find the ingredient.");
         return next(err); // bail out of the handler here, ingredientObject undefined
       }
       // Another error occurred.
-      console.log("An error occurred with the query. Error:", err);
       return next(err); // bail out of the handler here, ingredientObject undefined
     }
     // Fetched the Ingredient successfully.
-    console.log("ingredientObject:", ingredientObject, "json:", ingredientObject.toJSON());
     context.ingredient = ingredientObject;
-    console.log(ingredientObject)
     
     // Check for more ethical replacement
     Models.IngredientReplacements.getReplacementsForIngredientAsIngredientObjects(
@@ -63,7 +58,6 @@ ethicalRouter.route('/:ingredientId')
         }
         context.originalIngredient = ingredientObject;
         context.ingredientReplacements = listOfIngredientObjects;
-        console.log(context);
         res.render('ingredientEthics', context);
       }
     );
