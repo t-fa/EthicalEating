@@ -56,8 +56,12 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
         return next(err); // bail out of the handler here, recipeWithReplacements undefined
       }
 
+      if (!recipeWithReplacements) {
+        res.status(404);
+        return res.render("404");
+      }
       // Make sure if the recipe's private that there's a logged in user and they are the owner.
-      const sessionNumericUserId = res.locals.user_id_numeric;
+      const sessionNumericUserId = req.session.user_id_numeric;
       if (!recipeWithReplacements.recipe.isPublic && recipeWithReplacements.recipe.ownerId !== sessionNumericUserId) {
         // the recipe is private and the user is not the owner.
         return res.redirect('/login');
