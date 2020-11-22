@@ -6,26 +6,6 @@ const ethicalRouter = express.Router();
 ethicalRouter.use(bodyParser.urlencoded({ extended: false }));
 ethicalRouter.use(bodyParser.json());
 
-/* Returns list of all ingredients useful for linking to an individual ingredient
-Currently renders index but should be changed to render a more appropriate handlebars file 
-when frontend is built out
-*/
-ethicalRouter.route('/')
-.get((req, res, next) => {
-  context = {}
-  Models.Ingredients.getAllIngredients((err, listOfAllIngredients) => {
-    if (err) {
-      console.log("Failed to fetch Ingredients:", err);
-      return next(err);  // bail out of the handler here, listOfAllIngredients undefined
-    }
-    // Got the list of Ingredients.
-    console.log("listOfAllIngredients:", listOfAllIngredients);
-    console.log("listOfAllIngredients as json", listOfAllIngredients.map(ingredient => ingredient.toJSON()));
-    context.ingredients = listOfAllIngredients;
-    res.render('index', context);
-  });
-})
-
 
 /* Renders page 'ingredientEthics' and passes down to handlebars an ingredient
 accessible in context.ingredient and a list of potential replacements if an 
