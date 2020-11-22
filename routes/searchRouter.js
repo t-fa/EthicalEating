@@ -45,12 +45,9 @@ searchRouter.route('/ingredient_search')
 
         Models.Ingredients.searchByName({"query": search}, (err, listOfIngredients) => {
             if (err) {
-            console.log("Failed to fetch Ingredients:", err);
             return next(err);  // bail out of the handler here, listOfIngredients undefined
             }
             // Got the listOfIngredients.
-            console.log("listOfIngredients:", listOfIngredients);
-            console.log("listOfIngredients as json", listOfIngredients.map(ingredient => ingredient.toJSON()));
             context.ingredients = listOfIngredients;
             res.render('ingredient_search', context);
         });
