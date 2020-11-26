@@ -520,7 +520,7 @@ INSERT INTO IngredientReplacements(ingredient_id_replaces, ingredient_id_replace
   (SELECT id FROM Ingredients WHERE name = "Almonds"),
   (SELECT id FROM Ingredients WHERE name = "Hazlenuts"),
   "require less water to produce than other nuts like Almonds or Cashews.",
-  "https://healabel.com/a-ingredients/almonds https://healabel.com/h-ingredients/hazelnuts"
+  "https://healabel.com/h-ingredients/hazelnuts"
 ),
 (
   (SELECT id FROM Ingredients WHERE name = "Almonds"),
