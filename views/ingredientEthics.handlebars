@@ -3,13 +3,17 @@
 </head>
 <div>
     <p>
+        {{#if backActionClose}}
+        <button onclick="window.close()" style="height:4em;width:16em;margin-left:4em;font-size:medium">
+            <-- Back to Recipe
+        </button>
+        {{else}}
         <button onclick="history.back()" style="height:4em;width:16em;margin-left:4em;font-size:medium">
             <-- Back to Recipe
         </button>
+        {{/if}}
     </p>
 
-    
-    
     <div class="ingredientCard">
         <div style="padding: 4em">
             <h1 id="recipeBookHomeTitle">{{ingredient.name}}</h1>
@@ -22,15 +26,25 @@
                 You could consider replacing it with one of the following options.</p>
                 <br/>
             <h3><b>Replacement Suggestions</b></h3>
+            {{#unless noEdit}}
             <form id="submitIngredientReplacement">
-
+            {{/unless}}
             {{#each ingredientReplacements}}
             <div class="ingredientReplacementSuggestion">
-                <input type="radio" id="replacement_{{@index}}" name="replaceWithIDName" value="{{ingredientIDReplacement}}_{{name}}">
-                <a href="/ingredientEthics/{{ingredientIDReplacement}}"><strong>{{name}}</strong></a>
-                <label for="replacement_{{@index}}">{{replacementReason}} <a href="{{replacementReasonSource}}" target="_blank">[source]</a></label>
+                {{#if ../noEdit}}
+                    <li>
+                        <a href="/ingredientEthics/{{ingredientIDReplacement}}"><strong>{{name}}</strong></a> {{replacementReason}} <a href="{{replacementReasonSource}}" target="_blank">[source]</a>
+                {{else}}
+                    <input type="radio" id="replacement_{{@index}}" name="replaceWithIDName" value="{{ingredientIDReplacement}}_{{name}}">
+                    <a href="/ingredientEthics/{{ingredientIDReplacement}}"><strong>{{name}}</strong></a>
+                    <label for="replacement_{{@index}}">{{replacementReason}} <a href="{{replacementReasonSource}}" target="_blank">[source]</a></label>
+                {{/if}}
+                {{#if ../noEdit}}
+                    </li>
+                {{/if}}
             </div>
             {{/each}}
+            {{#unless noEdit}}
                 <input type="hidden" name="originalIngredientID" value="{{originalIngredient.id}}">
                 <input type="hidden" name="originalIngredientName" value="{{originalIngredient.name}}">
                 <input type="radio" id="no_change" name="replaceWithIDName" value="null" checked>
@@ -38,6 +52,7 @@
 
                 <input type="submit" value="Replace Ingredient">
             </form>
+            {{/unless}}
             {{else}}
             <p>We did not identify any ethical issues with this ingredient. It requires relatively little
                 water to produce and is a great ethical choice from our perspective.

@@ -1,4 +1,26 @@
-<script src='js/buildRecipe.js'></script>
+<style>
+    i {
+        font-family: "Material Icons";
+        font-size: 24px;
+        text-decoration: none;
+    }
+    a.ingredient-detail-popup {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 32%;
+    }
+    a i.material-icons {
+        text-decoration: none;
+    }
+    div.added {
+        margin: 16px 0px;
+    }
+    html.ingredient-detail-popup-hidden .ingredient-detail-popup {
+        display: none;
+    }
+</style>
+
 <div class="card " class="border border-primary" style="width: 50rem;margin:0 auto;">
     <div class="card-body">
 
@@ -24,6 +46,11 @@
                     <li>Review your recipe</li>
                     <li>Submit!</li>
                 </ol>
+
+                <p>
+                    We can show ethical problems with the ingredients as you add them.
+                    <button id="toggle-show-problems">Show Me Ethical Problems</button>
+                </p>
 
                 {{#if user_id}}
                 <form action="/build" method="POST">
@@ -86,18 +113,6 @@
 
     </div>
 </div>
-<div id="first">
-<script>
-getVal(1)
-function getVal(num)
-{
-var selectedVal = document.getElementById("ingredients"+num).value;
-var link = document.getElementById("recipe_link"+num);
-var final = /ingredientEthics/ + selectedVal
-   link.setAttribute("href", final);
-console.log(selectedVal);
-}
-</script>
-</div>
+<div id="first"></div>
 
-
+<script src='/js/buildRecipe.js?v=1606429235'></script>
