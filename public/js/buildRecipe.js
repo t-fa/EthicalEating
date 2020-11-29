@@ -14,7 +14,7 @@ function addIngredients() {
     let className = 'ingredient' + ingredientCount
     ingredientSelect.className = 'added ' + className
     let htmlContent = document.getElementById('ingredientSelect').innerHTML
-    htmlContent += '<button onclick="removeIngredient(\'' + className + '\');">Remove Ingredient</button>'
+    htmlContent += '<button onclick="removeIngredient(\'' + className + '\');" style = "border-radius: 6px;">Remove Ingredient</button>'
     htmlContent += '<br><a href="/ingredientEthics/2" class="ingredient-detail-popup" id ="recipe_link'+ ingredientCount+ '">Ingredient Detail</a>'
     
     ingredientSelect.innerHTML = htmlContent
