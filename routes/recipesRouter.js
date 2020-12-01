@@ -66,7 +66,7 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
         // the recipe is private and the user is not the owner.
         return res.redirect('/login');
       }
-      context.user = req.session.user_id_numeric;
+      context.userOwnsRecipe = recipeWithReplacements.recipe.ownerId === req.session.user_id_numeric;
       context.undo = req.session.undo;
       context.ingredients = recipeWithReplacements;
       res.render("userRecipe", context);
@@ -97,7 +97,7 @@ recipesRouter.route("/:recipeID").delete((req, res, next) => {
         res.status(200).json("OK");
       }
     );
-  })
+  });
 });
 
 module.exports = recipesRouter;
