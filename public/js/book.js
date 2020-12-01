@@ -46,6 +46,34 @@ function deleteRecipeByID(recipeID) {
   });
 };
 
+// updates recipe with recipeID to have ingredients in listOfIngredientIDs
+function updateRecipeWithIngredients(recipeID, listOfIngredientIDs) {
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      "recipeID": recipeID,
+      "ingredients": listOfIngredientIDs,
+    }),
+  };
+  fetch(`/build/${recipeID}`, options)
+      .then(data => data.json())
+      .then(result => {
+      // Success! Redirect to recipe page.
+      if (result.error !== null && typeof result.error !== "undefined") {
+          window.alert(result.error);
+      } else {
+          // reload the page.
+          window.location.href = window.location.href;
+      }
+  }).catch(err => {
+      // There was an error, display this to the user.
+      console.log("Error :(", err);
+  });
+}
+
 function handleIngredientReplacementFormSubmit(event) {
     // Prevent default submit behavior.
     event.preventDefault();
@@ -142,13 +170,31 @@ function attachListeners() {
         let recipeId = null;
         try {
           recipeId = Number(event.target.dataset.recipeId);
-        } catch(err) {
+        } catch (err) {
           console.log("failed to parse recipeid", err);
         }
         if (!recipeId) {
           console.log("no recipe id!", recipeId);
         }
         deleteRecipeByID(recipeId);
+      });
+    }
+
+    const editButton = document.getElementById("edit-recipe");
+    if (editButton) {
+      editButton.addEventListener("click", function(event) {
+        event.preventDefault();
+        let recipeId = null;
+        try {
+          recipeId = Number(event.target.dataset.recipeId);
+        } catch (err) {
+          console.log("failed to parse recipeid", err);
+        }
+        if (!recipeId) {
+          console.log("no recipe id!", recipeId);
+        }
+        // TODO, implement me to not be hardcoded IDs!!
+        updateRecipeWithIngredients(recipeId, [1,2,3]);
       });
     }
 };
