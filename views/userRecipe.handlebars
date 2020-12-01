@@ -58,7 +58,7 @@
         <button onclick="window.location.href='/build'" class="createNewRecipe">
             Create New Recipe
         </button>
-        {{#if user}}
+        {{#if userOwnsRecipe}}
             <button id="edit-recipe" data-recipe-id={{ingredients.recipe.id}}>
                 Edit Recipe
             </button>
