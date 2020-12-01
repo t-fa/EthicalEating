@@ -56,7 +56,6 @@ bookRouter.route('/')
 });
 
 
-
 bookRouter.route('/:id/:public')
 // update privacy/publicity to opposite of current state
 .get((req, res, next) => {

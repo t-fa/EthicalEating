@@ -77,6 +77,31 @@ const RecipeBookRecipes = (database) => {
     );
   };
 
+  /**
+    deleteRecipeByID deletes Recipe with ID @recipeID from the RecipeBook with ID @recipeBookID.
+    => Receives:
+      + recipeBookID: ID of RecipeBook from which to delete Recipe with ID @recipeID.
+      + recipeID: ID of Recipe to delete.
+      + callback function(error, data)
+    => Returns: by calling @callback with:
+      + (null, null) returns nothing on success.
+      + (Error, null) if an error occurs.
+  */
+  recipeBookRecipes.deleteRecipeByID = ({ recipeID, recipeBookID }, callback) => {
+    database.execute(
+      "DELETE FROM RecipeBookRecipes WHERE recipe_id = ? AND recipebook_id = ?",
+      [recipeID, recipeBookID],
+      (err, rows) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        callback(null, null);
+        return;
+      }
+    );
+  };
+
   return { ...recipeBookRecipes, Errors };
 };
 

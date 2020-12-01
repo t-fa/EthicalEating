@@ -66,6 +66,7 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
         // the recipe is private and the user is not the owner.
         return res.redirect('/login');
       }
+      context.user = req.session.user_id_numeric;
       context.undo = req.session.undo;
       context.ingredients = recipeWithReplacements;
       res.render("userRecipe", context);
@@ -73,10 +74,30 @@ recipesRouter.route("/:recipeID").get((req, res, next) => {
   );
 });
 
-
-// this will delete a recipe from a user's RecipeBook
+// This will delete a Recipe from the system. Logged in user must be Recipe owner.
 recipesRouter.route("/:recipeID").delete((req, res, next) => {
-    const { id } = req.params.recipeID;
-})
+  const id = req.params.recipeID;
+  if (!id) {
+    res.status(400).json({ error: "missing recipeID" });
+  }
+  const ownerID = req.session.user_id_numeric;
+  if (!ownerID) {
+    res.status(400).json({ error: "missing ownerID" });
+  }
+  Models.RecipeBookRecipes.deleteRecipeByID({recipeID: id, recipeBookID: req.session.recipeBookID}, function(err) {
+    if (err) {
+      return next(err);
+    }
+    Models.Recipes.deleteRecipeByID(
+      { recipeID: id, ownerID: ownerID },
+      function (err) {
+        if (err) {
+          return next(err);
+        }
+        res.status(200).json("OK");
+      }
+    );
+  })
+});
 
 module.exports = recipesRouter;

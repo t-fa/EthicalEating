@@ -135,6 +135,48 @@ const Recipes = (database) => {
     );
   };
 
+  /*
+    updateRecipeWithIngredientsList updates the Ingredients list for the given Recipe with
+    ID @recipeID to the Ingredients in list @ingredientIDList.
+    => Receives:
+      + recipeID: ID of the Recipe to update.
+      + ingredientIDList: List of Ingredient IDs to set on the Recipe.
+      + callback: function(error, data)
+    => Returns: by calling @callback with:
+      + (null, Recipe) with the Recipe object that was created.
+      + (Error, null) if an error occurs.
+  */
+  recipes.updateRecipeWithIngredientIDList = (
+    { recipeID, ingredientIDList },
+    callback
+  ) => {
+    database.execute(
+      "DELETE FROM RecipeIngredients WHERE recipe_id = ?",
+      [recipeID],
+      (err, data) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        // Sanity check ingredient IDs -- make sure all Integers.
+        const cleanedIngredientIDs = ingredientIDList
+          .filter((id) => Number.isInteger(Number(id)))
+          .map((ingredientID) => [Number(ingredientID), recipeID]);
+        database.query(
+          "INSERT INTO RecipeIngredients(ingredient_id, recipe_id) VALUES ?",
+          [cleanedIngredientIDs],
+          (err, rows) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            callback(null, null);
+          }
+        );
+      }
+    );
+  };
+
   /**
     replaceIngredientForRecipeID replaces Ingredient with ID @toReplaceID with Ingredient with
     ID @replaceWithID for Recipe with ID @recipeID.
@@ -197,6 +239,39 @@ const Recipes = (database) => {
           return;
         }
         callback(null, null);
+      }
+    );
+  };
+
+  /**
+    deleteRecipeByID deletes the Recipe with ID @recipeID.
+    Also deletes all RecipeIngredients with recipe_id = @recipeID.
+    => Receives:
+      + recipeID: ID of the Recipe to delete.
+    => Returns: by calling @callback with:
+      + (null, null) returns nothing on success
+      + (Error, null) if an error occurs.
+  */
+  recipes.deleteRecipeByID = ({ recipeID, ownerID }, callback) => {
+    database.execute(
+      "DELETE FROM Recipes WHERE id = ? AND owner_id = ?",
+      [recipeID, ownerID],
+      (err) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        database.execute(
+          "DELETE FROM RecipeIngredients WHERE recipe_id = ?",
+          [recipeID],
+          (err) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            callback(null, null);
+          }
+        );
       }
     );
   };
