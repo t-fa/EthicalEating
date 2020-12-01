@@ -202,6 +202,39 @@ const Recipes = (database) => {
   };
 
   /**
+    deleteRecipeByID deletes the Recipe with ID @recipeID.
+    Also deletes all RecipeIngredients with recipe_id = @recipeID.
+    => Receives:
+      + recipeID: ID of the Recipe to delete.
+    => Returns: by calling @callback with:
+      + (null, null) returns nothing on success
+      + (Error, null) if an error occurs.
+  */
+  recipes.deleteRecipeByID = ({ recipeID, ownerID }, callback) => {
+    database.execute(
+      "DELETE FROM Recipes WHERE id = ? AND owner_id = ?",
+      [recipeID, ownerID],
+      (err) => {
+        if (err) {
+          callback(err, null);
+          return;
+        }
+        database.execute(
+          "DELETE FROM RecipeIngredients WHERE recipe_id = ?",
+          [recipeID],
+          (err) => {
+            if (err) {
+              callback(err, null);
+              return;
+            }
+            callback(null, null);
+          }
+        );
+      }
+    );
+  };
+
+  /**
     getAllRecipes fetches a list of all the Recipe objects in the system.
     => Receives:
       + callback: function(error, data)

@@ -234,6 +234,7 @@ app.post('/addRecipe', function(req, res) {
 app.post('/logout', (req, res) => {
 	if (req.session.user_id) {
 		req.session.user_id = null;
+		req.session.destroy();
 		res.redirect('/');
 	}
 });

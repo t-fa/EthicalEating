@@ -12,7 +12,6 @@ function addRecipe(recipeID) {
     fetch('/addRecipe', options)
         .then(data => data.json())
         .then(result => {
-        // Success! Redirect to recipe page.
         if (result.error !== null && typeof result.error !== "undefined") {
             window.alert(result.error);
         } else {
@@ -24,6 +23,28 @@ function addRecipe(recipeID) {
     });
 };
 
+// deletes Recipe by ID
+function deleteRecipeByID(recipeID) {
+  const options = {
+      method: 'DELETE',
+      headers: {
+        'Content-Length': 0
+      },
+  };
+  fetch(`/userRecipe/${recipeID}`, options)
+      .then(data => data.json())
+      .then(result => {
+      // Success! Redirect to recipe page.
+      if (result.error !== null && typeof result.error !== "undefined") {
+          window.alert(result.error);
+      } else {
+          window.location.href = "/book";
+      }
+  }).catch(err => {
+      // There was an error, display this to the user.
+      console.log("Error :(", err);
+  });
+};
 
 function handleIngredientReplacementFormSubmit(event) {
     // Prevent default submit behavior.
@@ -112,6 +133,23 @@ function attachListeners() {
     const ingredientReplacementForm = document.getElementById("submitIngredientReplacement");
     if (ingredientReplacementForm) {
         ingredientReplacementForm.addEventListener("submit", handleIngredientReplacementFormSubmit);
+    }
+
+    const deleteBtn = document.getElementById("delete-recipe");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", function(event) {
+        event.preventDefault();
+        let recipeId = null;
+        try {
+          recipeId = Number(event.target.dataset.recipeId);
+        } catch(err) {
+          console.log("failed to parse recipeid", err);
+        }
+        if (!recipeId) {
+          console.log("no recipe id!", recipeId);
+        }
+        deleteRecipeByID(recipeId);
+      });
     }
 };
 
