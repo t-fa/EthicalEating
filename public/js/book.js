@@ -179,24 +179,6 @@ function attachListeners() {
         deleteRecipeByID(recipeId);
       });
     }
-
-    const editButton = document.getElementById("edit-recipe");
-    if (editButton) {
-      editButton.addEventListener("click", function(event) {
-        event.preventDefault();
-        let recipeId = null;
-        try {
-          recipeId = Number(event.target.dataset.recipeId);
-        } catch (err) {
-          console.log("failed to parse recipeid", err);
-        }
-        if (!recipeId) {
-          console.log("no recipe id!", recipeId);
-        }
-        // TODO, implement me to not be hardcoded IDs!!
-        updateRecipeWithIngredients(recipeId, [1,2,3]);
-      });
-    }
 };
 
 
